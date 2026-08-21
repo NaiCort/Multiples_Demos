@@ -83,7 +83,7 @@ function Navbar() {
 
   return (
     <motion.nav
-      className="fixed top-11 left-0 right-0 z-30 transition-all duration-300"
+      className="fixed top-11 left-0 right-0 z-[55] transition-all duration-300"
       style={{
         backgroundColor: scrolled ? "rgba(248,245,241,0.95)" : "transparent",
         backdropFilter: scrolled ? "blur(8px)" : "none",
@@ -126,7 +126,7 @@ function Navbar() {
             exit={{ opacity: 0, y: -16 }}
             transition={{ duration: 0.3 }}
             className="md:hidden absolute top-full left-0 right-0 py-6 px-6 flex flex-col gap-4"
-            style={{ backgroundColor: "rgba(248,245,241,0.98)", backdropFilter: "blur(12px)" }}
+            style={{ backgroundColor: "rgba(248,245,241,0.98)", backdropFilter: "blur(12px)", minHeight: "100dvh" }}
           >
             {links.map(l => (
               <a key={l.label} href={l.href} style={{ color: C.gray, fontFamily: "Inter, sans-serif", fontSize: 18 }}
