@@ -45,7 +45,7 @@ export default function PrivacyModal({ isOpen, onClose, accentColor, accentTextC
             <p className="text-sm leading-relaxed mb-3" style={{ color: "rgba(255,255,255,0.75)", fontFamily }}>
               Esta demostración no recopila, almacena ni comparte ningún dato real. Lo que escribas
               en los formularios de este sitio permanece únicamente en tu navegador durante esta
-              visita — nunca se envía a ningún servidor — y desaparece al cerrar o recargar la página.
+              visita, nunca se envía a ningún servidor, y desaparece al cerrar o recargar la página.
             </p>
             <p className="text-sm leading-relaxed" style={{ color: "rgba(255,255,255,0.5)", fontFamily }}>
               En un sitio real, aquí iría el aviso de privacidad completo del negocio: qué datos se

@@ -176,34 +176,25 @@ function Hero() {
   const ref = useRef(null)
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end start"] })
   const bgY = useTransform(scrollYProgress, [0, 1], ["0%", "20%"])
+  const orbScale = useTransform(scrollYProgress, [0, 1], [1, 1.7])
+  const orbOpacity = useTransform(scrollYProgress, [0, 1], [1, 0])
 
   return (
     <section ref={ref} className="min-h-screen flex items-center pt-[124px] pb-16 px-8 relative overflow-hidden"
       style={{ backgroundColor: C.bg }}>
 
-      {/* Orbes decorativos flotantes */}
-      <FloatingOrb size={180} color={`${C.green200}45`} top="10%" left="5%" duration={9} delay={0} />
-      <FloatingOrb size={80} color={`${C.earth}20`} top="30%" left="75%" duration={7} delay={1} />
+      {/* Orbes decorativos flotantes — se disuelven al hacer scroll, como una respiración lenta */}
+      <motion.div style={{ scale: orbScale, opacity: orbOpacity }}>
+        <FloatingOrb size={180} color={`${C.green200}45`} top="10%" left="5%" duration={9} delay={0} />
+        <FloatingOrb size={80} color={`${C.earth}20`} top="30%" left="75%" duration={7} delay={1} />
+      </motion.div>
 
       <div className="max-w-6xl mx-auto w-full grid md:grid-cols-2 gap-16 items-center relative z-10">
         <div>
-          <motion.div
-            initial={{ opacity: 0, filter: "blur(8px)" }}
-            animate={{ opacity: 1, filter: "blur(0px)" }}
-            transition={{ duration: 1, delay: 0.1 }}
-          >
-            <div className="flex items-center gap-2 mb-6">
-              <Wind size={14} style={{ color: C.sage }} />
-              <span style={{ fontFamily: "Nunito, sans-serif", color: C.sage, fontSize: 13, fontWeight: 300, letterSpacing: "0.08em" }}>
-                Psicóloga Clínica · Cédula 12345678
-              </span>
-            </div>
-          </motion.div>
-
           <motion.h1
             initial={{ opacity: 0, filter: "blur(10px)" }}
             animate={{ opacity: 1, filter: "blur(0px)" }}
-            transition={{ duration: 1.1, delay: 0.2 }}
+            transition={{ duration: 1.1, delay: 0.15 }}
             style={{
               fontFamily: "Cormorant Garamond, serif",
               color: C.green900,
@@ -223,8 +214,8 @@ function Hero() {
             style={{ fontFamily: "Nunito, sans-serif", color: C.gray, lineHeight: 1.85, fontSize: 15, fontWeight: 300 }}
             className="mb-10 max-w-lg"
           >
-            Un espacio de quietud y trabajo interior, donde puedes volver a conectar
-            contigo mismo/a y encontrar el camino hacia el bienestar.
+            Soy psicóloga clínica y ofrezco un espacio de quietud y trabajo interior,
+            donde puedes volver a conectar contigo mismo/a y encontrar el camino hacia el bienestar.
           </motion.p>
 
           <motion.div
@@ -356,11 +347,8 @@ function SobreMi() {
 
         <div>
           <FadeBlur delay={0.1}>
-            <span style={{ fontFamily: "Nunito, sans-serif", color: C.sage, fontSize: 13, fontWeight: 300, letterSpacing: "0.08em" }}>
-              Sobre mí
-            </span>
             <h2 style={{ fontFamily: "Cormorant Garamond, serif", color: C.green900, fontSize: "clamp(1.8rem, 3vw, 2.8rem)", fontWeight: 300, lineHeight: 1.3 }}
-              className="mt-2 mb-6">
+              className="mb-6">
               Dra. Valeria Romero
             </h2>
             <p style={{ fontFamily: "Nunito, sans-serif", color: C.gray, lineHeight: 1.9, fontSize: 14, fontWeight: 300 }}
@@ -378,8 +366,8 @@ function SobreMi() {
           <FadeBlur delay={0.2}>
             <div className="space-y-3 mb-8">
               {[
-                "Licenciatura en Psicología — UNAM",
-                "Maestría en Psicología Clínica — UNAM",
+                "Licenciatura en Psicología, UNAM",
+                "Maestría en Psicología Clínica, UNAM",
                 "Cédula profesional: 12345678",
                 "Formación en Mindfulness-Based Cognitive Therapy",
               ].map((item, i) => (

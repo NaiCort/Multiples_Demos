@@ -168,16 +168,6 @@ function Hero() {
       <div className="max-w-6xl mx-auto w-full">
         <div className="grid md:grid-cols-2 gap-16 items-center">
           <div>
-            <motion.p
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.5, delay: 0.1 }}
-              style={{ fontFamily: "DM Sans, sans-serif", color: C.gray400, fontSize: 12, letterSpacing: "0.12em" }}
-              className="uppercase mb-8"
-            >
-              Psicóloga Clínica · Cédula 12345678
-            </motion.p>
-
             <h1 style={{ fontFamily: "DM Serif Display, serif", color: C.black, lineHeight: 1.1, fontSize: "clamp(2.5rem, 5vw, 4rem)" }}
               className="mb-8">
               <TypeWriter text="Terapia psicológica para quien está listo para avanzar." delay={0.2} />
@@ -230,7 +220,7 @@ function Hero() {
             <div className="absolute bottom-6 left-6 right-6 p-4"
               style={{ backgroundColor: "rgba(255,255,255,0.95)", backdropFilter: "blur(8px)" }}>
               <p style={{ fontFamily: "DM Sans, sans-serif", color: C.gray400, fontSize: 11, letterSpacing: "0.08em" }} className="uppercase mb-1">
-                Cédula verificable
+                Cédula profesional
               </p>
               <p style={{ fontFamily: "DM Serif Display, serif", color: C.black, fontSize: 16 }}>
                 12345678 · UNAM · Psicología Clínica
@@ -296,10 +286,6 @@ function SobreMi() {
     <section id="sobre-mi" className="py-24 px-8" style={{ backgroundColor: C.white, scrollMarginTop: 134 }}>
       <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-20 items-start">
         <FadePure>
-          <p style={{ fontFamily: "DM Sans, sans-serif", color: C.gray400, fontSize: 11, letterSpacing: "0.12em" }}
-            className="uppercase mb-4">
-            Sobre mí
-          </p>
           <h2 style={{ fontFamily: "DM Serif Display, serif", color: C.black, fontSize: "clamp(1.8rem, 3vw, 2.5rem)" }}
             className="mb-8">
             Dra. Valeria Romero
@@ -317,8 +303,8 @@ function SobreMi() {
 
           <div className="space-y-3">
             {[
-              "Licenciatura en Psicología — UNAM",
-              "Maestría en Psicología Clínica — UNAM",
+              "Licenciatura en Psicología, UNAM",
+              "Maestría en Psicología Clínica, UNAM",
               "Cédula profesional: 12345678",
               "8 años de práctica clínica",
             ].map((item, i) => (
@@ -635,15 +621,29 @@ function Contacto() {
   )
 }
 
+function Monogram() {
+  return (
+    <div className="w-8 h-8 rounded-full border flex items-center justify-center shrink-0"
+      style={{ borderColor: "rgba(255,255,255,0.25)" }}>
+      <span style={{ fontFamily: "DM Serif Display, serif", color: "rgba(255,255,255,0.5)", fontSize: 12 }}>
+        VR
+      </span>
+    </div>
+  )
+}
+
 function Footer() {
   const [privacyOpen, setPrivacyOpen] = useState(false)
 
   return (
-    <footer className="py-6 px-8 flex flex-col md:flex-row items-center justify-between"
+    <footer className="py-6 px-8 flex flex-col md:flex-row items-center justify-between gap-4"
       style={{ backgroundColor: C.black, borderTop: "1px solid rgba(255,255,255,0.06)" }}>
       <p style={{ fontFamily: "DM Sans, sans-serif", color: "rgba(255,255,255,0.2)", fontSize: 12 }}>
         © 2026 Dra. Valeria Romero
       </p>
+
+      <Monogram />
+
       <button onClick={() => setPrivacyOpen(true)}
         className="underline-offset-2 hover:underline transition-all"
         style={{ fontFamily: "DM Sans, sans-serif", color: "rgba(255,255,255,0.3)", fontSize: 11 }}>

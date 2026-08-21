@@ -22,7 +22,7 @@ function useFonts() {
     link.id = "font-calido"
     link.rel = "stylesheet"
     link.href =
-      "https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap"
+      "https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;600&family=Caveat:wght@500;600&display=swap"
     document.head.appendChild(link)
   }, [])
 }
@@ -145,27 +145,31 @@ function Navbar() {
   )
 }
 
+function GrainOverlay() {
+  return (
+    <div
+      aria-hidden="true"
+      className="absolute inset-0 pointer-events-none"
+      style={{
+        opacity: 0.05,
+        backgroundImage:
+          "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E\")",
+      }}
+    />
+  )
+}
+
 function Hero() {
   return (
     <section className="min-h-screen flex items-center pt-[124px] pb-16 px-6 relative"
       style={{ backgroundColor: C.cream }}>
+      <GrainOverlay />
       <div className="max-w-6xl mx-auto w-full grid md:grid-cols-2 gap-12 items-center">
         <div>
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.1 }}
-          >
-            <span className="inline-block px-3 py-1 rounded-full text-sm font-medium mb-4"
-              style={{ backgroundColor: `${C.sage}20`, color: C.sage, fontFamily: "Inter, sans-serif" }}>
-              Psicóloga Clínica · Cédula 12345678
-            </span>
-          </motion.div>
-
           <motion.h1
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.2 }}
+            transition={{ duration: 0.7, delay: 0.15 }}
             style={{ fontFamily: "Playfair Display, serif", color: C.sageDark, lineHeight: 1.2 }}
             className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6"
           >
@@ -175,12 +179,13 @@ function Hero() {
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.35 }}
+            transition={{ duration: 0.7, delay: 0.3 }}
             style={{ fontFamily: "Inter, sans-serif", color: C.gray, lineHeight: 1.7 }}
             className="text-lg mb-8 max-w-lg"
           >
-            ¿Sientes que la ansiedad, el estrés o las relaciones te están superando?
-            Aquí puedes encontrar el acompañamiento que necesitas para avanzar.
+            Soy psicóloga clínica y acompaño a personas que sienten que la ansiedad,
+            el estrés o sus relaciones las están superando, para que encuentren
+            el camino de vuelta a sí mismas.
           </motion.p>
 
           <motion.div
@@ -211,7 +216,7 @@ function Hero() {
           >
             <Award size={16} style={{ color: C.terra }} />
             <span style={{ fontFamily: "Inter, sans-serif", color: C.grayLight, fontSize: 13 }}>
-              Cédula profesional verificable: 12345678
+              Cédula profesional: 12345678
             </span>
           </motion.div>
         </div>
@@ -231,6 +236,15 @@ function Hero() {
                 className="w-full h-full object-cover"
               />
             </div>
+            <motion.p
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.9 }}
+              className="absolute -bottom-2 -right-4 md:right-0"
+              style={{ fontFamily: "Caveat, cursive", color: C.sageDark, fontSize: 32, transform: "rotate(-4deg)" }}
+            >
+              Dra. Valeria Romero
+            </motion.p>
           </div>
         </motion.div>
       </div>
@@ -293,6 +307,17 @@ function Identificacion() {
   )
 }
 
+function LeafBullet({ color }) {
+  return (
+    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" className="flex-shrink-0">
+      <path d="M7 1C7 1 12 3 12 7.5C12 10.5 9.5 13 7 13C4.5 13 2 10.5 2 7.5C2 3 7 1 7 1Z"
+        fill={color} opacity="0.85" />
+      <path d="M7 2V12" stroke="white" strokeWidth="0.6" opacity="0.5" />
+    </svg>
+  )
+}
+
+
 function SobreMi() {
   return (
     <section id="sobre-mi" className="py-20 px-6" style={{ backgroundColor: C.cream, scrollMarginTop: 140 }}>
@@ -318,17 +343,13 @@ function SobreMi() {
 
         <div>
           <FadeRise delay={0.1}>
-            <span className="inline-block px-3 py-1 rounded-full text-sm font-medium mb-4"
-              style={{ backgroundColor: `${C.terra}15`, color: C.terra, fontFamily: "Inter, sans-serif" }}>
-              Sobre mí
-            </span>
             <h2 className="text-3xl md:text-4xl font-bold mb-4"
               style={{ fontFamily: "Playfair Display, serif", color: C.sageDark }}>
               Dra. Valeria Romero
             </h2>
             <p className="mb-4" style={{ fontFamily: "Inter, sans-serif", color: C.gray, lineHeight: 1.75 }}>
               Soy psicóloga clínica con más de 8 años acompañando a personas que atraviesan momentos difíciles.
-              Creo profundamente en que cada persona tiene los recursos para sanar — a veces solo necesitamos
+              Creo profundamente en que cada persona tiene los recursos para sanar; a veces solo necesitamos
               un espacio seguro para encontrarlos.
             </p>
             <p className="mb-6" style={{ fontFamily: "Inter, sans-serif", color: C.gray, lineHeight: 1.75 }}>
@@ -340,13 +361,13 @@ function SobreMi() {
           <FadeRise delay={0.2}>
             <div className="space-y-2 mb-6">
               {[
-                "Licenciatura en Psicología — UNAM",
-                "Maestría en Psicología Clínica — UNAM",
+                "Licenciatura en Psicología, UNAM",
+                "Maestría en Psicología Clínica, UNAM",
                 "Cédula profesional: 12345678",
                 "Especialidad en Terapia Cognitivo-Conductual",
               ].map((item, i) => (
-                <div key={i} className="flex items-center gap-2">
-                  <div className="w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ backgroundColor: C.terra }} />
+                <div key={i} className="flex items-center gap-2.5">
+                  <LeafBullet color={C.terra} />
                   <span style={{ fontFamily: "Inter, sans-serif", color: C.gray, fontSize: 14 }}>{item}</span>
                 </div>
               ))}

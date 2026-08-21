@@ -183,18 +183,6 @@ function Hero() {
       style={{ backgroundColor: C.bgLight }}>
       <div className="max-w-6xl mx-auto w-full grid md:grid-cols-2 gap-16 items-center">
         <div>
-          {/* Stagger en cascada */}
-          <motion.div
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: staggerItems[0].delay }}
-            className="flex flex-wrap gap-2 mb-6"
-          >
-            {["Psicóloga Clínica", "Cédula 12345678", "TCC Certificada"].map((tag, i) => (
-              <CredentialBadge key={i} text={tag} delay={0.1 + i * 0.1} />
-            ))}
-          </motion.div>
-
           <motion.h1
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
@@ -353,10 +341,10 @@ function SobreMi() {
           </SlideIn>
 
           <SlideIn delay={0.2}>
-            <div className="space-y-3 mb-8">
+            <div className="space-y-3 mb-6">
               {[
-                "Licenciatura en Psicología — UNAM",
-                "Maestría en Psicología Clínica — UNAM",
+                "Licenciatura en Psicología, UNAM",
+                "Maestría en Psicología Clínica, UNAM",
                 "Especialidad en Terapia Cognitivo-Conductual",
                 "Cédula profesional: 12345678",
                 "Miembro activo de la Sociedad Mexicana de Psicología",
@@ -365,6 +353,14 @@ function SobreMi() {
                   <CheckCircle size={15} style={{ color: C.blue, marginTop: 2, flexShrink: 0 }} />
                   <span style={{ fontFamily: "Source Sans 3, sans-serif", color: C.gray, fontSize: 13 }}>{item}</span>
                 </div>
+              ))}
+            </div>
+          </SlideIn>
+
+          <SlideIn delay={0.25}>
+            <div className="flex flex-wrap gap-2 mb-8">
+              {["Sesiones 100% confidenciales", "Modalidad presencial y online", "Evaluación clínica inicial"].map((tag, i) => (
+                <CredentialBadge key={i} text={tag} delay={0.1 + i * 0.1} />
               ))}
             </div>
           </SlideIn>
