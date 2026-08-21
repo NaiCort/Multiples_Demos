@@ -66,7 +66,7 @@ export default function DemoBanner() {
         <MonitorPlay size={14} color="#F5B942" className="shrink-0" />
         <p className="text-xs sm:text-[13px] truncate" style={{ color: "rgba(255,255,255,0.75)", fontFamily: "system-ui, sans-serif" }}>
           <span className="hidden sm:inline">Demo interactiva para portafolio. La identidad, los datos, las citas y los envíos de este sitio son simulados.</span>
-          <span className="sm:hidden">Demo interactiva — datos simulados</span>
+          <span className="sm:hidden">Demo interactiva, datos simulados</span>
         </p>
       </div>
 
@@ -95,7 +95,7 @@ export default function DemoBanner() {
               <p className="text-sm leading-relaxed" style={{ color: "rgba(255,255,255,0.75)", fontFamily: "system-ui, sans-serif" }}>
                 Este sitio es un prototipo interactivo de alta fidelidad, no el sitio real de un negocio.
                 Puedes cambiar el estilo visual con el selector de la esquina inferior derecha, recorrer
-                cada sección y probar los formularios y flujos — todo responde de forma creíble, pero
+                cada sección y probar los formularios y flujos. Todo responde de forma creíble, pero
                 ningún dato se guarda ni se envía realmente.
               </p>
             </Panel>
