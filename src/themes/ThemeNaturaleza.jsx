@@ -176,18 +176,14 @@ function Hero() {
   const ref = useRef(null)
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end start"] })
   const bgY = useTransform(scrollYProgress, [0, 1], ["0%", "20%"])
-  const orbScale = useTransform(scrollYProgress, [0, 1], [1, 1.7])
-  const orbOpacity = useTransform(scrollYProgress, [0, 1], [1, 0])
 
   return (
     <section ref={ref} className="min-h-screen flex items-center pt-[124px] pb-16 px-8 relative overflow-hidden"
       style={{ backgroundColor: C.bg }}>
 
-      {/* Orbes decorativos flotantes — se disuelven al hacer scroll, como una respiración lenta */}
-      <motion.div style={{ scale: orbScale, opacity: orbOpacity }}>
-        <FloatingOrb size={180} color={`${C.green200}45`} top="10%" left="5%" duration={9} delay={0} />
-        <FloatingOrb size={80} color={`${C.earth}20`} top="30%" left="75%" duration={7} delay={1} />
-      </motion.div>
+      {/* Orbes decorativos flotantes */}
+      <FloatingOrb size={180} color={`${C.green200}45`} top="10%" left="5%" duration={9} delay={0} />
+      <FloatingOrb size={80} color={`${C.earth}20`} top="30%" left="75%" duration={7} delay={1} />
 
       <div className="max-w-6xl mx-auto w-full grid md:grid-cols-2 gap-16 items-center relative z-10">
         <div>
