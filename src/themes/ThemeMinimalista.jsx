@@ -82,11 +82,27 @@ function TypeWriter({ text, delay = 0 }) {
 function Navbar() {
   const [scrolled, setScrolled] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
+  const [activeSection, setActiveSection] = useState("")
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40)
     window.addEventListener("scroll", onScroll)
     return () => window.removeEventListener("scroll", onScroll)
+  }, [])
+
+  useEffect(() => {
+    const ids = ["sobre-mi", "servicios", "primera-cita", "contacto"]
+    const sections = ids.map((id) => document.getElementById(id)).filter(Boolean)
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) setActiveSection(entry.target.id)
+        })
+      },
+      { rootMargin: "-40% 0px -55% 0px" }
+    )
+    sections.forEach((s) => observer.observe(s))
+    return () => observer.disconnect()
   }, [])
 
   const links = [
@@ -113,16 +129,20 @@ function Navbar() {
         </span>
 
         <div className="hidden md:flex items-center gap-10">
-          {links.map(l => (
-            <a key={l.label} href={l.href}
-              style={{ color: C.gray600, fontFamily: "DM Sans, sans-serif", fontSize: 13, letterSpacing: "0.04em" }}
-              className="hover:opacity-50 transition-opacity uppercase tracking-widest">
-              {l.label}
-            </a>
-          ))}
+          {links.map(l => {
+            const isActive = l.href === "#" ? activeSection === "" : activeSection === l.href.slice(1)
+            return (
+              <a key={l.label} href={l.href}
+                style={{ color: isActive ? C.black : C.gray600, fontFamily: "DM Sans, sans-serif", fontSize: 13, letterSpacing: "0.04em" }}
+                className="hover:opacity-50 transition-opacity uppercase tracking-widest">
+                {l.label}
+              </a>
+            )
+          })}
         </div>
 
-        <button className="md:hidden p-2" onClick={() => setMenuOpen(!menuOpen)}>
+        <button className="md:hidden p-2" onClick={() => setMenuOpen(!menuOpen)}
+          aria-expanded={menuOpen} aria-label={menuOpen ? "Cerrar menú" : "Abrir menú"}>
           <div className="space-y-1.5">
             <motion.div animate={{ rotate: menuOpen ? 45 : 0, y: menuOpen ? 8 : 0 }}
               className="w-5 h-px" style={{ backgroundColor: C.black }} />

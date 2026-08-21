@@ -30,7 +30,7 @@ export default function ThemeSwitcher({ activeTheme, onThemeChange }) {
 
   return (
     <>
-      {/* Overlay de niebla */}
+      {/* Overlay de niebla — debe cubrir absolutamente todo lo demás (banner, navbar, marca de agua) */}
       <AnimatePresence>
         {isHovering && (
           <motion.div
@@ -38,7 +38,7 @@ export default function ThemeSwitcher({ activeTheme, onThemeChange }) {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.3 }}
-            className="fixed inset-0 z-40 pointer-events-none"
+            className="fixed inset-0 z-[70] pointer-events-none"
             style={{
               background: "rgba(0,0,0,0.45)",
               backdropFilter: "blur(4px)",
@@ -47,9 +47,9 @@ export default function ThemeSwitcher({ activeTheme, onThemeChange }) {
         )}
       </AnimatePresence>
 
-      {/* Switcher */}
+      {/* Switcher — el único elemento que debe quedar por encima de la niebla */}
       <div
-        className="fixed bottom-6 right-6 z-50 flex flex-col items-end gap-2"
+        className="fixed bottom-6 right-6 z-[80] flex flex-col items-end gap-2"
         onMouseEnter={() => setIsHovering(true)}
         onMouseLeave={() => {
           setIsHovering(false)

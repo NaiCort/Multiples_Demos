@@ -84,11 +84,27 @@ function FloatingOrb({ size, color, top, left, duration = 8, delay = 0 }) {
 function Navbar() {
   const [scrolled, setScrolled] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
+  const [activeSection, setActiveSection] = useState("")
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40)
     window.addEventListener("scroll", onScroll)
     return () => window.removeEventListener("scroll", onScroll)
+  }, [])
+
+  useEffect(() => {
+    const ids = ["sobre-mi", "servicios", "primera-cita", "contacto"]
+    const sections = ids.map((id) => document.getElementById(id)).filter(Boolean)
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) setActiveSection(entry.target.id)
+        })
+      },
+      { rootMargin: "-40% 0px -55% 0px" }
+    )
+    sections.forEach((s) => observer.observe(s))
+    return () => observer.disconnect()
   }, [])
 
   const links = [
@@ -118,13 +134,16 @@ function Navbar() {
         </div>
 
         <div className="hidden md:flex items-center gap-8">
-          {links.map(l => (
-            <a key={l.label} href={l.href}
-              style={{ color: C.gray, fontFamily: "Nunito, sans-serif", fontSize: 14, fontWeight: 400 }}
-              className="hover:opacity-50 transition-opacity">
-              {l.label}
-            </a>
-          ))}
+          {links.map(l => {
+            const isActive = l.href === "#" ? activeSection === "" : activeSection === l.href.slice(1)
+            return (
+              <a key={l.label} href={l.href}
+                style={{ color: isActive ? C.green700 : C.gray, fontFamily: "Nunito, sans-serif", fontSize: 14, fontWeight: isActive ? 600 : 400 }}
+                className="hover:opacity-50 transition-opacity">
+                {l.label}
+              </a>
+            )
+          })}
           <a href="https://wa.me/521234567890?text=Hola, me gustaría agendar una cita"
             target="_blank" rel="noopener noreferrer"
             className="px-5 py-2 text-white text-sm transition-all hover:opacity-90 rounded-full"
@@ -133,7 +152,8 @@ function Navbar() {
           </a>
         </div>
 
-        <button className="md:hidden p-2" onClick={() => setMenuOpen(!menuOpen)}>
+        <button className="md:hidden p-2" onClick={() => setMenuOpen(!menuOpen)}
+          aria-expanded={menuOpen} aria-label={menuOpen ? "Cerrar menú" : "Abrir menú"}>
           <div className="space-y-1.5">
             <motion.div animate={{ rotate: menuOpen ? 45 : 0, y: menuOpen ? 8 : 0 }}
               className="w-6 h-px" style={{ backgroundColor: C.green700 }} />
