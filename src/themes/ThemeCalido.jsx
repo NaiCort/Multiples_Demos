@@ -171,7 +171,7 @@ function Hero() {
           initial={{ opacity: 0, rotate: -10, scale: 0.9, y: -10 }}
           animate={{ opacity: 1, rotate: -5, scale: 1, y: 0 }}
           transition={{ duration: 0.9, delay: 0.2, ease: "easeOut" }}
-          className="hidden md:block absolute -top-6 right-0 lg:right-4 z-10"
+          className="hidden md:block absolute top-6 right-0 lg:right-4 z-10"
         >
           <div className="relative">
             <div className="absolute -top-3 left-1/2 -translate-x-1/2 w-16 h-6 opacity-80"
@@ -341,77 +341,76 @@ function LeafBullet({ color }) {
 
 
 function SobreMi() {
-  const stats = [
-    { n: 412, s: "", label: "Pacientes", rotate: -6 },
-    { n: 8, s: "+", label: "Años", rotate: 3 },
-    { n: 94, s: "%", label: "Satisfacción", rotate: -2 },
-  ]
   const credenciales = [
-    { text: "Licenciatura en Psicología, UNAM", rotate: -1 },
-    { text: "Maestría en Psicología Clínica, UNAM", rotate: 1 },
-    { text: "Cédula profesional: 12345678", rotate: -1.5 },
-    { text: "Especialidad en Terapia Cognitivo-Conductual", rotate: 1 },
+    { text: "Licenciatura en Psicología, UNAM", rotate: -3 },
+    { text: "Maestría en Psicología Clínica, UNAM", rotate: 2.5 },
+    { text: "Cédula profesional: 12345678", rotate: -2 },
+    { text: "Especialidad en Terapia Cognitivo-Conductual", rotate: 3 },
   ]
 
   return (
     <section id="sobre-mi" className="py-24 px-6" style={{ backgroundColor: C.cream, scrollMarginTop: 140 }}>
-      <div className="max-w-3xl mx-auto">
+      <div className="max-w-5xl mx-auto">
         <FadeRise>
-          <h2 className="text-3xl md:text-4xl font-bold mb-8"
+          <h2 className="text-3xl md:text-4xl font-bold mb-10"
             style={{ fontFamily: "Playfair Display, serif", color: C.sageDark }}>
             Dra. Valeria Romero
           </h2>
         </FadeRise>
 
-        <div>
-          {/* Foto flotando dentro del texto, como un artículo de revista, no una columna espejo */}
-          <FadeRise delay={0.1} className="float-none md:float-right md:ml-10 mb-6 w-full md:w-72">
-            <div className="p-2 bg-white mx-auto" style={{ maxWidth: 288, borderRadius: 4, boxShadow: "0 20px 40px rgba(61,90,69,0.15)", transform: "rotate(2deg)" }}>
+        {/* Grid asimétrico (no 50/50) con la foto desplazada hacia abajo — rompe el espejo de los otros temas */}
+        <div className="grid md:grid-cols-[1.3fr_1fr] gap-10 md:gap-14 items-start">
+          <div>
+            <FadeRise delay={0.1}>
+              <p className="mb-4" style={{ fontFamily: "Inter, sans-serif", color: C.gray, lineHeight: 1.8 }}>
+                Soy psicóloga clínica con más de 8 años acompañando a personas que atraviesan momentos difíciles.
+                Creo profundamente en que cada persona tiene los recursos para sanar; a veces solo necesitamos
+                un espacio seguro para encontrarlos.
+              </p>
+              <p className="mb-8" style={{ fontFamily: "Inter, sans-serif", color: C.gray, lineHeight: 1.8 }}>
+                Mi enfoque integra la terapia cognitivo-conductual con técnicas humanistas, adaptándome siempre
+                a lo que cada persona necesita en su proceso.
+              </p>
+            </FadeRise>
+
+            {/* Un solo número grande, integrado, en vez de tres sellos pequeños */}
+            <FadeRise delay={0.18}>
+              <div className="flex items-center gap-5 mb-10 pb-8" style={{ borderBottom: `1px solid ${C.sage}25` }}>
+                <p className="flex-shrink-0" style={{ fontFamily: "Playfair Display, serif", color: C.sageDark, fontSize: 48, lineHeight: 1 }}>
+                  <Counter to={8} suffix="+" />
+                </p>
+                <p style={{ fontFamily: "Inter, sans-serif", color: C.gray, fontSize: 14, lineHeight: 1.6 }}>
+                  años de experiencia clínica, acompañando a más de <strong style={{ color: C.sageDark }}>412 pacientes</strong> con
+                  un <strong style={{ color: C.sageDark }}>94% de satisfacción</strong> reportada en sus procesos.
+                </p>
+              </div>
+            </FadeRise>
+
+            <FadeRise delay={0.25}>
+              <div className="flex flex-wrap gap-3">
+                {credenciales.map((item, i) => (
+                  <div key={i} className="inline-flex items-center gap-1.5 px-3.5 py-2"
+                    style={{ backgroundColor: C.white, borderRadius: 3, transform: `rotate(${item.rotate}deg)`, boxShadow: "0 4px 12px rgba(61,90,69,0.1)" }}>
+                    <LeafBullet color={C.terra} />
+                    <span style={{ fontFamily: "Inter, sans-serif", color: C.gray, fontSize: 13 }}>{item.text}</span>
+                  </div>
+                ))}
+              </div>
+            </FadeRise>
+          </div>
+
+          {/* Foto desplazada hacia abajo respecto al texto — asimetría real, no columna espejo */}
+          <FadeRise delay={0.15} className="md:mt-20">
+            <div className="p-2 bg-white mx-auto" style={{ maxWidth: 300, borderRadius: 4, boxShadow: "0 24px 48px rgba(61,90,69,0.18)", transform: "rotate(2.5deg)" }}>
               <img
                 src="https://images.unsplash.com/photo-1551836022-deb4988cc6c0?w=600&q=80"
                 alt="Consultorio"
                 className="w-full object-cover"
-                style={{ height: 260, borderRadius: 2 }}
+                style={{ height: 300, borderRadius: 2 }}
               />
-            </div>
-            <div className="flex justify-center gap-3 mt-6">
-              {stats.map((stat, i) => (
-                <div key={i} className="w-20 h-20 rounded-full flex flex-col items-center justify-center text-center flex-shrink-0"
-                  style={{ backgroundColor: C.white, transform: `rotate(${stat.rotate}deg)`, boxShadow: "0 8px 20px rgba(61,90,69,0.12)" }}>
-                  <p className="font-bold" style={{ fontFamily: "Playfair Display, serif", color: C.sageDark, fontSize: 17 }}>
-                    <Counter to={stat.n} suffix={stat.s} />
-                  </p>
-                  <p style={{ fontFamily: "Inter, sans-serif", color: C.grayLight, fontSize: 9 }}>{stat.label}</p>
-                </div>
-              ))}
-            </div>
-          </FadeRise>
-
-          <FadeRise delay={0.15}>
-            <p className="mb-4" style={{ fontFamily: "Inter, sans-serif", color: C.gray, lineHeight: 1.8 }}>
-              Soy psicóloga clínica con más de 8 años acompañando a personas que atraviesan momentos difíciles.
-              Creo profundamente en que cada persona tiene los recursos para sanar; a veces solo necesitamos
-              un espacio seguro para encontrarlos.
-            </p>
-            <p className="mb-8" style={{ fontFamily: "Inter, sans-serif", color: C.gray, lineHeight: 1.8 }}>
-              Mi enfoque integra la terapia cognitivo-conductual con técnicas humanistas, adaptándome siempre
-              a lo que cada persona necesita en su proceso.
-            </p>
-          </FadeRise>
-
-          <FadeRise delay={0.2}>
-            <div className="flex flex-wrap">
-              {credenciales.map((item, i) => (
-                <div key={i} className="inline-flex items-center gap-1.5 px-3 py-1.5 mr-2.5 mb-2.5"
-                  style={{ backgroundColor: C.white, borderRadius: 3, transform: `rotate(${item.rotate}deg)`, boxShadow: "0 3px 10px rgba(61,90,69,0.08)" }}>
-                  <LeafBullet color={C.terra} />
-                  <span style={{ fontFamily: "Inter, sans-serif", color: C.gray, fontSize: 13 }}>{item.text}</span>
-                </div>
-              ))}
             </div>
           </FadeRise>
         </div>
-        <div style={{ clear: "both" }} />
       </div>
     </section>
   )
