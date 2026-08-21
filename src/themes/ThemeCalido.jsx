@@ -366,18 +366,18 @@ function SobreMi() {
           </FadeRise>
 
           <FadeRise delay={0.3}>
-            <div className="flex gap-5">
+            <div className="flex flex-wrap gap-4">
               {[
                 { n: 412, s: "", label: "Pacientes" },
                 { n: 8, s: "+", label: "Años" },
                 { n: 94, s: "%", label: "Satisfacción" },
               ].map((stat, i) => (
-                <div key={i} className="w-28 h-28 rounded-full flex flex-col items-center justify-center text-center flex-shrink-0"
+                <div key={i} className="w-24 h-24 rounded-full flex flex-col items-center justify-center text-center flex-shrink-0"
                   style={{ backgroundColor: C.white, boxShadow: "0 8px 24px rgba(61,90,69,0.1)" }}>
-                  <p className="font-bold" style={{ fontFamily: "Playfair Display, serif", color: C.sageDark, fontSize: 24 }}>
+                  <p className="font-bold" style={{ fontFamily: "Playfair Display, serif", color: C.sageDark, fontSize: 20 }}>
                     <Counter to={stat.n} suffix={stat.s} />
                   </p>
-                  <p style={{ fontFamily: "Inter, sans-serif", color: C.grayLight, fontSize: 11 }}>{stat.label}</p>
+                  <p style={{ fontFamily: "Inter, sans-serif", color: C.grayLight, fontSize: 10 }}>{stat.label}</p>
                 </div>
               ))}
             </div>

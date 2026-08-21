@@ -94,8 +94,8 @@ function Navbar() {
         transition: "all 0.3s ease",
       }}
     >
-      {/* Barra superior institucional */}
-      <div style={{ backgroundColor: C.blueDark }} className="py-1.5 px-8">
+      {/* Barra superior institucional — solo en escritorio, en móvil el texto envuelve y descuadra el header */}
+      <div style={{ backgroundColor: C.blueDark }} className="hidden md:block py-1.5 px-8">
         <div className="max-w-6xl mx-auto flex justify-between items-center">
           <span style={{ fontFamily: "Source Sans 3, sans-serif", color: "rgba(255,255,255,0.6)", fontSize: 11 }}>
             Consulta presencial y en línea · Xalapa, Veracruz
@@ -179,7 +179,7 @@ function Hero() {
   ]
 
   return (
-    <section className="min-h-screen flex items-center pt-[156px] pb-16 px-8"
+    <section className="min-h-screen flex items-center pt-[112px] md:pt-[156px] pb-16 px-8"
       style={{ backgroundColor: C.bgLight }}>
       <div className="max-w-6xl mx-auto w-full grid md:grid-cols-2 gap-16 items-center">
         <div>
