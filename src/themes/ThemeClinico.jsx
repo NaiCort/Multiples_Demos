@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react"
 import { motion, useInView, AnimatePresence } from "framer-motion"
-import { Phone, MapPin, Clock, MessageCircle, Award, Shield, CheckCircle } from "lucide-react"
+import { Phone, MapPin, Clock, MessageCircle, Award, Shield, CheckCircle, Star } from "lucide-react"
 import useContactForm from "../hooks/useContactForm"
 import DemoConfirmation from "../components/shared/DemoConfirmation"
 import PrivacyModal from "../components/shared/PrivacyModal"
@@ -398,9 +398,9 @@ function SobreMi() {
 
 function Servicios() {
   const items = [
-    { title: "Psicoterapia Individual", desc: "Evaluación inicial y proceso terapéutico estructurado orientado a objetivos clínicos específicos.", duration: "50 min / sesión", mode: "Presencial u online" },
-    { title: "Terapia de Pareja", desc: "Intervención especializada en dinámica relacional, comunicación y resolución de conflictos.", duration: "60 min / sesión", mode: "Presencial u online" },
-    { title: "Consulta de Orientación", desc: "Evaluación puntual de una problemática específica con recomendaciones profesionales.", duration: "45 min / sesión", mode: "Online" },
+    { title: "Psicoterapia Individual", desc: "Empezamos con una conversación para entender qué te trae a consulta y qué te gustaría que cambiara. A partir de ahí trabajamos con herramientas con respaldo científico, revisando cada cierto tiempo qué tanto has avanzado hacia lo que buscabas.", duration: "50 min / sesión", mode: "Presencial u online" },
+    { title: "Terapia de Pareja", desc: "Ambos comparten, con mi acompañamiento, qué está pasando en la relación desde su propia perspectiva. Identificamos los patrones que generan los conflictos repetidos y practicamos, en sesión, formas distintas de comunicarse.", duration: "60 min / sesión", mode: "Presencial u online" },
+    { title: "Consulta de Orientación", desc: "Si tienes una situación específica que resolver, no hace falta iniciar un proceso largo. Evaluamos juntos qué está pasando y sales de la sesión con recomendaciones concretas sobre cómo continuar.", duration: "45 min / sesión", mode: "Online" },
   ]
 
   return (
@@ -456,10 +456,10 @@ function Servicios() {
 
 function PrimeraCita() {
   const pasos = [
-    { n: "01", title: "Contacto inicial", desc: "Envía un mensaje describiendo brevemente tu motivo de consulta." },
-    { n: "02", title: "Evaluación preliminar", desc: "Coordinamos una primera sesión de evaluación sin compromiso de continuidad." },
-    { n: "03", title: "Diagnóstico y encuadre", desc: "Establecemos juntos los objetivos terapéuticos y el plan de trabajo." },
-    { n: "04", title: "Inicio del proceso", desc: "Comenzamos el proceso terapéutico con sesiones regulares y seguimiento." },
+    { n: "01", title: "Contacto inicial", desc: "Envía un mensaje contándome, en tus palabras, qué te gustaría trabajar. No necesitas usar términos técnicos ni tener claro un diagnóstico." },
+    { n: "02", title: "Primera conversación", desc: "Nos reunimos para que me cuentes tu situación con calma. Esta primera sesión no te compromete a continuar el proceso." },
+    { n: "03", title: "Acordamos el plan", desc: "Definimos juntos, en términos simples, qué vamos a trabajar y cómo, para que sepas exactamente qué esperar de las siguientes sesiones." },
+    { n: "04", title: "Inicio del proceso", desc: "Comenzamos con sesiones regulares. Cada cierto tiempo revisamos juntos qué tanto has avanzado hacia lo que buscabas." },
   ]
 
   return (
@@ -498,14 +498,14 @@ function PrimeraCita() {
 
 function Resenas() {
   const reviews = [
-    { text: "El enfoque profesional y estructurado me dio claridad desde las primeras sesiones.", author: "Paciente anónimo/a, 38 años" },
-    { text: "Sentí respaldo profesional real. Cada sesión tenía un propósito claro.", author: "Paciente anónimo/a, 31 años" },
-    { text: "La seriedad y el rigor del proceso me generaron mucha confianza.", author: "Paciente anónimo/a, 45 años" },
+    { text: "El enfoque profesional y estructurado me dio claridad desde las primeras sesiones.", author: "Paciente anónimo/a, 38 años", service: "Psicoterapia Individual", date: "Hace 2 meses", rating: 5 },
+    { text: "Sentí respaldo profesional real. Cada sesión tenía un propósito claro.", author: "Paciente anónimo/a, 31 años", service: "Consulta de Orientación", date: "Hace 6 semanas", rating: 5 },
+    { text: "La seriedad y el rigor del proceso me generaron mucha confianza.", author: "Paciente anónimo/a, 45 años", service: "Terapia de Pareja", date: "Hace 4 meses", rating: 4 },
   ]
 
   return (
     <section id="resenas" className="py-20 px-8" style={{ backgroundColor: C.white, scrollMarginTop: 164 }}>
-      <div className="max-w-6xl mx-auto">
+      <div className="max-w-4xl mx-auto">
         <SlideIn>
           <h2 style={{ fontFamily: "Lora, serif", color: C.blueDark, fontSize: "clamp(1.6rem, 3vw, 2.2rem)" }}
             className="mb-12">
@@ -513,17 +513,29 @@ function Resenas() {
           </h2>
         </SlideIn>
 
-        <div className="grid md:grid-cols-3 gap-6">
+        <div style={{ borderTop: `1px solid ${C.blue}20` }}>
           {reviews.map((r, i) => (
             <SlideIn key={i} delay={i * 0.1}>
-              <div className="p-6"
-                style={{ backgroundColor: C.bgLight, borderLeft: `3px solid ${C.blue}` }}>
+              <div className="py-6" style={{ borderBottom: `1px solid ${C.blue}20` }}>
+                <div className="flex flex-wrap items-center gap-3 mb-3">
+                  <div className="flex gap-0.5">
+                    {[...Array(5)].map((_, s) => (
+                      <Star key={s} size={13} fill={s < r.rating ? C.blue : "none"} style={{ color: C.blue }} />
+                    ))}
+                  </div>
+                  <span style={{ fontFamily: "Source Sans 3, sans-serif", color: C.blueDark, fontSize: 12, fontWeight: 600 }}>
+                    {r.service}
+                  </span>
+                  <span style={{ fontFamily: "Source Sans 3, sans-serif", color: C.grayLight, fontSize: 11 }}>
+                    · {r.date}
+                  </span>
+                </div>
                 <p style={{ fontFamily: "Lora, serif", color: C.gray, lineHeight: 1.7, fontSize: 14 }}
-                  className="mb-4 italic">
+                  className="mb-3 italic">
                   "{r.text}"
                 </p>
                 <p style={{ fontFamily: "Source Sans 3, sans-serif", color: C.grayLight, fontSize: 12 }}>
-                  — {r.author}
+                  {r.author}
                 </p>
               </div>
             </SlideIn>

@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react"
 import { motion, useInView, AnimatePresence } from "framer-motion"
-import { Phone, MapPin, Clock, Heart, Users, Award, ChevronDown, MessageCircle } from "lucide-react"
+import { Phone, MapPin, Clock, Heart, Users, Award, ChevronDown, MessageCircle, Star } from "lucide-react"
 import useContactForm from "../hooks/useContactForm"
 import DemoConfirmation from "../components/shared/DemoConfirmation"
 import PrivacyModal from "../components/shared/PrivacyModal"
@@ -390,9 +390,9 @@ function SobreMi() {
 
 function Servicios() {
   const items = [
-    { title: "Terapia Individual", desc: "Un espacio personal para explorar tus pensamientos, emociones y patrones de conducta. Trabajamos juntos hacia el bienestar.", duration: "50 min / sesión", mode: "Presencial u online" },
-    { title: "Terapia de Pareja", desc: "Fortalecemos la comunicación, trabajamos conflictos y construimos una relación más sana y satisfactoria para ambos.", duration: "60 min / sesión", mode: "Presencial u online" },
-    { title: "Orientación Psicológica", desc: "Sesiones breves enfocadas en una situación específica que necesitas resolver o entender mejor.", duration: "45 min / sesión", mode: "Online" },
+    { title: "Terapia Individual", desc: "Es un espacio solo para ti, donde hablamos de lo que te está pasando sin prisa ni juicio. Juntos identificamos qué patrones se repiten en tu vida y probamos, sesión a sesión, formas distintas de manejarlos.", duration: "50 min / sesión", mode: "Presencial u online" },
+    { title: "Terapia de Pareja", desc: "Nos sentamos los tres a hablar de lo que ya no está funcionando entre ustedes, sin buscar culpables. Trabajamos formas concretas de escucharse y responder distinto la próxima vez que surja el mismo conflicto.", duration: "60 min / sesión", mode: "Presencial u online" },
+    { title: "Orientación Psicológica", desc: "Para cuando tienes algo puntual que resolver o entender mejor, sin necesidad de un proceso largo. En pocas sesiones ponemos ese tema sobre la mesa y sales con ideas claras de cómo seguir.", duration: "45 min / sesión", mode: "Online" },
   ]
 
   return (
@@ -446,10 +446,10 @@ function Servicios() {
 
 function PrimeraCita() {
   const pasos = [
-    { n: "01", title: "Me escribes", desc: "Envíame un mensaje por WhatsApp cuando te sientas listo/a. Sin compromiso." },
-    { n: "02", title: "Agendamos", desc: "Buscamos juntos el horario que mejor se adapte a tu día a día." },
-    { n: "03", title: "Conversamos", desc: "En la primera sesión me cuentas lo que estás viviendo, sin presiones." },
-    { n: "04", title: "Diseñamos tu proceso", desc: "Definimos juntos un plan adaptado a tus necesidades y objetivos." },
+    { n: "01", title: "Me escribes", desc: "Envíame un mensaje por WhatsApp cuando te sientas listo/a, sin compromiso. Puedes contarme tan poco o tanto como quieras del motivo." },
+    { n: "02", title: "Agendamos", desc: "Buscamos juntos el horario que mejor se adapte a tu día a día, sea presencial o en línea." },
+    { n: "03", title: "Conversamos", desc: "En la primera sesión me cuentas lo que estás viviendo, sin presiones ni juicios. Solo es una conversación para conocernos." },
+    { n: "04", title: "Diseñamos tu proceso", desc: "Definimos juntos, en palabras simples, qué vamos a trabajar y cómo, para que sepas exactamente qué esperar de las siguientes sesiones." },
   ]
 
   return (
@@ -492,16 +492,16 @@ function PrimeraCita() {
 
 function Resenas() {
   const reviews = [
-    { text: "Encontré en este espacio la tranquilidad que tanto buscaba. El proceso fue gradual pero muy efectivo.", author: "Paciente anónimo/a, 34 años" },
-    { text: "Por primera vez sentí que alguien realmente me escuchaba sin juzgarme. Eso cambió todo para mí.", author: "Paciente anónimo/a, 28 años" },
-    { text: "Mi relación de pareja mejoró muchísimo. Aprendimos a comunicarnos de una manera completamente distinta.", author: "Paciente anónimo/a, 41 años" },
+    { text: "Encontré en este espacio la tranquilidad que tanto buscaba. El proceso fue gradual pero muy efectivo.", author: "Paciente anónimo/a, 34 años", service: "Terapia Individual", date: "Hace 2 meses", rating: 5 },
+    { text: "Por primera vez sentí que alguien realmente me escuchaba sin juzgarme. Eso cambió todo para mí.", author: "Paciente anónimo/a, 28 años", service: "Orientación Psicológica", date: "Hace 5 semanas", rating: 5 },
+    { text: "Mi relación de pareja mejoró muchísimo. Aprendimos a comunicarnos de una manera completamente distinta.", author: "Paciente anónimo/a, 41 años", service: "Terapia de Pareja", date: "Hace 3 meses", rating: 4 },
   ]
 
   return (
     <section id="resenas" className="py-20 px-6" style={{ backgroundColor: C.white, scrollMarginTop: 140 }}>
       <div className="max-w-6xl mx-auto">
         <FadeRise>
-          <h2 className="text-3xl md:text-4xl font-bold text-center mb-12"
+          <h2 className="text-3xl md:text-4xl font-bold text-center mb-14"
             style={{ fontFamily: "Playfair Display, serif", color: C.sageDark }}>
             Lo que dicen quienes han dado el paso
           </h2>
@@ -509,14 +509,30 @@ function Resenas() {
 
         <div className="grid md:grid-cols-3 gap-6">
           {reviews.map((r, i) => (
-            <FadeRise key={i} delay={i * 0.12}>
-              <div className="p-6 rounded-2xl" style={{ backgroundColor: C.cream }}>
+            <FadeRise key={i} delay={i * 0.12} className={i === 1 ? "md:mt-10" : ""}>
+              <div className="p-6 rounded-2xl" style={{ backgroundColor: C.cream, transform: `rotate(${i % 2 === 0 ? -0.6 : 0.6}deg)` }}>
+                <div className="flex items-center justify-between mb-3">
+                  <div className="flex gap-0.5">
+                    {[...Array(5)].map((_, s) => (
+                      <Star key={s} size={13} fill={s < r.rating ? C.terra : "none"} style={{ color: C.terra }} />
+                    ))}
+                  </div>
+                  <span className="px-2 py-0.5 rounded-full text-center"
+                    style={{ backgroundColor: `${C.sage}18`, color: C.sageDark, fontFamily: "Inter, sans-serif", fontSize: 10 }}>
+                    {r.service}
+                  </span>
+                </div>
                 <p className="mb-4 italic" style={{ fontFamily: "Playfair Display, serif", color: C.gray, lineHeight: 1.7 }}>
                   "{r.text}"
                 </p>
-                <p style={{ fontFamily: "Inter, sans-serif", color: C.grayLight, fontSize: 13 }}>
-                  — {r.author}
-                </p>
+                <div className="flex items-center justify-between">
+                  <p style={{ fontFamily: "Inter, sans-serif", color: C.grayLight, fontSize: 13 }}>
+                    {r.author}
+                  </p>
+                  <p style={{ fontFamily: "Inter, sans-serif", color: C.grayLight, fontSize: 11 }}>
+                    {r.date}
+                  </p>
+                </div>
               </div>
             </FadeRise>
           ))}

@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react"
 import { motion, useInView, AnimatePresence, useScroll, useTransform } from "framer-motion"
-import { Phone, MapPin, Clock, MessageCircle, Leaf, Wind, Sun } from "lucide-react"
+import { Phone, MapPin, Clock, MessageCircle, Leaf, Wind, Sun, Star } from "lucide-react"
 import useContactForm from "../hooks/useContactForm"
 import DemoConfirmation from "../components/shared/DemoConfirmation"
 import PrivacyModal from "../components/shared/PrivacyModal"
@@ -401,9 +401,9 @@ function SobreMi() {
 
 function Servicios() {
   const items = [
-    { title: "Terapia Individual", desc: "Un espacio íntimo para explorar, comprender y transformar lo que pesa.", duration: "50 min / sesión", mode: "Presencial u online" },
-    { title: "Terapia de Pareja", desc: "Reconectar con el otro desde un lugar más auténtico y compasivo.", duration: "60 min / sesión", mode: "Presencial u online" },
-    { title: "Orientación y Acompañamiento", desc: "Para momentos de transición que piden una mirada externa y serena.", duration: "45 min / sesión", mode: "Online" },
+    { title: "Terapia Individual", desc: "Un espacio íntimo para explorar, comprender y transformar lo que pesa. Vamos a tu ritmo, sin agenda impuesta, dejando que el proceso tome la forma que tú necesitas.", duration: "50 min / sesión", mode: "Presencial u online" },
+    { title: "Terapia de Pareja", desc: "Reconectar con el otro desde un lugar más auténtico y compasivo. Juntos identificamos qué los aleja y practicamos formas más genuinas de encontrarse de nuevo.", duration: "60 min / sesión", mode: "Presencial u online" },
+    { title: "Orientación y Acompañamiento", desc: "Para momentos de transición que piden una mirada externa y serena. En pocos encuentros, ponemos en palabras lo que sientes y encontramos claridad sobre el siguiente paso.", duration: "45 min / sesión", mode: "Online" },
   ]
 
   return (
@@ -459,10 +459,10 @@ function Servicios() {
 
 function PrimeraCita() {
   const pasos = [
-    { icon: MessageCircle, title: "Escríbeme", desc: "Un mensaje sencillo es suficiente. No necesitas tenerlo todo claro todavía." },
+    { icon: MessageCircle, title: "Escríbeme", desc: "Un mensaje sencillo es suficiente. No necesitas tenerlo todo claro todavía, ni saber cómo explicarlo." },
     { icon: Clock, title: "Agendamos", desc: "Encontramos un momento que encaje con tu ritmo y disponibilidad." },
-    { icon: Leaf, title: "Nos conocemos", desc: "La primera sesión es un espacio de escucha, sin prisa ni juicio." },
-    { icon: Sun, title: "Comenzamos", desc: "Desde ahí, construimos juntos el camino que necesitas." },
+    { icon: Leaf, title: "Nos conocemos", desc: "La primera sesión es un espacio de escucha, sin prisa ni juicio. Solo para que nos conozcamos." },
+    { icon: Sun, title: "Comenzamos", desc: "Desde ahí, construimos juntos el camino que necesitas, sabiendo siempre qué esperar de cada paso." },
   ]
 
   return (
@@ -507,35 +507,53 @@ function PrimeraCita() {
 
 function Resenas() {
   const reviews = [
-    { text: "Por primera vez sentí que podía respirar con calma. El proceso fue transformador.", author: "Paciente anónimo/a, 32 años" },
-    { text: "Un espacio genuinamente seguro. Me ayudó a reencontrarme conmigo misma.", author: "Paciente anónimo/a, 27 años" },
-    { text: "Llegué agotado y sin saber cómo avanzar. Hoy tengo herramientas reales.", author: "Paciente anónimo/a, 39 años" },
+    { text: "Por primera vez sentí que podía respirar con calma. El proceso fue transformador.", author: "Paciente anónimo/a, 32 años", service: "Terapia Individual", date: "Hace 6 semanas", rating: 5 },
+    { text: "Un espacio genuinamente seguro. Me ayudó a reencontrarme conmigo misma.", author: "Paciente anónimo/a, 27 años", service: "Orientación y Acompañamiento", date: "Hace 2 meses", rating: 5 },
+    { text: "Llegué agotado y sin saber cómo avanzar. Hoy tengo herramientas reales.", author: "Paciente anónimo/a, 39 años", service: "Terapia de Pareja", date: "Hace 4 meses", rating: 4 },
   ]
 
   return (
     <section id="resenas" className="py-24 px-8" style={{ backgroundColor: C.white, scrollMarginTop: 144 }}>
-      <div className="max-w-6xl mx-auto">
+      <div className="max-w-2xl mx-auto">
         <FadeBlur>
           <h2 style={{ fontFamily: "Cormorant Garamond, serif", color: C.green900, fontSize: "clamp(1.8rem, 3vw, 2.8rem)", fontWeight: 300 }}
-            className="mb-16">
+            className="mb-16 text-center">
             Palabras de quienes ya caminaron aquí
           </h2>
         </FadeBlur>
 
-        <div className="grid md:grid-cols-3 gap-6">
-          {reviews.map((r, i) => (
-            <FadeBlur key={i} delay={i * 0.15}>
-              <div className="p-8 rounded-3xl" style={{ backgroundColor: C.bg }}>
-                <p style={{ fontFamily: "Cormorant Garamond, serif", color: C.green900, lineHeight: 1.75, fontSize: 17, fontWeight: 300, fontStyle: "italic" }}
-                  className="mb-5">
-                  "{r.text}"
-                </p>
-                <p style={{ fontFamily: "Nunito, sans-serif", color: C.grayLight, fontSize: 12, fontWeight: 300 }}>
-                  — {r.author}
-                </p>
-              </div>
-            </FadeBlur>
-          ))}
+        {/* Camino vertical, coherente con los pasos de "primera cita" del mismo tema */}
+        <div className="relative">
+          <div className="absolute left-4 top-2 bottom-2 w-px" style={{ backgroundColor: `${C.sage}30` }} />
+          <div className="space-y-12">
+            {reviews.map((r, i) => (
+              <FadeBlur key={i} delay={i * 0.15}>
+                <div className="relative pl-14">
+                  <div className="absolute left-0 top-0 w-8 h-8 rounded-full flex items-center justify-center"
+                    style={{ backgroundColor: C.bg, border: `1px solid ${C.sage}50` }}>
+                    <Leaf size={13} style={{ color: C.sage }} />
+                  </div>
+                  <div className="flex flex-wrap items-center gap-2 mb-3">
+                    <div className="flex gap-0.5">
+                      {[...Array(5)].map((_, s) => (
+                        <Star key={s} size={12} fill={s < r.rating ? C.sage : "none"} style={{ color: C.sage }} />
+                      ))}
+                    </div>
+                    <span style={{ fontFamily: "Nunito, sans-serif", color: C.grayLight, fontSize: 11, fontWeight: 300 }}>
+                      {r.service} · {r.date}
+                    </span>
+                  </div>
+                  <p style={{ fontFamily: "Cormorant Garamond, serif", color: C.green900, lineHeight: 1.75, fontSize: 17, fontWeight: 300, fontStyle: "italic" }}
+                    className="mb-3">
+                    "{r.text}"
+                  </p>
+                  <p style={{ fontFamily: "Nunito, sans-serif", color: C.grayLight, fontSize: 12, fontWeight: 300 }}>
+                    {r.author}
+                  </p>
+                </div>
+              </FadeBlur>
+            ))}
+          </div>
         </div>
       </div>
     </section>

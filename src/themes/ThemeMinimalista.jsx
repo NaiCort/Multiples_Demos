@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react"
 import { motion, useInView, AnimatePresence } from "framer-motion"
-import { Phone, MapPin, Clock, ChevronRight, MessageCircle, ArrowRight } from "lucide-react"
+import { Phone, MapPin, Clock, ChevronRight, ChevronLeft, MessageCircle, ArrowRight, Star } from "lucide-react"
 import useContactForm from "../hooks/useContactForm"
 import DemoConfirmation from "../components/shared/DemoConfirmation"
 import PrivacyModal from "../components/shared/PrivacyModal"
@@ -348,9 +348,9 @@ function SobreMi() {
 
 function Servicios() {
   const items = [
-    { title: "Terapia Individual", desc: "Trabajo personalizado enfocado en tus objetivos concretos.", duration: "50 min", mode: "Presencial u online" },
-    { title: "Terapia de Pareja", desc: "Comunicación, conflicto y reconstrucción de la relación.", duration: "60 min", mode: "Presencial u online" },
-    { title: "Orientación Psicológica", desc: "Una o pocas sesiones para una situación específica.", duration: "45 min", mode: "Online" },
+    { title: "Terapia Individual", desc: "Trabajamos con lo que realmente te está pasando, sin fórmulas genéricas. Cada sesión tiene un objetivo claro y revisamos juntos si te está funcionando.", duration: "50 min", mode: "Presencial u online" },
+    { title: "Terapia de Pareja", desc: "Ambos hablan, yo modero. Identificamos qué se repite en sus conflictos y probamos formas distintas de resolverlos.", duration: "60 min", mode: "Presencial u online" },
+    { title: "Orientación Psicológica", desc: "Para algo puntual, no para un proceso largo. Pocas sesiones, un tema concreto, salidas claras.", duration: "45 min", mode: "Online" },
   ]
 
   return (
@@ -404,10 +404,10 @@ function Servicios() {
 
 function PrimeraCita() {
   const pasos = [
-    { n: "01", title: "Contacto", desc: "Me escribes indicando qué te trae por aquí." },
-    { n: "02", title: "Agenda", desc: "Coordinamos fecha y horario según tu disponibilidad." },
-    { n: "03", title: "Primera sesión", desc: "Conversamos con calma. Sin presión ni compromisos previos." },
-    { n: "04", title: "Tu proceso", desc: "Diseñamos juntos el camino más adecuado para ti." },
+    { n: "01", title: "Contacto", desc: "Me escribes indicando qué te trae por aquí, en tus propias palabras." },
+    { n: "02", title: "Agenda", desc: "Coordinamos fecha y horario según tu disponibilidad, presencial o en línea." },
+    { n: "03", title: "Primera sesión", desc: "Conversamos con calma, sin presión ni compromisos previos. Solo para conocernos." },
+    { n: "04", title: "Tu proceso", desc: "Diseñamos juntos el camino más adecuado para ti y qué esperar de cada sesión." },
   ]
 
   return (
@@ -450,40 +450,61 @@ function PrimeraCita() {
 
 function Resenas() {
   const reviews = [
-    { text: "El proceso fue claro desde el inicio. Sin rodeos, sin tiempo perdido.", author: "Paciente anónimo/a, 34 años" },
-    { text: "Aprendí a ver mis patrones de una forma completamente distinta.", author: "Paciente anónimo/a, 28 años" },
-    { text: "La comunicación con mi pareja mejoró en pocas sesiones.", author: "Paciente anónimo/a, 41 años" },
+    { text: "El proceso fue claro desde el inicio. Sin rodeos, sin tiempo perdido.", author: "Paciente anónimo/a, 34 años", service: "Terapia Individual", date: "Hace 2 meses", rating: 5 },
+    { text: "Aprendí a ver mis patrones de una forma completamente distinta.", author: "Paciente anónimo/a, 28 años", service: "Orientación Psicológica", date: "Hace 1 mes", rating: 5 },
+    { text: "La comunicación con mi pareja mejoró en pocas sesiones.", author: "Paciente anónimo/a, 41 años", service: "Terapia de Pareja", date: "Hace 3 meses", rating: 4 },
   ]
+  const [index, setIndex] = useState(0)
+  const current = reviews[index]
+  const next = () => setIndex((i) => (i + 1) % reviews.length)
+  const prev = () => setIndex((i) => (i - 1 + reviews.length) % reviews.length)
 
   return (
     <section id="resenas" className="py-24 px-8" style={{ backgroundColor: C.gray100, scrollMarginTop: 134 }}>
-      <div className="max-w-6xl mx-auto">
+      <div className="max-w-2xl mx-auto text-center">
         <FadePure>
           <p style={{ fontFamily: "DM Sans, sans-serif", color: C.gray400, fontSize: 11, letterSpacing: "0.12em" }}
             className="uppercase mb-4">
             Testimonios
           </p>
           <h2 style={{ fontFamily: "DM Serif Display, serif", color: C.black, fontSize: "clamp(1.8rem, 3vw, 2.5rem)" }}
-            className="mb-16">
+            className="mb-14">
             Quienes ya dieron el paso
           </h2>
         </FadePure>
 
-        <div className="grid md:grid-cols-3 gap-0 border-t border-l"
-          style={{ borderColor: C.gray200 }}>
-          {reviews.map((r, i) => (
-            <FadePure key={i} delay={i * 0.1}>
-              <div className="p-8 border-b border-r" style={{ borderColor: C.gray200 }}>
-                <p style={{ fontFamily: "DM Serif Display, serif", color: C.black, lineHeight: 1.65, fontSize: 16 }}
-                  className="mb-6 italic">
-                  "{r.text}"
-                </p>
-                <p style={{ fontFamily: "DM Sans, sans-serif", color: C.gray400, fontSize: 12, letterSpacing: "0.04em" }}>
-                  {r.author}
-                </p>
-              </div>
-            </FadePure>
+        <div className="flex justify-center gap-0.5 mb-6">
+          {[...Array(5)].map((_, s) => (
+            <Star key={s} size={14} fill={s < current.rating ? C.black : "none"} style={{ color: C.black }} />
           ))}
+        </div>
+
+        <p style={{ fontFamily: "DM Serif Display, serif", color: C.black, lineHeight: 1.6, fontSize: "clamp(1.2rem, 2.5vw, 1.6rem)" }}
+          className="mb-8 italic">
+          "{current.text}"
+        </p>
+
+        <p style={{ fontFamily: "DM Sans, sans-serif", color: C.gray400, fontSize: 12, letterSpacing: "0.04em" }}
+          className="mb-1">
+          {current.author}
+        </p>
+        <p style={{ fontFamily: "DM Sans, sans-serif", color: C.gray400, fontSize: 11 }}
+          className="mb-10">
+          {current.service} · {current.date}
+        </p>
+
+        <div className="flex items-center justify-center gap-6">
+          <button onClick={prev} aria-label="Reseña anterior"
+            className="p-2 hover:opacity-60 transition-opacity">
+            <ChevronLeft size={18} style={{ color: C.black }} />
+          </button>
+          <span style={{ fontFamily: "DM Sans, sans-serif", color: C.gray400, fontSize: 12 }}>
+            {index + 1} / {reviews.length}
+          </span>
+          <button onClick={next} aria-label="Siguiente reseña"
+            className="p-2 hover:opacity-60 transition-opacity">
+            <ChevronRight size={18} style={{ color: C.black }} />
+          </button>
         </div>
       </div>
     </section>
