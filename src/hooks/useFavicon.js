@@ -7,6 +7,14 @@ import { useEffect } from "react"
 // Cada punto de entrada (Bienvenida, PsicologoApp, y cada giro futuro) debe llamar
 // a este hook con su propio ícono, incluyendo Bienvenida — de lo contrario el
 // ícono de la última demo visitada se queda pegado al volver al directorio.
+//
+// FAVICON_VERSION: los navegadores guardan el favicon en caché de forma muy
+// agresiva, incluso más que otros archivos estáticos. Sin este número de versión,
+// cambiar el contenido de un ícono sin cambiar su URL no garantiza que el
+// navegador pida la versión nueva. Subir este número cada vez que se modifique
+// el contenido de cualquier ícono en public/favicon.svg o public/favicons/.
+
+export const FAVICON_VERSION = "2"
 
 export default function useFavicon(href) {
   useEffect(() => {
@@ -16,6 +24,6 @@ export default function useFavicon(href) {
       link.rel = "icon"
       document.head.appendChild(link)
     }
-    link.href = href
+    link.href = `${href}?v=${FAVICON_VERSION}`
   }, [href])
 }
