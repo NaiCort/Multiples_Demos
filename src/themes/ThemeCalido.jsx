@@ -4,6 +4,10 @@ import { Phone, MapPin, Clock, Heart, Users, Award, ChevronDown, MessageCircle, 
 import useContactForm from "../hooks/useContactForm"
 import DemoConfirmation from "../components/shared/DemoConfirmation"
 import PrivacyModal from "../components/shared/PrivacyModal"
+import ComercialCTA from "../components/shared/ComercialCTA"
+import WhatsAppPreview from "../components/shared/WhatsAppPreview"
+import ReservationFlow from "../components/shared/ReservationFlow"
+import OnboardingGuide from "../components/shared/OnboardingGuide"
 
 const C = {
   cream: "#F8F5F1",
@@ -180,7 +184,7 @@ function GrainOverlay() {
   )
 }
 
-function Hero() {
+function Hero({ onOpenWhatsApp }) {
   return (
     <section className="min-h-screen flex items-center pt-[124px] pb-16 px-6 relative overflow-hidden"
       style={{ backgroundColor: C.cream }}>
@@ -215,13 +219,12 @@ function Hero() {
             transition={{ duration: 0.6, delay: 0.5 }}
             className="flex flex-col sm:flex-row gap-3"
           >
-            <a href="https://wa.me/521234567890?text=Hola, me gustaría agendar una primera cita"
-              target="_blank" rel="noopener noreferrer"
+            <button onClick={onOpenWhatsApp}
               className="flex items-center justify-center gap-2 px-6 py-3 rounded-full text-white font-medium text-sm transition-all duration-200 hover:opacity-90 hover:shadow-lg"
               style={{ backgroundColor: C.sage, fontFamily: "Inter, sans-serif" }}>
               <MessageCircle size={18} />
               Agendar por WhatsApp
-            </a>
+            </button>
             <a href="#sobre-mi"
               className="flex items-center justify-center gap-2 px-6 py-3 rounded-full font-medium text-sm border-2 transition-all duration-200 hover:opacity-70"
               style={{ borderColor: C.sage, color: C.sage, fontFamily: "Inter, sans-serif" }}>
@@ -409,12 +412,14 @@ function SobreMi() {
   )
 }
 
-function Servicios() {
-  const items = [
-    { title: "Terapia Individual", desc: "Es un espacio solo para ti, donde hablamos de lo que te está pasando sin prisa ni juicio. Juntos identificamos qué patrones se repiten en tu vida y probamos, sesión a sesión, formas distintas de manejarlos.", duration: "50 min / sesión", mode: "Presencial u online" },
-    { title: "Terapia de Pareja", desc: "Nos sentamos los tres a hablar de lo que ya no está funcionando entre ustedes, sin buscar culpables. Trabajamos formas concretas de escucharse y responder distinto la próxima vez que surja el mismo conflicto.", duration: "60 min / sesión", mode: "Presencial u online" },
-    { title: "Orientación Psicológica", desc: "Para cuando tienes algo puntual que resolver o entender mejor, sin necesidad de un proceso largo. En pocas sesiones ponemos ese tema sobre la mesa y sales con ideas claras de cómo seguir.", duration: "45 min / sesión", mode: "Online" },
-  ]
+const SERVICIOS_ITEMS = [
+  { title: "Terapia Individual", desc: "Es un espacio solo para ti, donde hablamos de lo que te está pasando sin prisa ni juicio. Juntos identificamos qué patrones se repiten en tu vida y probamos, sesión a sesión, formas distintas de manejarlos.", duration: "50 min / sesión", mode: "Presencial u online" },
+  { title: "Terapia de Pareja", desc: "Nos sentamos los tres a hablar de lo que ya no está funcionando entre ustedes, sin buscar culpables. Trabajamos formas concretas de escucharse y responder distinto la próxima vez que surja el mismo conflicto.", duration: "60 min / sesión", mode: "Presencial u online" },
+  { title: "Orientación Psicológica", desc: "Para cuando tienes algo puntual que resolver o entender mejor, sin necesidad de un proceso largo. En pocas sesiones ponemos ese tema sobre la mesa y sales con ideas claras de cómo seguir.", duration: "45 min / sesión", mode: "Online" },
+]
+
+function Servicios({ onSelect }) {
+  const items = SERVICIOS_ITEMS
 
   return (
     <section id="servicios" className="py-20 px-6" style={{ backgroundColor: C.white, scrollMarginTop: 140 }}>
@@ -426,15 +431,16 @@ function Servicios() {
           </h2>
           <p className="text-center mb-12 max-w-xl mx-auto"
             style={{ fontFamily: "Inter, sans-serif", color: C.grayLight }}>
-            Cada proceso es único. Adapto el trabajo a lo que tú necesitas.
+            Cada proceso es único. Adapto el trabajo a lo que tú necesitas. Elige un servicio para simular una reserva.
           </p>
         </FadeRise>
 
         <div className="grid md:grid-cols-3 gap-6">
           {items.map((item, i) => (
             <FadeRise key={i} delay={i * 0.12}>
-              <motion.div
-                className="p-6 rounded-2xl border flex flex-col h-full"
+              <motion.button
+                onClick={() => onSelect(item)}
+                className="p-6 rounded-2xl border flex flex-col h-full text-left w-full cursor-pointer"
                 style={{ borderColor: `${C.sage}30`, backgroundColor: C.cream }}
                 whileHover={{ y: -4, boxShadow: "0 12px 32px rgba(107,143,113,0.12)" }}
                 transition={{ duration: 0.2 }}
@@ -456,7 +462,10 @@ function Servicios() {
                     <span style={{ fontFamily: "Inter, sans-serif", color: C.grayLight, fontSize: 13 }}>{item.mode}</span>
                   </div>
                 </div>
-              </motion.div>
+                <span className="mt-4 text-sm font-medium" style={{ fontFamily: "Inter, sans-serif", color: C.sage }}>
+                  Reservar este servicio →
+                </span>
+              </motion.button>
             </FadeRise>
           ))}
         </div>
@@ -465,7 +474,7 @@ function Servicios() {
   )
 }
 
-function PrimeraCita() {
+function PrimeraCita({ onStartReservation }) {
   const pasos = [
     { n: "01", title: "Me escribes", desc: "Envíame un mensaje por WhatsApp cuando te sientas listo/a, sin compromiso. Puedes contarme tan poco o tanto como quieras del motivo." },
     { n: "02", title: "Agendamos", desc: "Buscamos juntos el horario que mejor se adapte a tu día a día, sea presencial o en línea." },
@@ -506,6 +515,16 @@ function PrimeraCita() {
             </FadeRise>
           ))}
         </div>
+
+        <FadeRise delay={0.5}>
+          <div className="text-center mt-12">
+            <button onClick={onStartReservation}
+              className="px-6 py-3 rounded-full text-white font-medium text-sm transition-all hover:opacity-90"
+              style={{ backgroundColor: C.sage, fontFamily: "Inter, sans-serif" }}>
+              Simular una reserva
+            </button>
+          </div>
+        </FadeRise>
       </div>
     </section>
   )
@@ -715,37 +734,77 @@ function Footer() {
   )
 }
 
-function WhatsAppFloat() {
+function WhatsAppFloat({ onOpen }) {
   return (
-    <motion.a
-      href="https://wa.me/521234567890?text=Hola, me gustaría agendar una cita"
-      target="_blank"
-      rel="noopener noreferrer"
+    <motion.button
+      onClick={onOpen}
       className="fixed bottom-20 right-6 z-40 w-14 h-14 rounded-full flex items-center justify-center shadow-lg"
       style={{ backgroundColor: "#25D366" }}
       animate={{ scale: [1, 1.08, 1] }}
       transition={{ repeat: Infinity, duration: 2.5, ease: "easeInOut" }}
       whileHover={{ scale: 1.15 }}
+      aria-label="Simular contacto por WhatsApp"
     >
       <MessageCircle size={26} color="white" />
-    </motion.a>
+    </motion.button>
   )
 }
 
 export default function ThemeCalido() {
   useFonts()
+  const [waOpen, setWaOpen] = useState(false)
+  const [reservationOpen, setReservationOpen] = useState(false)
+  const [preselected, setPreselected] = useState(null)
+
+  const openReservation = (service = null) => {
+    setPreselected(service)
+    setReservationOpen(true)
+  }
+
   return (
     <div style={{ backgroundColor: C.cream }}>
       <Navbar />
-      <Hero />
+      <Hero onOpenWhatsApp={() => setWaOpen(true)} />
       <Identificacion />
       <SobreMi />
-      <Servicios />
-      <PrimeraCita />
+      <Servicios onSelect={openReservation} />
+      <PrimeraCita onStartReservation={() => openReservation(null)} />
       <Resenas />
+      <ComercialCTA
+        accentColor={C.sage}
+        backgroundColor={C.sageDark}
+        fontFamily="Inter, sans-serif"
+        headingFontFamily="Playfair Display, serif"
+        radius={16}
+        giro="psicólogo (tema Cálido)"
+      />
       <Contacto />
       <Footer />
-      <WhatsAppFloat />
+      <WhatsAppFloat onOpen={() => setWaOpen(true)} />
+      <WhatsAppPreview
+        isOpen={waOpen}
+        onClose={() => setWaOpen(false)}
+        accentColor={C.sage}
+        fontFamily="Inter, sans-serif"
+        radius={20}
+      />
+      <ReservationFlow
+        isOpen={reservationOpen}
+        onClose={() => setReservationOpen(false)}
+        services={SERVICIOS_ITEMS}
+        preselectedService={preselected}
+        accentColor={C.sage}
+        fontFamily="Inter, sans-serif"
+        headingFontFamily="Playfair Display, serif"
+        radius={20}
+        accionLabel="cita"
+      />
+      <OnboardingGuide
+        accentColor={C.sage}
+        fontFamily="Inter, sans-serif"
+        headingFontFamily="Playfair Display, serif"
+        radius={16}
+      />
     </div>
   )
 }

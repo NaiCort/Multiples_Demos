@@ -4,6 +4,10 @@ import { Phone, MapPin, Clock, MessageCircle, Award, Shield, CheckCircle, Star }
 import useContactForm from "../hooks/useContactForm"
 import DemoConfirmation from "../components/shared/DemoConfirmation"
 import PrivacyModal from "../components/shared/PrivacyModal"
+import ComercialCTA from "../components/shared/ComercialCTA"
+import WhatsAppPreview from "../components/shared/WhatsAppPreview"
+import ReservationFlow from "../components/shared/ReservationFlow"
+import OnboardingGuide from "../components/shared/OnboardingGuide"
 
 const C = {
   white: "#FFFFFF",
@@ -190,7 +194,7 @@ function Navbar() {
   )
 }
 
-function Hero() {
+function Hero({ onOpenWhatsApp }) {
   const staggerItems = [
     { delay: 0.1 },
     { delay: 0.25 },
@@ -230,13 +234,12 @@ function Hero() {
             transition={{ duration: 0.5, delay: staggerItems[3].delay }}
             className="flex flex-col sm:flex-row gap-3"
           >
-            <a href="https://wa.me/521234567890?text=Hola, me gustaría agendar una cita"
-              target="_blank" rel="noopener noreferrer"
+            <button onClick={onOpenWhatsApp}
               className="flex items-center justify-center gap-2 px-6 py-3 text-white text-sm font-medium transition-all hover:opacity-90"
               style={{ backgroundColor: C.blue, fontFamily: "Source Sans 3, sans-serif", borderRadius: 4 }}>
               <MessageCircle size={16} />
               Solicitar primera consulta
-            </a>
+            </button>
             <a href="#sobre-mi"
               className="flex items-center justify-center gap-2 px-6 py-3 text-sm border transition-all hover:bg-white"
               style={{ borderColor: C.blue, color: C.blue, fontFamily: "Source Sans 3, sans-serif", borderRadius: 4 }}>
@@ -416,12 +419,14 @@ function SobreMi() {
   )
 }
 
-function Servicios() {
-  const items = [
-    { title: "Psicoterapia Individual", desc: "Empezamos con una conversación para entender qué te trae a consulta y qué te gustaría que cambiara. A partir de ahí trabajamos con herramientas con respaldo científico, revisando cada cierto tiempo qué tanto has avanzado hacia lo que buscabas.", duration: "50 min / sesión", mode: "Presencial u online" },
-    { title: "Terapia de Pareja", desc: "Ambos comparten, con mi acompañamiento, qué está pasando en la relación desde su propia perspectiva. Identificamos los patrones que generan los conflictos repetidos y practicamos, en sesión, formas distintas de comunicarse.", duration: "60 min / sesión", mode: "Presencial u online" },
-    { title: "Consulta de Orientación", desc: "Si tienes una situación específica que resolver, no hace falta iniciar un proceso largo. Evaluamos juntos qué está pasando y sales de la sesión con recomendaciones concretas sobre cómo continuar.", duration: "45 min / sesión", mode: "Online" },
-  ]
+const SERVICIOS_ITEMS = [
+  { title: "Psicoterapia Individual", desc: "Empezamos con una conversación para entender qué te trae a consulta y qué te gustaría que cambiara. A partir de ahí trabajamos con herramientas con respaldo científico, revisando cada cierto tiempo qué tanto has avanzado hacia lo que buscabas.", duration: "50 min / sesión", mode: "Presencial u online" },
+  { title: "Terapia de Pareja", desc: "Ambos comparten, con mi acompañamiento, qué está pasando en la relación desde su propia perspectiva. Identificamos los patrones que generan los conflictos repetidos y practicamos, en sesión, formas distintas de comunicarse.", duration: "60 min / sesión", mode: "Presencial u online" },
+  { title: "Consulta de Orientación", desc: "Si tienes una situación específica que resolver, no hace falta iniciar un proceso largo. Evaluamos juntos qué está pasando y sales de la sesión con recomendaciones concretas sobre cómo continuar.", duration: "45 min / sesión", mode: "Online" },
+]
+
+function Servicios({ onSelect }) {
+  const items = SERVICIOS_ITEMS
 
   return (
     <section id="servicios" className="py-20 px-8" style={{ backgroundColor: C.white, scrollMarginTop: 164 }}>
@@ -436,8 +441,9 @@ function Servicios() {
         <div className="grid md:grid-cols-3 gap-6">
           {items.map((item, i) => (
             <SlideIn key={i} delay={i * 0.1}>
-              <motion.div
-                className="p-6 h-full flex flex-col"
+              <motion.button
+                onClick={() => onSelect(item)}
+                className="p-6 h-full flex flex-col text-left w-full cursor-pointer"
                 style={{ backgroundColor: C.bgLight, border: `1px solid ${C.blue}10` }}
                 whileHover={{ boxShadow: `0 8px 32px ${C.blue}15`, y: -2 }}
                 transition={{ duration: 0.2 }}
@@ -465,7 +471,10 @@ function Servicios() {
                     </span>
                   </div>
                 </div>
-              </motion.div>
+                <span className="mt-4 text-xs font-semibold" style={{ fontFamily: "Source Sans 3, sans-serif", color: C.blue }}>
+                  Reservar este servicio →
+                </span>
+              </motion.button>
             </SlideIn>
           ))}
         </div>
@@ -474,7 +483,7 @@ function Servicios() {
   )
 }
 
-function PrimeraCita() {
+function PrimeraCita({ onStartReservation }) {
   const pasos = [
     { n: "01", title: "Contacto inicial", desc: "Envía un mensaje contándome, en tus palabras, qué te gustaría trabajar. No necesitas usar términos técnicos ni tener claro un diagnóstico." },
     { n: "02", title: "Primera conversación", desc: "Nos reunimos para que me cuentes tu situación con calma. Esta primera sesión no te compromete a continuar el proceso." },
@@ -511,6 +520,16 @@ function PrimeraCita() {
             </SlideIn>
           ))}
         </div>
+
+        <SlideIn delay={0.4}>
+          <div className="text-center mt-12">
+            <button onClick={onStartReservation}
+              className="px-6 py-3 text-white text-sm font-medium transition-all hover:opacity-90"
+              style={{ backgroundColor: C.blue, fontFamily: "Source Sans 3, sans-serif", borderRadius: 4 }}>
+              Simular una reserva
+            </button>
+          </div>
+        </SlideIn>
       </div>
     </section>
   )
@@ -756,17 +775,58 @@ function Footer() {
 
 export default function ThemeClinico() {
   useFonts()
+  const [waOpen, setWaOpen] = useState(false)
+  const [reservationOpen, setReservationOpen] = useState(false)
+  const [preselected, setPreselected] = useState(null)
+
+  const openReservation = (service = null) => {
+    setPreselected(service)
+    setReservationOpen(true)
+  }
+
   return (
     <div style={{ backgroundColor: C.bgLight }}>
       <Navbar />
-      <Hero />
+      <Hero onOpenWhatsApp={() => setWaOpen(true)} />
       <Identificacion />
       <SobreMi />
-      <Servicios />
-      <PrimeraCita />
+      <Servicios onSelect={openReservation} />
+      <PrimeraCita onStartReservation={() => openReservation(null)} />
       <Resenas />
+      <ComercialCTA
+        accentColor={C.blue}
+        backgroundColor={C.blueDark}
+        fontFamily="Source Sans 3, sans-serif"
+        headingFontFamily="Lora, serif"
+        radius={4}
+        giro="psicólogo (tema Clínico)"
+      />
       <Contacto />
       <Footer />
+      <WhatsAppPreview
+        isOpen={waOpen}
+        onClose={() => setWaOpen(false)}
+        accentColor={C.blue}
+        fontFamily="Source Sans 3, sans-serif"
+        radius={4}
+      />
+      <ReservationFlow
+        isOpen={reservationOpen}
+        onClose={() => setReservationOpen(false)}
+        services={SERVICIOS_ITEMS}
+        preselectedService={preselected}
+        accentColor={C.blue}
+        fontFamily="Source Sans 3, sans-serif"
+        headingFontFamily="Lora, serif"
+        radius={4}
+        accionLabel="consulta"
+      />
+      <OnboardingGuide
+        accentColor={C.blue}
+        fontFamily="Source Sans 3, sans-serif"
+        headingFontFamily="Lora, serif"
+        radius={4}
+      />
     </div>
   )
 }

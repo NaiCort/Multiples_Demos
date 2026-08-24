@@ -4,6 +4,10 @@ import { Phone, MapPin, Clock, MessageCircle, Leaf, Wind, Sun, Star } from "luci
 import useContactForm from "../hooks/useContactForm"
 import DemoConfirmation from "../components/shared/DemoConfirmation"
 import PrivacyModal from "../components/shared/PrivacyModal"
+import ComercialCTA from "../components/shared/ComercialCTA"
+import WhatsAppPreview from "../components/shared/WhatsAppPreview"
+import ReservationFlow from "../components/shared/ReservationFlow"
+import OnboardingGuide from "../components/shared/OnboardingGuide"
 
 const C = {
   bg: "#F7F9F4",
@@ -192,7 +196,7 @@ function Navbar() {
   )
 }
 
-function Hero() {
+function Hero({ onOpenWhatsApp }) {
   const ref = useRef(null)
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end start"] })
   const bgY = useTransform(scrollYProgress, [0, 1], ["0%", "20%"])
@@ -240,13 +244,12 @@ function Hero() {
             transition={{ duration: 0.8, delay: 0.8 }}
             className="flex flex-col sm:flex-row gap-4"
           >
-            <a href="https://wa.me/521234567890?text=Hola, me gustaría agendar una primera cita"
-              target="_blank" rel="noopener noreferrer"
+            <button onClick={onOpenWhatsApp}
               className="flex items-center justify-center gap-2 px-6 py-3 text-white text-sm rounded-full transition-all hover:opacity-90"
               style={{ backgroundColor: C.green500, fontFamily: "Nunito, sans-serif" }}>
               <MessageCircle size={16} />
               Comenzar el proceso
-            </a>
+            </button>
             <a href="#sobre-mi"
               className="flex items-center justify-center gap-2 px-6 py-3 text-sm rounded-full border transition-all hover:bg-green-50"
               style={{ borderColor: C.green200, color: C.green700, fontFamily: "Nunito, sans-serif" }}>
@@ -419,12 +422,14 @@ function SobreMi() {
   )
 }
 
-function Servicios() {
-  const items = [
-    { title: "Terapia Individual", desc: "Un espacio íntimo para explorar, comprender y transformar lo que pesa. Vamos a tu ritmo, sin agenda impuesta, dejando que el proceso tome la forma que tú necesitas.", duration: "50 min / sesión", mode: "Presencial u online" },
-    { title: "Terapia de Pareja", desc: "Reconectar con el otro desde un lugar más auténtico y compasivo. Juntos identificamos qué los aleja y practicamos formas más genuinas de encontrarse de nuevo.", duration: "60 min / sesión", mode: "Presencial u online" },
-    { title: "Orientación y Acompañamiento", desc: "Para momentos de transición que piden una mirada externa y serena. En pocos encuentros, ponemos en palabras lo que sientes y encontramos claridad sobre el siguiente paso.", duration: "45 min / sesión", mode: "Online" },
-  ]
+const SERVICIOS_ITEMS = [
+  { title: "Terapia Individual", desc: "Un espacio íntimo para explorar, comprender y transformar lo que pesa. Vamos a tu ritmo, sin agenda impuesta, dejando que el proceso tome la forma que tú necesitas.", duration: "50 min / sesión", mode: "Presencial u online" },
+  { title: "Terapia de Pareja", desc: "Reconectar con el otro desde un lugar más auténtico y compasivo. Juntos identificamos qué los aleja y practicamos formas más genuinas de encontrarse de nuevo.", duration: "60 min / sesión", mode: "Presencial u online" },
+  { title: "Orientación y Acompañamiento", desc: "Para momentos de transición que piden una mirada externa y serena. En pocos encuentros, ponemos en palabras lo que sientes y encontramos claridad sobre el siguiente paso.", duration: "45 min / sesión", mode: "Online" },
+]
+
+function Servicios({ onSelect }) {
+  const items = SERVICIOS_ITEMS
 
   return (
     <section id="servicios" className="py-24 px-8" style={{ backgroundColor: C.white, scrollMarginTop: 144 }}>
@@ -439,8 +444,9 @@ function Servicios() {
         <div className="grid md:grid-cols-3 gap-6">
           {items.map((item, i) => (
             <FadeBlur key={i} delay={i * 0.15}>
-              <motion.div
-                className="p-8 rounded-3xl flex flex-col h-full"
+              <motion.button
+                onClick={() => onSelect(item)}
+                className="p-8 rounded-3xl flex flex-col h-full text-left w-full cursor-pointer"
                 style={{ backgroundColor: C.bg, border: `1px solid ${C.green200}` }}
                 whileHover={{ y: -4, boxShadow: `0 16px 48px ${C.green200}80` }}
                 transition={{ duration: 0.35 }}
@@ -468,7 +474,10 @@ function Servicios() {
                     </span>
                   </div>
                 </div>
-              </motion.div>
+                <span className="mt-4 text-xs" style={{ fontFamily: "Nunito, sans-serif", color: C.sage, fontWeight: 400 }}>
+                  Reservar este servicio →
+                </span>
+              </motion.button>
             </FadeBlur>
           ))}
         </div>
@@ -477,7 +486,7 @@ function Servicios() {
   )
 }
 
-function PrimeraCita() {
+function PrimeraCita({ onStartReservation }) {
   const pasos = [
     { icon: MessageCircle, title: "Escríbeme", desc: "Un mensaje sencillo es suficiente. No necesitas tenerlo todo claro todavía, ni saber cómo explicarlo." },
     { icon: Clock, title: "Agendamos", desc: "Encontramos un momento que encaje con tu ritmo y disponibilidad." },
@@ -520,6 +529,16 @@ function PrimeraCita() {
             </FadeBlur>
           ))}
         </div>
+
+        <FadeBlur delay={0.5}>
+          <div className="text-center mt-14">
+            <button onClick={onStartReservation}
+              className="px-6 py-3 text-white text-sm rounded-full transition-all hover:opacity-90"
+              style={{ backgroundColor: C.green500, fontFamily: "Nunito, sans-serif" }}>
+              Simular una reserva
+            </button>
+          </div>
+        </FadeBlur>
       </div>
     </section>
   )
@@ -764,17 +783,58 @@ function Footer() {
 
 export default function ThemeNaturaleza() {
   useFonts()
+  const [waOpen, setWaOpen] = useState(false)
+  const [reservationOpen, setReservationOpen] = useState(false)
+  const [preselected, setPreselected] = useState(null)
+
+  const openReservation = (service = null) => {
+    setPreselected(service)
+    setReservationOpen(true)
+  }
+
   return (
     <div style={{ backgroundColor: C.bg }}>
       <Navbar />
-      <Hero />
+      <Hero onOpenWhatsApp={() => setWaOpen(true)} />
       <Identificacion />
       <SobreMi />
-      <Servicios />
-      <PrimeraCita />
+      <Servicios onSelect={openReservation} />
+      <PrimeraCita onStartReservation={() => openReservation(null)} />
       <Resenas />
+      <ComercialCTA
+        accentColor={C.green500}
+        backgroundColor={C.green900}
+        fontFamily="Nunito, sans-serif"
+        headingFontFamily="Cormorant Garamond, serif"
+        radius={20}
+        giro="psicólogo (tema Naturaleza)"
+      />
       <Contacto />
       <Footer />
+      <WhatsAppPreview
+        isOpen={waOpen}
+        onClose={() => setWaOpen(false)}
+        accentColor={C.green500}
+        fontFamily="Nunito, sans-serif"
+        radius={20}
+      />
+      <ReservationFlow
+        isOpen={reservationOpen}
+        onClose={() => setReservationOpen(false)}
+        services={SERVICIOS_ITEMS}
+        preselectedService={preselected}
+        accentColor={C.green500}
+        fontFamily="Nunito, sans-serif"
+        headingFontFamily="Cormorant Garamond, serif"
+        radius={20}
+        accionLabel="cita"
+      />
+      <OnboardingGuide
+        accentColor={C.green500}
+        fontFamily="Nunito, sans-serif"
+        headingFontFamily="Cormorant Garamond, serif"
+        radius={20}
+      />
     </div>
   )
 }
