@@ -4,10 +4,10 @@ import ThemeCalido from "./themes/ThemeCalido"
 import ThemeMinimalista from "./themes/ThemeMinimalista"
 import ThemeClinico from "./themes/ThemeClinico"
 import ThemeNaturaleza from "./themes/ThemeNaturaleza"
-import ThemeSwitcher from "./components/ThemeSwitcher"
-import WaterMark from "./components/WaterMark"
-import DemoBanner from "./components/shared/DemoBanner"
-import useFavicon from "./hooks/useFavicon"
+import ThemeSwitcher from "../../components/ThemeSwitcher"
+import WaterMark from "../../components/WaterMark"
+import DemoBanner from "../../components/shared/DemoBanner"
+import useFavicon from "../../hooks/useFavicon"
 
 // Contenedor de la demo de Psicólogo (Fase 3 del Documento Maestro: vive en su
 // propia ruta /psicologo, separado de la pantalla de bienvenida). Toda la lógica

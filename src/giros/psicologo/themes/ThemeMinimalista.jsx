@@ -1,13 +1,13 @@
 import { useEffect, useRef, useState } from "react"
 import { motion, useInView, AnimatePresence } from "framer-motion"
 import { Phone, MapPin, Clock, ChevronRight, ChevronLeft, MessageCircle, ArrowRight, Star } from "lucide-react"
-import useContactForm from "../hooks/useContactForm"
-import DemoConfirmation from "../components/shared/DemoConfirmation"
-import PrivacyModal from "../components/shared/PrivacyModal"
-import ComercialCTA from "../components/shared/ComercialCTA"
-import WhatsAppPreview from "../components/shared/WhatsAppPreview"
-import ReservationFlow from "../components/shared/ReservationFlow"
-import OnboardingGuide from "../components/shared/OnboardingGuide"
+import useContactForm from "../../../hooks/useContactForm"
+import DemoConfirmation from "../../../components/shared/DemoConfirmation"
+import PrivacyModal from "../../../components/shared/PrivacyModal"
+import ComercialCTA from "../../../components/shared/ComercialCTA"
+import WhatsAppPreview from "../../../components/shared/WhatsAppPreview"
+import ReservationFlow from "../../../components/shared/ReservationFlow"
+import OnboardingGuide from "../../../components/shared/OnboardingGuide"
 
 const C = {
   white: "#FFFFFF",
