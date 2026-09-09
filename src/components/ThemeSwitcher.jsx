@@ -1,103 +1,34 @@
 import { useState } from "react"
-import { motion, AnimatePresence } from "framer-motion"
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion"
 
-const themeConfig = {
-  calido: {
-    label: "Cálido",
-    color: "#6B8F71",
-    textColor: "text-white",
-  },
-  minimalista: {
-    label: "Minimalista",
-    color: "#1A1A1A",
-    textColor: "text-white",
-  },
-  clinico: {
-    label: "Clínico",
-    color: "#2C4A7C",
-    textColor: "text-white",
-  },
-  naturaleza: {
-    label: "Naturaleza",
-    color: "#7A9E7E",
-    textColor: "text-white",
-  },
+const THEMES = {
+  calido: { label: "Cálido", color: "#6B8F71" },
+  minimalista: { label: "Minimalista", color: "#1A1A1A" },
+  clinico: { label: "Clínico", color: "#2C4A7C" },
+  naturaleza: { label: "Naturaleza", color: "#7A9E7E" },
 }
-
 export default function ThemeSwitcher({ activeTheme, onThemeChange }) {
-  const [isHovering, setIsHovering] = useState(false)
-  const [hoveredTheme, setHoveredTheme] = useState(null)
-
-  return (
-    <>
-      {/* Overlay de niebla — debe cubrir absolutamente todo lo demás (banner, navbar, marca de agua) */}
-      <AnimatePresence>
-        {isHovering && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.3 }}
-            className="fixed inset-0 z-[70] pointer-events-none"
-            style={{
-              background: "rgba(0,0,0,0.45)",
-              backdropFilter: "blur(4px)",
-            }}
-          />
-        )}
-      </AnimatePresence>
-
-      {/* Switcher — el único elemento que debe quedar por encima de la niebla */}
-      <div
-        className="fixed bottom-6 right-6 z-[80] flex flex-col items-end gap-2"
-        onMouseEnter={() => setIsHovering(true)}
-        onMouseLeave={() => {
-          setIsHovering(false)
-          setHoveredTheme(null)
-        }}
-      >
-        {/* Etiqueta del tema hovereado o activo */}
-        <AnimatePresence mode="wait">
-          {(hoveredTheme || isHovering) && (
-            <motion.span
-              key={hoveredTheme || activeTheme}
-              initial={{ opacity: 0, y: 4 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 4 }}
-              transition={{ duration: 0.2 }}
-              className="text-white text-xs font-medium bg-black/60 px-3 py-1 rounded-full backdrop-blur-sm"
-            >
-              {themeConfig[hoveredTheme || activeTheme].label}
-            </motion.span>
-          )}
-        </AnimatePresence>
-
-        {/* Círculos de temas */}
-        <div className="flex items-center gap-2 bg-black/30 backdrop-blur-sm px-3 py-2 rounded-full">
-          {Object.entries(themeConfig).map(([key, config]) => {
-            const isActive = activeTheme === key
-            const isHovered = hoveredTheme === key
-
-            return (
-              <motion.button
-                key={key}
-                onClick={() => onThemeChange(key)}
-                onMouseEnter={() => setHoveredTheme(key)}
-                onMouseLeave={() => setHoveredTheme(null)}
-                animate={{
-                  width: isActive ? 28 : 16,
-                  height: isActive ? 28 : 16,
-                  scale: isHovered && !isActive ? 1.15 : 1,
-                }}
-                transition={{ duration: 0.2 }}
-                className="rounded-full border-2 border-white/40 cursor-pointer"
-                style={{ backgroundColor: config.color }}
-                title={config.label}
-              />
-            )
-          })}
-        </div>
+  const [hovered, setHovered] = useState(null)
+  const [focused, setFocused] = useState(null)
+  const reduced = useReducedMotion()
+  const expanded = !!hovered || !!focused
+  const label = THEMES[focused || hovered || activeTheme]?.label || THEMES.calido.label
+  return <>
+    <AnimatePresence>
+      {expanded && <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: reduced ? 0 : 0.2 }}
+        className="fixed inset-0 z-[70] pointer-events-none" aria-hidden="true" style={{ background: "rgba(0,0,0,0.45)", backdropFilter: reduced ? "none" : "blur(4px)" }} />}
+    </AnimatePresence>
+    <div className="demo-theme-switcher fixed right-3 sm:right-6 z-[80] flex flex-col items-end gap-1" role="group" aria-label="Estilo visual de la demo">
+      <span aria-live="polite" className="text-white text-xs bg-[#111318] px-3 py-1 rounded-full">{label}</span>
+      <div className="flex items-center bg-[#111318]/90 rounded-full p-1" onMouseLeave={() => setHovered(null)}
+        onBlur={event => { if (!event.currentTarget.contains(event.relatedTarget)) setFocused(null) }}>
+        {Object.entries(THEMES).map(([key, theme]) => <button type="button" key={key} onClick={() => onThemeChange(key)}
+          aria-label={`Tema ${theme.label}`} aria-pressed={key === activeTheme}
+          onMouseEnter={() => setHovered(key)} onFocus={() => setFocused(key)} className="demo-icon-button rounded-full">
+          <motion.span animate={{ width: key === activeTheme ? 28 : 18, height: key === activeTheme ? 28 : 18 }}
+            transition={{ duration: reduced ? 0 : 0.2 }} className="rounded-full border-2 border-white/80" style={{ background: theme.color }} />
+        </button>)}
       </div>
-    </>
-  )
+    </div>
+  </>
 }

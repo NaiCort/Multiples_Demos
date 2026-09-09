@@ -1,16 +1,52 @@
 @import "tailwindcss";
 
-html {
-  scroll-behavior: smooth;
-  overflow-x: hidden;
+html { scroll-behavior: smooth; overflow-x: clip; scrollbar-gutter: stable; }
+body { margin: 0; }
+button, a, input, select, textarea { -webkit-tap-highlight-color: transparent; }
+button:not(:disabled), a { cursor: pointer; }
+button:disabled { opacity: 0.5; cursor: not-allowed; }
+:where(a, button, input, select, textarea, [tabindex]):focus-visible {
+  outline: 3px solid #f5b942;
+  outline-offset: 3px;
+  box-shadow: 0 0 0 5px #111318;
 }
-
-body {
-  overflow-x: hidden;
+:where(h1, h2, h3, main)[tabindex="-1"]:focus { outline: none; box-shadow: none; }
+.skip-link { position: fixed; top: 8px; left: 8px; z-index: 200; transform: translateY(-180%); background: #fff; color: #111318; padding: 12px 18px; border-radius: 8px; }
+.skip-link:focus { transform: translateY(0); }
+.demo-modal {
+  position: fixed; inset: 0; margin: auto; padding: 0;
+  width: min(30rem, calc(100vw - 2rem));
+  max-width: none; max-height: calc(100dvh - 2rem);
+  overflow-y: auto; overscroll-behavior: contain;
+  color: #fff; background: #16181d;
+  border: 1px solid #626b78; box-shadow: 0 24px 60px #0006;
 }
-
+.demo-modal::backdrop { background: #0009; }
+.demo-modal-content { padding: clamp(1rem, 4vw, 1.5rem); }
+.demo-modal fieldset { min-width: 0; }
+.demo-icon-button { display: inline-flex; align-items: center; justify-content: center; min-width: 44px; min-height: 44px; }
+.demo-theme-switcher { bottom: calc(1.9rem + env(safe-area-inset-bottom, 0px)); }
+.demo-watermark { bottom: calc(0.25rem + env(safe-area-inset-bottom, 0px)); }
+.demo-contact-form[hidden] { display: none; }
+.demo-form-field {
+  width: 100%; padding: 12px 16px; background: #ffffff0d; color: white;
+  border: 1px solid #ffffff85; font-size: 16px; line-height: 1.5; min-height: 48px;
+}
+.demo-form-field::placeholder { color: #ffffffc7; opacity: 1; }
+.demo-form-field option { color: #111318; background: #fff; }
+.demo-form-field[aria-invalid="true"] { border-color: #ffd1d1; }
+.demo-fiction-note { font-family: system-ui, sans-serif; font-size: 13px; line-height: 1.6; color: #4b554d; margin: 0 0 1.5rem; }
+/* La sala conserva su proporción original en todos los anchos de pantalla. */
+.demo-room-image {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 4 / 3;
+  object-fit: contain;
+}
+.route-message { min-height: 100dvh; background: #0f1418; color: #ede8de; display: grid; place-content: center; padding: 2rem; text-align: center; gap: 1rem; font-family: system-ui, sans-serif; }
+.route-message a, .route-message button { padding: 12px 20px; border: 1px solid #c9a227; border-radius: 8px; color: #f5d373; }
 @media (prefers-reduced-motion: reduce) {
-  html {
-    scroll-behavior: auto;
-  }
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
 }

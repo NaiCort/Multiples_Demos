@@ -1,20 +1,21 @@
 import { useEffect, useRef, useState } from "react"
-import { motion, useInView, AnimatePresence } from "framer-motion"
+import { motion, useReducedMotion, useInView } from "framer-motion"
 import { Phone, MapPin, Clock, ChevronRight, ChevronLeft, MessageCircle, ArrowRight, Star } from "lucide-react"
-import useContactForm from "../../../hooks/useContactForm"
-import DemoConfirmation from "../../../components/shared/DemoConfirmation"
+import DemoContactForm from "../../../components/shared/DemoContactForm"
 import PrivacyModal from "../../../components/shared/PrivacyModal"
 import ComercialCTA from "../../../components/shared/ComercialCTA"
 import WhatsAppPreview from "../../../components/shared/WhatsAppPreview"
 import ReservationFlow from "../../../components/shared/ReservationFlow"
-import OnboardingGuide from "../../../components/shared/OnboardingGuide"
+import Modal from "../../../components/shared/Modal"
+import useDemoNavigation from "../../../hooks/useDemoNavigation"
+import { withServiceRules } from "../data/services"
 
 const C = {
   white: "#FFFFFF",
   black: "#0A0A0A",
   gray100: "#F5F5F5",
   gray200: "#E8E8E8",
-  gray400: "#AAAAAA",
+  gray400: "#666666",
   gray600: "#666666",
   accent: "#2D6A4F",
 }
@@ -33,14 +34,15 @@ function useFonts() {
 
 // Línea que se dibuja al entrar en viewport
 function DrawLine({ delay = 0 }) {
+  const reduced = useReducedMotion()
   const ref = useRef(null)
   const inView = useInView(ref, { once: true })
   return (
     <motion.div
       ref={ref}
-      initial={{ scaleX: 0 }}
-      animate={inView ? { scaleX: 1 } : {}}
-      transition={{ duration: 0.7, delay, ease: "easeInOut" }}
+      initial={reduced ? false : { scaleX: 0 }}
+      animate={reduced || inView ? { scaleX: 1 } : {}}
+      transition={reduced ? { duration: 0, delay: 0, repeat: 0 } : { duration: 0.7, delay, ease: "easeInOut" }}
       style={{ originX: 0, height: 1, backgroundColor: C.gray200 }}
       className="w-full"
     />
@@ -49,14 +51,15 @@ function DrawLine({ delay = 0 }) {
 
 // Fade puro sin movimiento
 function FadePure({ children, delay = 0 }) {
+  const reduced = useReducedMotion()
   const ref = useRef(null)
   const inView = useInView(ref, { once: true, margin: "-60px" })
   return (
     <motion.div
       ref={ref}
-      initial={{ opacity: 0 }}
-      animate={inView ? { opacity: 1 } : {}}
-      transition={{ duration: 0.7, delay }}
+      initial={reduced ? false : { opacity: 0 }}
+      animate={reduced || inView ? { opacity: 1 } : {}}
+      transition={reduced ? { duration: 0, delay: 0, repeat: 0 } : { duration: 0.7, delay }}
     >
       {children}
     </motion.div>
@@ -65,15 +68,16 @@ function FadePure({ children, delay = 0 }) {
 
 // Texto que aparece letra por letra
 function TypeWriter({ text, delay = 0 }) {
+  const reduced = useReducedMotion()
   const words = text.split(" ")
   return (
     <span>
       {words.map((word, i) => (
         <motion.span
           key={i}
-          initial={{ opacity: 0, y: 12 }}
+          initial={reduced ? false : { opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4, delay: delay + i * 0.06, ease: "easeOut" }}
+          transition={reduced ? { duration: 0, delay: 0, repeat: 0 } : { duration: 0.4, delay: delay + i * 0.06, ease: "easeOut" }}
           style={{ display: "inline-block", marginRight: "0.25em" }}
         >
           {word}
@@ -84,33 +88,11 @@ function TypeWriter({ text, delay = 0 }) {
 }
 
 function Navbar() {
-  const [scrolled, setScrolled] = useState(false)
-  const [menuOpen, setMenuOpen] = useState(false)
-  const [activeSection, setActiveSection] = useState("")
-
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 40)
-    window.addEventListener("scroll", onScroll)
-    return () => window.removeEventListener("scroll", onScroll)
-  }, [])
-
-  useEffect(() => {
-    const ids = ["sobre-mi", "servicios", "primera-cita", "contacto"]
-    const sections = ids.map((id) => document.getElementById(id)).filter(Boolean)
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) setActiveSection(entry.target.id)
-        })
-      },
-      { rootMargin: "-40% 0px -55% 0px" }
-    )
-    sections.forEach((s) => observer.observe(s))
-    return () => observer.disconnect()
-  }, [])
+  const reduced = useReducedMotion()
+  const { scrolled, activeSection, menuOpen, setMenuOpen } = useDemoNavigation()
 
   const links = [
-    { label: "Inicio", href: "#" },
+    { label: "Inicio", href: "#inicio" },
     { label: "Sobre mí", href: "#sobre-mi" },
     { label: "Servicios", href: "#servicios" },
     { label: "Primera cita", href: "#primera-cita" },
@@ -118,7 +100,7 @@ function Navbar() {
   ]
 
   return (
-    <motion.nav
+    <motion.nav aria-label="Navegación de la demo"
       className="fixed top-11 left-0 right-0 z-[55]"
       style={{
         backgroundColor: scrolled ? "rgba(255,255,255,0.97)" : "transparent",
@@ -129,24 +111,24 @@ function Navbar() {
     >
       <div className="max-w-6xl mx-auto px-8 py-5 flex items-center justify-between">
         <span style={{ fontFamily: "DM Serif Display, serif", color: C.black, fontSize: 18, letterSpacing: "-0.02em" }}>
-          Dra. Valeria Romero
+          Valeria Romero
         </span>
 
-        <div className="hidden md:flex items-center gap-10">
+        <div className="hidden xl:flex items-center gap-6">
           {links.map(l => {
-            const isActive = l.href === "#" ? activeSection === "" : activeSection === l.href.slice(1)
+            const isActive = activeSection === l.href.slice(1)
             return (
-              <a key={l.label} href={l.href}
+              <a key={l.label} href={l.href} aria-current={activeSection === l.href.slice(1) ? "location" : undefined}
                 style={{ color: isActive ? C.black : C.gray600, fontFamily: "DM Sans, sans-serif", fontSize: 13, letterSpacing: "0.04em" }}
-                className="hover:opacity-50 transition-opacity uppercase tracking-widest">
+                className="hover:opacity-90 transition-opacity uppercase tracking-widest">
                 {l.label}
               </a>
             )
           })}
         </div>
 
-        <button className="md:hidden p-2" onClick={() => setMenuOpen(!menuOpen)}
-          aria-expanded={menuOpen} aria-label={menuOpen ? "Cerrar menú" : "Abrir menú"}>
+        <button className="xl:hidden p-2" onClick={() => setMenuOpen(!menuOpen)}
+          aria-haspopup="dialog" aria-expanded={menuOpen} aria-label={menuOpen ? "Cerrar menú" : "Abrir menú"}>
           <div className="space-y-1.5">
             <motion.div animate={{ rotate: menuOpen ? 45 : 0, y: menuOpen ? 8 : 0 }}
               className="w-5 h-px" style={{ backgroundColor: C.black }} />
@@ -158,36 +140,33 @@ function Navbar() {
         </button>
       </div>
 
-      <AnimatePresence>
+      <>
         {menuOpen && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="md:hidden absolute top-full left-0 right-0 py-8 px-8 flex flex-col gap-6"
-            style={{ backgroundColor: C.white, borderBottom: `1px solid ${C.gray200}`, minHeight: "100dvh" }}
-          >
+          <Modal title="Menú de la demo" onClose={() => setMenuOpen(false)} fontFamily="DM Sans, sans-serif">
+          <div className="flex flex-col gap-2">
             {links.map((l, i) => (
               <motion.a
-                key={l.label} href={l.href}
-                initial={{ opacity: 0, x: -8 }}
+                key={l.label} className="min-h-11 flex items-center" href={l.href} aria-current={activeSection === l.href.slice(1) ? "location" : undefined}
+                initial={reduced ? false : { opacity: 0, x: -8 }}
                 animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: i * 0.05 }}
-                style={{ color: C.black, fontFamily: "DM Serif Display, serif", fontSize: 22 }}
+                transition={reduced ? { duration: 0, delay: 0, repeat: 0 } : { delay: i * 0.05 }}
+                style={{ color: "#ffffff", fontFamily: "DM Serif Display, serif", fontSize: 22 }}
                 onClick={() => setMenuOpen(false)}>
                 {l.label}
               </motion.a>
             ))}
-          </motion.div>
+          </div>
+          </Modal>
         )}
-      </AnimatePresence>
+      </>
     </motion.nav>
   )
 }
 
 function Hero({ onOpenWhatsApp }) {
+  const reduced = useReducedMotion()
   return (
-    <section className="min-h-screen flex flex-col justify-center pt-[140px] pb-16 px-8"
+    <section id="inicio" className="min-h-screen flex flex-col justify-center pt-[140px] pb-16 px-8"
       style={{ backgroundColor: C.white }}>
       <div className="max-w-6xl mx-auto w-full">
         <div className="grid md:grid-cols-2 gap-16 items-center">
@@ -198,9 +177,9 @@ function Hero({ onOpenWhatsApp }) {
             </h1>
 
             <motion.p
-              initial={{ opacity: 0 }}
+              initial={reduced ? false : { opacity: 0 }}
               animate={{ opacity: 1 }}
-              transition={{ duration: 0.6, delay: 0.8 }}
+              transition={reduced ? { duration: 0, delay: 0, repeat: 0 } : { duration: 0.6, delay: 0.8 }}
               style={{ fontFamily: "DM Sans, sans-serif", color: C.gray600, lineHeight: 1.8, fontSize: 16 }}
               className="mb-10 max-w-md"
             >
@@ -209,9 +188,9 @@ function Hero({ onOpenWhatsApp }) {
             </motion.p>
 
             <motion.div
-              initial={{ opacity: 0 }}
+              initial={reduced ? false : { opacity: 0 }}
               animate={{ opacity: 1 }}
-              transition={{ duration: 0.5, delay: 1 }}
+              transition={reduced ? { duration: 0, delay: 0, repeat: 0 } : { duration: 0.5, delay: 1 }}
               className="flex flex-col sm:flex-row gap-4"
             >
               <button onClick={onOpenWhatsApp}
@@ -229,14 +208,14 @@ function Hero({ onOpenWhatsApp }) {
           </div>
 
           <motion.div
-            initial={{ opacity: 0 }}
+            initial={reduced ? false : { opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ duration: 0.9, delay: 0.4 }}
+            transition={reduced ? { duration: 0, delay: 0, repeat: 0 } : { duration: 0.9, delay: 0.4 }}
             className="relative hidden md:block"
           >
             <img
               src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=600&q=80"
-              alt="Psicóloga"
+              alt="Retrato de referencia para el personaje ficticio" fetchPriority="high"
               className="w-full object-cover"
               style={{ height: 560, filter: "grayscale(20%)" }}
             />
@@ -311,8 +290,9 @@ function SobreMi() {
         <FadePure>
           <h2 style={{ fontFamily: "DM Serif Display, serif", color: C.black, fontSize: "clamp(1.8rem, 3vw, 2.5rem)" }}
             className="mb-8">
-            Dra. Valeria Romero
+            Valeria Romero
           </h2>
+            <p className="demo-fiction-note">Perfil ficticio. La formación y la trayectoria son contenido de ejemplo.</p>
           <p style={{ fontFamily: "DM Sans, sans-serif", color: C.gray600, lineHeight: 1.85, fontSize: 15 }}
             className="mb-6">
             Trabajo con personas que enfrentan ansiedad, crisis vitales, dificultades relacionales o simplemente
@@ -328,7 +308,7 @@ function SobreMi() {
             {[
               "Licenciatura en Psicología, UNAM",
               "Maestría en Psicología Clínica, UNAM",
-              "Cédula profesional: 12345678",
+              "Cédula de ejemplo: 12345678",
               "8 años de práctica clínica",
             ].map((item, i) => (
               <div key={i} className="flex items-center gap-3">
@@ -342,17 +322,18 @@ function SobreMi() {
         <FadePure delay={0.15}>
           <div className="relative">
             <img
-              src="https://images.unsplash.com/photo-1551836022-deb4988cc6c0?w=600&q=80"
-              alt="Consultorio"
-              className="w-full object-cover"
-              style={{ height: 480, filter: "grayscale(10%)" }}
+              src="https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?w=600&q=80"
+              alt="Sala con sillones y plantas, imagen de referencia para esta demo" loading="lazy" decoding="async"
+              width={600} height={450}
+              className="demo-room-image"
+              style={{ filter: "grayscale(10%)" }}
             />
             <div className="grid grid-cols-3 gap-0 mt-0 border-t"
               style={{ borderColor: C.gray200 }}>
               {[
-                { n: "412", label: "Pacientes" },
-                { n: "8+", label: "Años" },
-                { n: "94%", label: "Satisfacción" },
+                { n: "3", label: "Servicios" },
+                { n: "50 min", label: "Sesión individual" },
+                { n: "2", label: "Modalidades" },
               ].map((s, i) => (
                 <div key={i} className="py-6 text-center border-r last:border-r-0"
                   style={{ borderColor: C.gray200, backgroundColor: C.gray100 }}>
@@ -369,13 +350,14 @@ function SobreMi() {
   )
 }
 
-const SERVICIOS_ITEMS = [
+const SERVICIOS_ITEMS = withServiceRules([
   { title: "Terapia Individual", desc: "Trabajamos con lo que realmente te está pasando, sin fórmulas genéricas. Cada sesión tiene un objetivo claro y revisamos juntos si te está funcionando.", duration: "50 min", mode: "Presencial u online" },
   { title: "Terapia de Pareja", desc: "Ambos hablan, yo modero. Identificamos qué se repite en sus conflictos y probamos formas distintas de resolverlos.", duration: "60 min", mode: "Presencial u online" },
   { title: "Orientación Psicológica", desc: "Para algo puntual, no para un proceso largo. Pocas sesiones, un tema concreto, salidas claras.", duration: "45 min", mode: "Online" },
-]
+])
 
 function Servicios({ onSelect }) {
+  const reduced = useReducedMotion()
   const items = SERVICIOS_ITEMS
 
   return (
@@ -400,7 +382,7 @@ function Servicios({ onSelect }) {
                 onClick={() => onSelect(item)}
                 className="py-8 grid grid-cols-12 gap-4 items-center cursor-pointer group w-full text-left"
                 whileHover={{ x: 4 }}
-                transition={{ duration: 0.2 }}
+                transition={reduced ? { duration: 0, delay: 0, repeat: 0 } : { duration: 0.2 }}
               >
                 <h3 style={{ fontFamily: "DM Serif Display, serif", color: C.black, fontSize: 20 }}
                   className="col-span-12 md:col-span-4">
@@ -511,6 +493,7 @@ function Resenas() {
             className="mb-14">
             Quienes ya dieron el paso
           </h2>
+            <p className="demo-fiction-note">Reseñas ficticias redactadas para esta demostración.</p>
         </FadePure>
 
         <div className="flex justify-center gap-0.5 mb-6">
@@ -535,14 +518,14 @@ function Resenas() {
 
         <div className="flex items-center justify-center gap-6">
           <button onClick={prev} aria-label="Reseña anterior"
-            className="p-2 hover:opacity-60 transition-opacity">
+            className="p-2 hover:opacity-90 transition-opacity">
             <ChevronLeft size={18} style={{ color: C.black }} />
           </button>
           <span style={{ fontFamily: "DM Sans, sans-serif", color: C.gray400, fontSize: 12 }}>
             {index + 1} / {reviews.length}
           </span>
           <button onClick={next} aria-label="Siguiente reseña"
-            className="p-2 hover:opacity-60 transition-opacity">
+            className="p-2 hover:opacity-90 transition-opacity">
             <ChevronRight size={18} style={{ color: C.black }} />
           </button>
         </div>
@@ -551,15 +534,13 @@ function Resenas() {
   )
 }
 
-function Contacto() {
-  const nombreRef = useRef(null)
-  const form = useContactForm({ nombreRef })
+function Contacto({ onOpenWhatsApp }) {
 
   return (
     <section id="contacto" className="py-24 px-8" style={{ backgroundColor: C.black, scrollMarginTop: 134 }}>
       <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-20">
         <FadePure>
-          <p style={{ fontFamily: "DM Sans, sans-serif", color: "rgba(255,255,255,0.3)", fontSize: 11, letterSpacing: "0.12em" }}
+          <p style={{ fontFamily: "DM Sans, sans-serif", color: "rgba(255,255,255,0.8)", fontSize: 11, letterSpacing: "0.12em" }}
             className="uppercase mb-4">
             Contacto
           </p>
@@ -570,12 +551,12 @@ function Contacto() {
 
           <div className="space-y-4 mb-10">
             {[
-              { icon: Phone, text: "+52 (123) 456-7890" },
+              { icon: Phone, text: "Número de ejemplo · contacto simulado" },
               { icon: MapPin, text: "Xalapa, Veracruz, México" },
               { icon: Clock, text: "Lunes a Viernes · 9:00 – 19:00" },
             ].map((item, i) => (
               <div key={i} className="flex items-center gap-3">
-                <item.icon size={15} style={{ color: "rgba(255,255,255,0.3)" }} />
+                <item.icon size={15} style={{ color: "rgba(255,255,255,0.8)" }} />
                 <span style={{ fontFamily: "DM Sans, sans-serif", color: "rgba(255,255,255,0.6)", fontSize: 14 }}>
                   {item.text}
                 </span>
@@ -583,99 +564,17 @@ function Contacto() {
             ))}
           </div>
 
-          <a href="https://wa.me/521234567890?text=Hola, me gustaría agendar una primera cita"
-            target="_blank" rel="noopener noreferrer"
+          <button type="button" onClick={onOpenWhatsApp}
             className="group inline-flex items-center gap-3 px-6 py-3 text-sm font-medium transition-all duration-200 hover:opacity-80"
             style={{ backgroundColor: C.white, color: C.black, fontFamily: "DM Sans, sans-serif" }}>
             <MessageCircle size={15} />
             Escribir por WhatsApp
             <ArrowRight size={13} className="group-hover:translate-x-1 transition-transform" />
-          </a>
+          </button>
         </FadePure>
 
         <FadePure delay={0.15}>
-          <AnimatePresence mode="wait">
-            {form.status === "success" ? (
-              <DemoConfirmation
-                key="confirmation"
-                onReset={() => form.reset(true)}
-                onClose={() => form.reset(false)}
-                accentColor={C.white}
-                accentTextColor={C.black}
-                borderColor="rgba(255,255,255,0.15)"
-                fontFamily="DM Sans, sans-serif"
-                radius={0}
-              />
-            ) : (
-              <motion.form
-                key="form"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                className="space-y-6"
-                onSubmit={form.handleSubmit}
-                noValidate
-              >
-                <div className="border-b pb-2" style={{ borderColor: form.errors.nombre ? "#F87171" : "rgba(255,255,255,0.1)" }}>
-                  <label style={{ fontFamily: "DM Sans, sans-serif", color: "rgba(255,255,255,0.3)", fontSize: 11, letterSpacing: "0.08em" }}
-                    className="block uppercase mb-2">
-                    Nombre
-                  </label>
-                  <input type="text" placeholder="Tu nombre" ref={nombreRef}
-                    value={form.values.nombre} onChange={form.handleChange("nombre")}
-                    className="w-full bg-transparent focus:outline-none"
-                    style={{ fontFamily: "DM Sans, sans-serif", color: C.white, fontSize: 15 }} />
-                  {form.errors.nombre && <p className="mt-1 text-xs" style={{ color: "#FCA5A5", fontFamily: "DM Sans, sans-serif" }}>{form.errors.nombre}</p>}
-                </div>
-                <div className="border-b pb-2" style={{ borderColor: form.errors.correo ? "#F87171" : "rgba(255,255,255,0.1)" }}>
-                  <label style={{ fontFamily: "DM Sans, sans-serif", color: "rgba(255,255,255,0.3)", fontSize: 11, letterSpacing: "0.08em" }}
-                    className="block uppercase mb-2">
-                    Correo electrónico
-                  </label>
-                  <input type="email" placeholder="tu@correo.com"
-                    value={form.values.correo} onChange={form.handleChange("correo")}
-                    className="w-full bg-transparent focus:outline-none"
-                    style={{ fontFamily: "DM Sans, sans-serif", color: C.white, fontSize: 15 }} />
-                  {form.errors.correo && <p className="mt-1 text-xs" style={{ color: "#FCA5A5", fontFamily: "DM Sans, sans-serif" }}>{form.errors.correo}</p>}
-                </div>
-                <div className="border-b pb-2" style={{ borderColor: form.errors.motivo ? "#F87171" : "rgba(255,255,255,0.1)" }}>
-                  <label style={{ fontFamily: "DM Sans, sans-serif", color: "rgba(255,255,255,0.3)", fontSize: 11, letterSpacing: "0.08em" }}
-                    className="block uppercase mb-2">
-                    Motivo
-                  </label>
-                  <select value={form.values.motivo} onChange={form.handleChange("motivo")}
-                    className="w-full bg-transparent focus:outline-none"
-                    style={{ fontFamily: "DM Sans, sans-serif", color: "rgba(255,255,255,0.6)", fontSize: 15 }}>
-                    <option value="" className="bg-gray-900">Selecciona</option>
-                    {["Ansiedad o estrés", "Depresión", "Terapia de pareja", "Duelo", "Otro"].map(o => (
-                      <option key={o} value={o} className="bg-gray-900">{o}</option>
-                    ))}
-                  </select>
-                  {form.errors.motivo && <p className="mt-1 text-xs" style={{ color: "#FCA5A5", fontFamily: "DM Sans, sans-serif" }}>{form.errors.motivo}</p>}
-                </div>
-                <div className="border-b pb-2" style={{ borderColor: form.errors.mensaje ? "#F87171" : "rgba(255,255,255,0.1)" }}>
-                  <label style={{ fontFamily: "DM Sans, sans-serif", color: "rgba(255,255,255,0.3)", fontSize: 11, letterSpacing: "0.08em" }}
-                    className="block uppercase mb-2">
-                    Mensaje
-                  </label>
-                  <textarea rows={3} placeholder="Cuéntame brevemente..."
-                    value={form.values.mensaje} onChange={form.handleChange("mensaje")}
-                    className="w-full bg-transparent focus:outline-none resize-none"
-                    style={{ fontFamily: "DM Sans, sans-serif", color: C.white, fontSize: 15 }} />
-                  {form.errors.mensaje && <p className="mt-1 text-xs" style={{ color: "#FCA5A5", fontFamily: "DM Sans, sans-serif" }}>{form.errors.mensaje}</p>}
-                </div>
-                <motion.button
-                  type="submit"
-                  disabled={form.status === "submitting"}
-                  whileHover={{ opacity: form.status === "submitting" ? 1 : 0.85 }}
-                  whileTap={{ scale: form.status === "submitting" ? 1 : 0.98 }}
-                  className="w-full py-3 text-sm font-medium uppercase tracking-widest disabled:opacity-70"
-                  style={{ backgroundColor: C.white, color: C.black, fontFamily: "DM Sans, sans-serif", letterSpacing: "0.1em" }}>
-                  {form.status === "submitting" ? "Enviando..." : "Enviar mensaje"}
-                </motion.button>
-              </motion.form>
-            )}
-          </AnimatePresence>
+          <DemoContactForm accentColor={C.white} fontFamily="DM Sans, sans-serif" variant="minimalista" />
         </FadePure>
       </div>
     </section>
@@ -686,7 +585,7 @@ function Monogram() {
   return (
     <div className="w-8 h-8 rounded-full border flex items-center justify-center shrink-0"
       style={{ borderColor: "rgba(255,255,255,0.25)" }}>
-      <span style={{ fontFamily: "DM Serif Display, serif", color: "rgba(255,255,255,0.5)", fontSize: 12 }}>
+      <span style={{ fontFamily: "DM Serif Display, serif", color: "rgba(255,255,255,0.8)", fontSize: 12 }}>
         VR
       </span>
     </div>
@@ -697,17 +596,17 @@ function Footer() {
   const [privacyOpen, setPrivacyOpen] = useState(false)
 
   return (
-    <footer className="py-6 px-8 flex flex-col md:flex-row items-center justify-between gap-4"
+    <footer className="pt-8 pb-28 px-8 flex flex-col md:flex-row items-center justify-between gap-4"
       style={{ backgroundColor: C.black, borderTop: "1px solid rgba(255,255,255,0.06)" }}>
-      <p style={{ fontFamily: "DM Sans, sans-serif", color: "rgba(255,255,255,0.2)", fontSize: 12 }}>
-        © 2026 Dra. Valeria Romero
+      <p style={{ fontFamily: "DM Sans, sans-serif", color: "rgba(255,255,255,0.8)", fontSize: 12 }}>
+        © 2026 Valeria Romero
       </p>
 
       <Monogram />
 
       <button onClick={() => setPrivacyOpen(true)}
         className="underline-offset-2 hover:underline transition-all"
-        style={{ fontFamily: "DM Sans, sans-serif", color: "rgba(255,255,255,0.3)", fontSize: 11 }}>
+        style={{ fontFamily: "DM Sans, sans-serif", color: "rgba(255,255,255,0.8)", fontSize: 11 }}>
         Aviso de privacidad
       </button>
 
@@ -736,7 +635,8 @@ export default function ThemeMinimalista() {
 
   return (
     <div style={{ backgroundColor: C.white }}>
-      <Navbar />
+      <Navbar onOpenWhatsApp={() => setWaOpen(true)} />
+      <main id="contenido" tabIndex={-1}>
       <Hero onOpenWhatsApp={() => setWaOpen(true)} />
       <Identificacion />
       <SobreMi />
@@ -752,7 +652,8 @@ export default function ThemeMinimalista() {
         radius={0}
         giro="psicólogo (tema Minimalista)"
       />
-      <Contacto />
+      <Contacto onOpenWhatsApp={() => setWaOpen(true)} />
+      </main>
       <Footer />
       <WhatsAppPreview
         isOpen={waOpen}
@@ -771,13 +672,6 @@ export default function ThemeMinimalista() {
         headingFontFamily="DM Serif Display, serif"
         radius={4}
         accionLabel="consulta"
-      />
-      <OnboardingGuide
-        accentColor={C.black}
-        accentTextColor={C.white}
-        fontFamily="DM Sans, sans-serif"
-        headingFontFamily="DM Serif Display, serif"
-        radius={4}
       />
     </div>
   )

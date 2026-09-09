@@ -1,66 +1,58 @@
-import { useState } from "react"
-
-// Implementa el modelo de 5 estados documentado en Parte IV, sección 11
-// del Documento Maestro: inicial -> foco/selección -> procesamiento -> resultado -> salida.
-// Compartido por los 4 temas para que el formulario de contacto tenga
-// exactamente la misma validación y el mismo comportamiento en todos ellos.
-
-const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+import { useEffect, useRef, useState } from "react"
 
 const EMPTY_VALUES = { nombre: "", correo: "", motivo: "", mensaje: "" }
-
-function validate(values) {
-  const errors = {}
-  if (!values.nombre.trim() || values.nombre.trim().length < 2) {
-    errors.nombre = "Escribe tu nombre."
-  }
-  if (!EMAIL_RE.test(values.correo.trim())) {
-    errors.correo = "Escribe un correo válido."
-  }
-  if (!values.motivo) {
-    errors.motivo = "Selecciona una opción."
-  }
-  if (!values.mensaje.trim() || values.mensaje.trim().length < 10) {
-    errors.mensaje = "Cuéntanos un poco más (mínimo 10 caracteres)."
-  }
-  return errors
-}
-
+const MOTIVOS = ["servicios", "horarios", "modalidades"]
 export default function useContactForm({ nombreRef } = {}) {
   const [values, setValues] = useState(EMPTY_VALUES)
   const [errors, setErrors] = useState({})
-  const [status, setStatus] = useState("idle") // idle | submitting | success
+  const [status, setStatus] = useState("idle")
+  const timer = useRef(null)
+  const busy = useRef(false)
+  const pendingFocus = useRef(false)
+  useEffect(() => () => clearTimeout(timer.current), [])
+  useEffect(() => {
+    if (status === "idle" && pendingFocus.current) {
+      nombreRef?.current?.focus()
+      pendingFocus.current = false
+    }
+  }, [status, nombreRef])
 
-  const handleChange = (field) => (e) => {
-    const value = e.target.value
-    setValues(v => ({ ...v, [field]: value }))
-    setErrors(er => (er[field] ? { ...er, [field]: null } : er))
+  const handleChange = field => event => {
+    if (busy.current) return
+    const value = event.target.value
+    setValues(previous => ({ ...previous, [field]: value }))
+    setErrors(previous => ({ ...previous, [field]: undefined }))
   }
-
-  const handleSubmit = (e) => {
-    e.preventDefault()
-    if (status === "submitting") return
-
-    const nextErrors = validate(values)
-    if (Object.keys(nextErrors).length > 0) {
-      setErrors(nextErrors)
+  const handleSubmit = event => {
+    event.preventDefault()
+    if (busy.current) return
+    const nextErrors = {}
+    if (values.nombre.trim().length < 2) nextErrors.nombre = "Escribe un nombre de ejemplo de al menos 2 caracteres."
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(values.correo.trim())) nextErrors.correo = "Escribe un correo válido de ejemplo."
+    if (!MOTIVOS.includes(values.motivo)) nextErrors.motivo = "Selecciona una opción."
+    if (values.mensaje.trim().length < 10) nextErrors.mensaje = "Escribe un mensaje de ejemplo de al menos 10 caracteres."
+    setErrors(nextErrors)
+    const firstError = Object.keys(nextErrors)[0]
+    if (firstError) {
+      event.currentTarget.elements.namedItem(firstError)?.focus()
       return
     }
-
-    setErrors({})
+    busy.current = true
     setStatus("submitting")
-    // Transición breve para que el envío no parezca ignorado (600-900ms, Parte IV sección 11)
-    setTimeout(() => setStatus("success"), 750)
+    timer.current = setTimeout(() => { busy.current = false; setStatus("success") }, 750)
   }
-
-  const reset = (focusFirst = false) => {
+  const reset = () => {
+    clearTimeout(timer.current)
+    busy.current = false
+    pendingFocus.current = true
     setValues(EMPTY_VALUES)
     setErrors({})
     setStatus("idle")
-    if (focusFirst) {
-      requestAnimationFrame(() => nombreRef?.current?.focus())
-    }
   }
-
-  return { values, errors, status, handleChange, handleSubmit, reset }
+  const fillExample = () => {
+    if (busy.current) return
+    setValues({ nombre: "Alex Ejemplo", correo: "alex@example.com", motivo: "horarios", mensaje: "Este es un mensaje ficticio para probar el formulario." })
+    setErrors({})
+  }
+  return { values, errors, status, handleChange, handleSubmit, reset, fillExample }
 }

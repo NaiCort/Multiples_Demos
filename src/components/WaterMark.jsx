@@ -1,12 +1,5 @@
 export default function WaterMark() {
-  return (
-    <div className="fixed bottom-3 left-3 z-50 pointer-events-none select-none">
-      <p
-        className="text-xs font-medium opacity-50 tracking-wide"
-        style={{ color: "#ffffff", textShadow: "0 1px 3px rgba(0,0,0,0.8)" }}
-      >
-        Demo · Ian Habid Aldana Martínez
-      </p>
-    </div>
-  )
+  return <div className="demo-watermark fixed left-3 z-50 pointer-events-none select-none rounded px-2 py-1 bg-[#111318]/90 text-white">
+    <p className="text-[10px] sm:text-xs font-medium">Demo · Ian Habid Aldana Martínez</p>
+  </div>
 }

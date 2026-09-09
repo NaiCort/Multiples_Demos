@@ -1,13 +1,14 @@
 import { useEffect, useRef, useState } from "react"
-import { motion, useInView, AnimatePresence, useScroll, useTransform } from "framer-motion"
+import { motion, useReducedMotion, useInView, useScroll, useTransform } from "framer-motion"
 import { Phone, MapPin, Clock, MessageCircle, Leaf, Wind, Sun, Star } from "lucide-react"
-import useContactForm from "../../../hooks/useContactForm"
-import DemoConfirmation from "../../../components/shared/DemoConfirmation"
+import DemoContactForm from "../../../components/shared/DemoContactForm"
 import PrivacyModal from "../../../components/shared/PrivacyModal"
 import ComercialCTA from "../../../components/shared/ComercialCTA"
 import WhatsAppPreview from "../../../components/shared/WhatsAppPreview"
 import ReservationFlow from "../../../components/shared/ReservationFlow"
-import OnboardingGuide from "../../../components/shared/OnboardingGuide"
+import Modal from "../../../components/shared/Modal"
+import useDemoNavigation from "../../../hooks/useDemoNavigation"
+import { withServiceRules } from "../data/services"
 
 const C = {
   bg: "#F7F9F4",
@@ -20,7 +21,7 @@ const C = {
   sage: "#7A9E7E",
   earth: "#8B7355",
   gray: "#5A6650",
-  grayLight: "#8A9A80",
+  grayLight: "#5A6650",
 }
 
 function useFonts() {
@@ -37,14 +38,15 @@ function useFonts() {
 
 // Fade muy lento con blur — meditativo
 function FadeBlur({ children, delay = 0 }) {
+  const reduced = useReducedMotion()
   const ref = useRef(null)
   const inView = useInView(ref, { once: true, margin: "-60px" })
   return (
     <motion.div
       ref={ref}
-      initial={{ opacity: 0, filter: "blur(6px)" }}
-      animate={inView ? { opacity: 1, filter: "blur(0px)" } : {}}
-      transition={{ duration: 0.9, delay, ease: "easeOut" }}
+      initial={reduced ? false : { opacity: 0, filter: "blur(6px)" }}
+      animate={reduced || inView ? { opacity: 1, filter: "blur(0px)" } : {}}
+      transition={reduced ? { duration: 0, delay: 0, repeat: 0 } : { duration: 0.9, delay, ease: "easeOut" }}
     >
       {children}
     </motion.div>
@@ -53,6 +55,7 @@ function FadeBlur({ children, delay = 0 }) {
 
 // Elemento flotante decorativo — hojas orgánicas
 function FloatingOrb({ size, color, top, left, duration = 8, delay = 0 }) {
+  const reduced = useReducedMotion()
   return (
     <motion.div
       style={{
@@ -75,7 +78,7 @@ function FloatingOrb({ size, color, top, left, duration = 8, delay = 0 }) {
         y: [0, -12, 0],
         rotate: [0, 5, 0],
       }}
-      transition={{
+      transition={reduced ? { duration: 0, delay: 0, repeat: 0 } : {
         duration,
         delay,
         repeat: Infinity,
@@ -85,34 +88,11 @@ function FloatingOrb({ size, color, top, left, duration = 8, delay = 0 }) {
   )
 }
 
-function Navbar() {
-  const [scrolled, setScrolled] = useState(false)
-  const [menuOpen, setMenuOpen] = useState(false)
-  const [activeSection, setActiveSection] = useState("")
-
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 40)
-    window.addEventListener("scroll", onScroll)
-    return () => window.removeEventListener("scroll", onScroll)
-  }, [])
-
-  useEffect(() => {
-    const ids = ["sobre-mi", "servicios", "primera-cita", "contacto"]
-    const sections = ids.map((id) => document.getElementById(id)).filter(Boolean)
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) setActiveSection(entry.target.id)
-        })
-      },
-      { rootMargin: "-40% 0px -55% 0px" }
-    )
-    sections.forEach((s) => observer.observe(s))
-    return () => observer.disconnect()
-  }, [])
+function Navbar({ onOpenWhatsApp }) {
+  const { scrolled, activeSection, menuOpen, setMenuOpen } = useDemoNavigation()
 
   const links = [
-    { label: "Inicio", href: "#" },
+    { label: "Inicio", href: "#inicio" },
     { label: "Sobre mí", href: "#sobre-mi" },
     { label: "Servicios", href: "#servicios" },
     { label: "Primera cita", href: "#primera-cita" },
@@ -120,7 +100,7 @@ function Navbar() {
   ]
 
   return (
-    <motion.nav
+    <motion.nav aria-label="Navegación de la demo"
       className="fixed top-11 left-0 right-0 z-[55]"
       style={{
         backgroundColor: scrolled ? "rgba(247,249,244,0.96)" : "transparent",
@@ -133,31 +113,30 @@ function Navbar() {
         <div className="flex items-center gap-2">
           <Leaf size={16} style={{ color: C.green500 }} />
           <span style={{ fontFamily: "Cormorant Garamond, serif", color: C.green900, fontSize: 19, fontWeight: 400 }}>
-            Dra. Valeria Romero
+            Valeria Romero
           </span>
         </div>
 
-        <div className="hidden md:flex items-center gap-8">
+        <div className="hidden xl:flex items-center gap-5">
           {links.map(l => {
-            const isActive = l.href === "#" ? activeSection === "" : activeSection === l.href.slice(1)
+            const isActive = activeSection === l.href.slice(1)
             return (
-              <a key={l.label} href={l.href}
+              <a key={l.label} href={l.href} aria-current={activeSection === l.href.slice(1) ? "location" : undefined}
                 style={{ color: isActive ? C.green700 : C.gray, fontFamily: "Nunito, sans-serif", fontSize: 14, fontWeight: isActive ? 600 : 400 }}
-                className="hover:opacity-50 transition-opacity">
+                className="hover:opacity-90 transition-opacity">
                 {l.label}
               </a>
             )
           })}
-          <a href="https://wa.me/521234567890?text=Hola, me gustaría agendar una cita"
-            target="_blank" rel="noopener noreferrer"
+          <button type="button" onClick={() => { setMenuOpen(false); onOpenWhatsApp() }}
             className="px-5 py-2 text-white text-sm transition-all hover:opacity-90 rounded-full"
-            style={{ backgroundColor: C.green500, fontFamily: "Nunito, sans-serif" }}>
+            style={{ backgroundColor: C.green700, fontFamily: "Nunito, sans-serif" }}>
             Agendar cita
-          </a>
+          </button>
         </div>
 
-        <button className="md:hidden p-2" onClick={() => setMenuOpen(!menuOpen)}
-          aria-expanded={menuOpen} aria-label={menuOpen ? "Cerrar menú" : "Abrir menú"}>
+        <button className="xl:hidden p-2" onClick={() => setMenuOpen(!menuOpen)}
+          aria-haspopup="dialog" aria-expanded={menuOpen} aria-label={menuOpen ? "Cerrar menú" : "Abrir menú"}>
           <div className="space-y-1.5">
             <motion.div animate={{ rotate: menuOpen ? 45 : 0, y: menuOpen ? 8 : 0 }}
               className="w-6 h-px" style={{ backgroundColor: C.green700 }} />
@@ -169,40 +148,36 @@ function Navbar() {
         </button>
       </div>
 
-      <AnimatePresence>
+      <>
         {menuOpen && (
-          <motion.div
-            initial={{ opacity: 0, y: -12 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -12 }}
-            transition={{ duration: 0.35 }}
-            className="md:hidden absolute top-full left-0 right-0 py-8 px-8 flex flex-col gap-5"
-            style={{ backgroundColor: "rgba(247,249,244,0.98)", backdropFilter: "blur(12px)", borderBottom: `1px solid ${C.green200}`, minHeight: "100dvh" }}
-          >
+          <Modal title="Menú de la demo" onClose={() => setMenuOpen(false)} fontFamily="Nunito, sans-serif">
+          <div className="flex flex-col gap-2">
             {links.map(l => (
-              <a key={l.label} href={l.href}
-                style={{ color: C.green900, fontFamily: "Cormorant Garamond, serif", fontSize: 22 }}
+              <a key={l.label} className="min-h-11 flex items-center" href={l.href} aria-current={activeSection === l.href.slice(1) ? "location" : undefined}
+                style={{ color: "#ffffff", fontFamily: "Cormorant Garamond, serif", fontSize: 22 }}
                 onClick={() => setMenuOpen(false)}>{l.label}</a>
             ))}
-            <a href="https://wa.me/521234567890"
+            <button type="button" onClick={() => { setMenuOpen(false); onOpenWhatsApp() }}
               className="mt-2 py-3 text-white text-center rounded-full"
-              style={{ backgroundColor: C.green500, fontFamily: "Nunito, sans-serif" }}>
+              style={{ backgroundColor: "#394d43", fontFamily: "Nunito, sans-serif" }}>
               Agendar cita
-            </a>
-          </motion.div>
+            </button>
+          </div>
+          </Modal>
         )}
-      </AnimatePresence>
+      </>
     </motion.nav>
   )
 }
 
 function Hero({ onOpenWhatsApp }) {
+  const reduced = useReducedMotion()
   const ref = useRef(null)
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end start"] })
   const bgY = useTransform(scrollYProgress, [0, 1], ["0%", "20%"])
 
   return (
-    <section ref={ref} className="min-h-screen flex items-center pt-[124px] pb-16 px-8 relative overflow-hidden"
+    <section id="inicio" ref={ref} className="min-h-screen flex items-center pt-[124px] pb-16 px-8 relative overflow-hidden"
       style={{ backgroundColor: C.bg }}>
 
       {/* Orbes decorativos flotantes */}
@@ -212,9 +187,9 @@ function Hero({ onOpenWhatsApp }) {
       <div className="max-w-6xl mx-auto w-full grid md:grid-cols-2 gap-16 items-center relative z-10">
         <div>
           <motion.h1
-            initial={{ opacity: 0, filter: "blur(10px)" }}
+            initial={reduced ? false : { opacity: 0, filter: "blur(10px)" }}
             animate={{ opacity: 1, filter: "blur(0px)" }}
-            transition={{ duration: 1.1, delay: 0.15 }}
+            transition={reduced ? { duration: 0, delay: 0, repeat: 0 } : { duration: 1.1, delay: 0.15 }}
             style={{
               fontFamily: "Cormorant Garamond, serif",
               color: C.green900,
@@ -228,9 +203,9 @@ function Hero({ onOpenWhatsApp }) {
           </motion.h1>
 
           <motion.p
-            initial={{ opacity: 0 }}
+            initial={reduced ? false : { opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ duration: 1, delay: 0.5 }}
+            transition={reduced ? { duration: 0, delay: 0, repeat: 0 } : { duration: 1, delay: 0.5 }}
             style={{ fontFamily: "Nunito, sans-serif", color: C.gray, lineHeight: 1.85, fontSize: 15, fontWeight: 300 }}
             className="mb-10 max-w-lg"
           >
@@ -239,14 +214,14 @@ function Hero({ onOpenWhatsApp }) {
           </motion.p>
 
           <motion.div
-            initial={{ opacity: 0 }}
+            initial={reduced ? false : { opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ duration: 0.8, delay: 0.8 }}
+            transition={reduced ? { duration: 0, delay: 0, repeat: 0 } : { duration: 0.8, delay: 0.8 }}
             className="flex flex-col sm:flex-row gap-4"
           >
             <button onClick={onOpenWhatsApp}
               className="flex items-center justify-center gap-2 px-6 py-3 text-white text-sm rounded-full transition-all hover:opacity-90"
-              style={{ backgroundColor: C.green500, fontFamily: "Nunito, sans-serif" }}>
+              style={{ backgroundColor: C.green700, fontFamily: "Nunito, sans-serif" }}>
               <MessageCircle size={16} />
               Comenzar el proceso
             </button>
@@ -260,11 +235,11 @@ function Hero({ onOpenWhatsApp }) {
 
         {/* Imagen con parallax sutil */}
         <motion.div
-          initial={{ opacity: 0, filter: "blur(8px)" }}
+          initial={reduced ? false : { opacity: 0, filter: "blur(8px)" }}
           animate={{ opacity: 1, filter: "blur(0px)" }}
-          transition={{ duration: 1.2, delay: 0.3 }}
+          transition={reduced ? { duration: 0, delay: 0, repeat: 0 } : { duration: 1.2, delay: 0.3 }}
           className="hidden md:block relative"
-          style={{ y: bgY }}
+          style={{ y: reduced ? 0 : bgY }}
         >
           <div style={{
             borderRadius: "60% 40% 55% 45% / 50% 45% 55% 50%",
@@ -274,7 +249,7 @@ function Hero({ onOpenWhatsApp }) {
           }}>
             <img
               src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=600&q=80"
-              alt="Psicóloga"
+              alt="Retrato de referencia para el personaje ficticio" fetchPriority="high"
               className="w-full h-full object-cover"
               style={{ filter: "saturate(0.85)" }}
             />
@@ -282,7 +257,7 @@ function Hero({ onOpenWhatsApp }) {
           {/* Badge flotante */}
           <motion.div
             animate={{ y: [0, -6, 0] }}
-            transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+            transition={reduced ? { duration: 0, delay: 0, repeat: 0 } : { duration: 4, repeat: Infinity, ease: "easeInOut" }}
             className="absolute bottom-8 -left-6 p-4 rounded-2xl shadow-lg"
             style={{ backgroundColor: C.white, border: `1px solid ${C.green200}` }}
           >
@@ -301,6 +276,7 @@ function Hero({ onOpenWhatsApp }) {
 }
 
 function Identificacion() {
+  const reduced = useReducedMotion()
   const items = [
     { icon: Wind, title: "Ansiedad y agotamiento", desc: "Cuando la mente no descansa y el cuerpo acusa el peso de las preocupaciones." },
     { icon: Leaf, title: "Desconexión interior", desc: "Sensación de no reconocerse, de estar lejos de lo que alguna vez se fue." },
@@ -328,7 +304,7 @@ function Identificacion() {
                 className="p-8 rounded-3xl cursor-default"
                 style={{ backgroundColor: C.bg }}
                 whileHover={{ y: -5, backgroundColor: C.green100 }}
-                transition={{ duration: 0.3 }}
+                transition={reduced ? { duration: 0, delay: 0, repeat: 0 } : { duration: 0.3 }}
               >
                 <item.icon size={24} className="mb-5" style={{ color: C.sage }} />
                 <h3 style={{ fontFamily: "Cormorant Garamond, serif", color: C.green900, fontSize: 20, fontWeight: 400 }}
@@ -354,22 +330,22 @@ function SobreMi() {
 
       <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-16 items-center relative z-10">
         <FadeBlur>
-          <div style={{ borderRadius: "50% 50% 40% 60% / 45% 55% 45% 55%", overflow: "hidden", height: 480 }}>
-            <img
-              src="https://images.unsplash.com/photo-1551836022-deb4988cc6c0?w=600&q=80"
-              alt="Consultorio"
-              className="w-full h-full object-cover"
-              style={{ filter: "saturate(0.8)" }}
-            />
-          </div>
+          <img
+            src="https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?w=600&q=80"
+            alt="Sala con sillones y plantas, imagen de referencia para esta demo" loading="lazy" decoding="async"
+            width={600} height={450}
+            className="demo-room-image rounded-3xl"
+            style={{ filter: "saturate(0.8)" }}
+          />
         </FadeBlur>
 
         <div>
           <FadeBlur delay={0.1}>
             <h2 style={{ fontFamily: "Cormorant Garamond, serif", color: C.green900, fontSize: "clamp(1.8rem, 3vw, 2.8rem)", fontWeight: 300, lineHeight: 1.3 }}
               className="mb-6">
-              Dra. Valeria Romero
+              Valeria Romero
             </h2>
+            <p className="demo-fiction-note">Perfil ficticio. La formación y la trayectoria son contenido de ejemplo.</p>
             <p style={{ fontFamily: "Nunito, sans-serif", color: C.gray, lineHeight: 1.9, fontSize: 14, fontWeight: 300 }}
               className="mb-5">
               Creo que cada persona lleva en sí misma la capacidad de sanar. Mi trabajo es
@@ -377,8 +353,8 @@ function SobreMi() {
             </p>
             <p style={{ fontFamily: "Nunito, sans-serif", color: C.gray, lineHeight: 1.9, fontSize: 14, fontWeight: 300 }}
               className="mb-8">
-              Trabajo principalmente desde la terapia humanista y mindfulness, integrando
-              técnicas cognitivo-conductuales cuando el proceso lo requiere.
+              Mi enfoque integra la terapia cognitivo-conductual con técnicas humanistas,
+              adaptando el acompañamiento a cada proceso.
             </p>
           </FadeBlur>
 
@@ -387,11 +363,11 @@ function SobreMi() {
               {[
                 "Licenciatura en Psicología, UNAM",
                 "Maestría en Psicología Clínica, UNAM",
-                "Cédula profesional: 12345678",
-                "Formación en Mindfulness-Based Cognitive Therapy",
+                "Cédula de ejemplo: 12345678",
+                "Especialidad en Terapia Cognitivo-Conductual",
               ].map((item, i) => (
                 <div key={i} className="flex items-center gap-3">
-                  <Leaf size={13} style={{ color: C.sage, flexShrink: 0 }} />
+                  <Leaf size={13} style={{ color: C.green700, flexShrink: 0 }} />
                   <span style={{ fontFamily: "Nunito, sans-serif", color: C.gray, fontSize: 13, fontWeight: 300 }}>
                     {item}
                   </span>
@@ -403,9 +379,9 @@ function SobreMi() {
           <FadeBlur delay={0.3}>
             <div className="grid grid-cols-3 gap-4">
               {[
-                { n: "412", label: "Pacientes" },
-                { n: "8+", label: "Años" },
-                { n: "94%", label: "Satisfacción" },
+                { n: "3", label: "Servicios" },
+                { n: "50 min", label: "Sesión individual" },
+                { n: "2", label: "Modalidades" },
               ].map((s, i) => (
                 <div key={i} className="text-center py-4 rounded-2xl"
                   style={{ backgroundColor: C.green100 }}>
@@ -422,13 +398,14 @@ function SobreMi() {
   )
 }
 
-const SERVICIOS_ITEMS = [
+const SERVICIOS_ITEMS = withServiceRules([
   { title: "Terapia Individual", desc: "Un espacio íntimo para explorar, comprender y transformar lo que pesa. Vamos a tu ritmo, sin agenda impuesta, dejando que el proceso tome la forma que tú necesitas.", duration: "50 min / sesión", mode: "Presencial u online" },
   { title: "Terapia de Pareja", desc: "Reconectar con el otro desde un lugar más auténtico y compasivo. Juntos identificamos qué los aleja y practicamos formas más genuinas de encontrarse de nuevo.", duration: "60 min / sesión", mode: "Presencial u online" },
   { title: "Orientación y Acompañamiento", desc: "Para momentos de transición que piden una mirada externa y serena. En pocos encuentros, ponemos en palabras lo que sientes y encontramos claridad sobre el siguiente paso.", duration: "45 min / sesión", mode: "Online" },
-]
+])
 
 function Servicios({ onSelect }) {
+  const reduced = useReducedMotion()
   const items = SERVICIOS_ITEMS
 
   return (
@@ -449,7 +426,7 @@ function Servicios({ onSelect }) {
                 className="p-8 rounded-3xl flex flex-col h-full text-left w-full cursor-pointer"
                 style={{ backgroundColor: C.bg, border: `1px solid ${C.green200}` }}
                 whileHover={{ y: -4, boxShadow: `0 16px 48px ${C.green200}80` }}
-                transition={{ duration: 0.35 }}
+                transition={reduced ? { duration: 0, delay: 0, repeat: 0 } : { duration: 0.35 }}
               >
                 <h3 style={{ fontFamily: "Cormorant Garamond, serif", color: C.green900, fontSize: 21, fontWeight: 400 }}
                   className="mb-3">
@@ -474,7 +451,7 @@ function Servicios({ onSelect }) {
                     </span>
                   </div>
                 </div>
-                <span className="mt-4 text-xs" style={{ fontFamily: "Nunito, sans-serif", color: C.sage, fontWeight: 400 }}>
+                <span className="mt-4 text-xs" style={{ fontFamily: "Nunito, sans-serif", color: C.green700, fontWeight: 400 }}>
                   Reservar este servicio →
                 </span>
               </motion.button>
@@ -534,7 +511,7 @@ function PrimeraCita({ onStartReservation }) {
           <div className="text-center mt-14">
             <button onClick={onStartReservation}
               className="px-6 py-3 text-white text-sm rounded-full transition-all hover:opacity-90"
-              style={{ backgroundColor: C.green500, fontFamily: "Nunito, sans-serif" }}>
+              style={{ backgroundColor: C.green700, fontFamily: "Nunito, sans-serif" }}>
               Simular una reserva
             </button>
           </div>
@@ -559,6 +536,7 @@ function Resenas() {
             className="mb-16 text-center">
             Palabras de quienes ya caminaron aquí
           </h2>
+            <p className="demo-fiction-note">Reseñas ficticias redactadas para esta demostración.</p>
         </FadeBlur>
 
         {/* Camino vertical, coherente con los pasos de "primera cita" del mismo tema */}
@@ -599,9 +577,7 @@ function Resenas() {
   )
 }
 
-function Contacto() {
-  const nombreRef = useRef(null)
-  const form = useContactForm({ nombreRef })
+function Contacto({ onOpenWhatsApp }) {
 
   return (
     <section id="contacto" className="py-24 px-8 relative overflow-hidden" style={{ backgroundColor: C.green900, scrollMarginTop: 144 }}>
@@ -621,12 +597,12 @@ function Contacto() {
 
           <div className="space-y-4 mb-10">
             {[
-              { icon: Phone, text: "+52 (123) 456-7890" },
+              { icon: Phone, text: "Número de ejemplo · contacto simulado" },
               { icon: MapPin, text: "Xalapa, Veracruz, México" },
               { icon: Clock, text: "Lunes a Viernes · 9:00 – 19:00" },
             ].map((item, i) => (
               <div key={i} className="flex items-center gap-3">
-                <item.icon size={15} style={{ color: "rgba(255,255,255,0.3)" }} />
+                <item.icon size={15} style={{ color: "rgba(255,255,255,0.8)" }} />
                 <span style={{ fontFamily: "Nunito, sans-serif", color: "rgba(255,255,255,0.55)", fontSize: 14, fontWeight: 300 }}>
                   {item.text}
                 </span>
@@ -634,121 +610,16 @@ function Contacto() {
             ))}
           </div>
 
-          <a href="https://wa.me/521234567890?text=Hola, me gustaría comenzar el proceso"
-            target="_blank" rel="noopener noreferrer"
+          <button type="button" onClick={onOpenWhatsApp}
             className="inline-flex items-center gap-2 px-6 py-3 text-sm rounded-full transition-all hover:opacity-90"
             style={{ backgroundColor: C.sage, color: C.white, fontFamily: "Nunito, sans-serif" }}>
             <MessageCircle size={15} />
             Escribir por WhatsApp
-          </a>
+          </button>
         </FadeBlur>
 
         <FadeBlur delay={0.2}>
-          <AnimatePresence mode="wait">
-            {form.status === "success" ? (
-              <DemoConfirmation
-                key="confirmation"
-                onReset={() => form.reset(true)}
-                onClose={() => form.reset(false)}
-                accentColor={C.sage}
-                borderColor="rgba(255,255,255,0.15)"
-                fontFamily="Nunito, sans-serif"
-                radius={12}
-              />
-            ) : (
-              <motion.form
-                key="form"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                className="space-y-5"
-                onSubmit={form.handleSubmit}
-                noValidate
-              >
-                <div>
-                  <label style={{ fontFamily: "Nunito, sans-serif", color: "rgba(255,255,255,0.4)", fontSize: 12, fontWeight: 300 }}
-                    className="block mb-1.5">
-                    Nombre
-                  </label>
-                  <input type="text" placeholder="Tu nombre" ref={nombreRef}
-                    value={form.values.nombre} onChange={form.handleChange("nombre")}
-                    className="w-full px-4 py-3 text-white focus:outline-none rounded-xl"
-                    style={{
-                      backgroundColor: "rgba(255,255,255,0.07)",
-                      border: `1px solid ${form.errors.nombre ? "#F87171" : "rgba(255,255,255,0.1)"}`,
-                      fontFamily: "Nunito, sans-serif",
-                      fontSize: 14,
-                      fontWeight: 300,
-                    }} />
-                  {form.errors.nombre && <p className="mt-1 text-xs" style={{ color: "#FCA5A5", fontFamily: "Nunito, sans-serif" }}>{form.errors.nombre}</p>}
-                </div>
-                <div>
-                  <label style={{ fontFamily: "Nunito, sans-serif", color: "rgba(255,255,255,0.4)", fontSize: 12, fontWeight: 300 }}
-                    className="block mb-1.5">
-                    Correo
-                  </label>
-                  <input type="email" placeholder="tu@correo.com"
-                    value={form.values.correo} onChange={form.handleChange("correo")}
-                    className="w-full px-4 py-3 text-white focus:outline-none rounded-xl"
-                    style={{
-                      backgroundColor: "rgba(255,255,255,0.07)",
-                      border: `1px solid ${form.errors.correo ? "#F87171" : "rgba(255,255,255,0.1)"}`,
-                      fontFamily: "Nunito, sans-serif",
-                      fontSize: 14,
-                      fontWeight: 300,
-                    }} />
-                  {form.errors.correo && <p className="mt-1 text-xs" style={{ color: "#FCA5A5", fontFamily: "Nunito, sans-serif" }}>{form.errors.correo}</p>}
-                </div>
-                <div>
-                  <label style={{ fontFamily: "Nunito, sans-serif", color: "rgba(255,255,255,0.4)", fontSize: 12, fontWeight: 300 }}
-                    className="block mb-1.5">
-                    ¿Qué te trae aquí?
-                  </label>
-                  <select value={form.values.motivo} onChange={form.handleChange("motivo")}
-                    className="w-full px-4 py-3 text-white focus:outline-none rounded-xl"
-                    style={{
-                      backgroundColor: "rgba(255,255,255,0.07)",
-                      border: `1px solid ${form.errors.motivo ? "#F87171" : "rgba(255,255,255,0.1)"}`,
-                      fontFamily: "Nunito, sans-serif",
-                      fontSize: 14,
-                      fontWeight: 300,
-                    }}>
-                    <option value="" className="bg-green-900">Selecciona</option>
-                    {["Ansiedad o estrés", "Agotamiento emocional", "Terapia de pareja", "Duelo o pérdida", "Otro"].map(o => (
-                      <option key={o} value={o} className="bg-green-900">{o}</option>
-                    ))}
-                  </select>
-                  {form.errors.motivo && <p className="mt-1 text-xs" style={{ color: "#FCA5A5", fontFamily: "Nunito, sans-serif" }}>{form.errors.motivo}</p>}
-                </div>
-                <div>
-                  <label style={{ fontFamily: "Nunito, sans-serif", color: "rgba(255,255,255,0.4)", fontSize: 12, fontWeight: 300 }}
-                    className="block mb-1.5">
-                    Mensaje
-                  </label>
-                  <textarea rows={4} placeholder="Cuéntame lo que necesites..."
-                    value={form.values.mensaje} onChange={form.handleChange("mensaje")}
-                    className="w-full px-4 py-3 text-white focus:outline-none resize-none rounded-xl"
-                    style={{
-                      backgroundColor: "rgba(255,255,255,0.07)",
-                      border: `1px solid ${form.errors.mensaje ? "#F87171" : "rgba(255,255,255,0.1)"}`,
-                      fontFamily: "Nunito, sans-serif",
-                      fontSize: 14,
-                      fontWeight: 300,
-                    }} />
-                  {form.errors.mensaje && <p className="mt-1 text-xs" style={{ color: "#FCA5A5", fontFamily: "Nunito, sans-serif" }}>{form.errors.mensaje}</p>}
-                </div>
-                <motion.button
-                  type="submit"
-                  disabled={form.status === "submitting"}
-                  whileHover={{ opacity: form.status === "submitting" ? 1 : 0.9 }}
-                  whileTap={{ scale: form.status === "submitting" ? 1 : 0.98 }}
-                  className="w-full py-3 text-sm rounded-xl disabled:opacity-70"
-                  style={{ backgroundColor: C.sage, color: C.white, fontFamily: "Nunito, sans-serif" }}>
-                  {form.status === "submitting" ? "Enviando..." : "Enviar mensaje"}
-                </motion.button>
-              </motion.form>
-            )}
-          </AnimatePresence>
+          <DemoContactForm accentColor={C.green500} fontFamily="Nunito, sans-serif" variant="naturaleza" />
         </FadeBlur>
       </div>
     </section>
@@ -759,10 +630,10 @@ function Footer() {
   const [privacyOpen, setPrivacyOpen] = useState(false)
 
   return (
-    <footer className="py-6 px-8 text-center"
+    <footer className="pt-8 pb-28 px-8 text-center"
       style={{ backgroundColor: "#111D0F", borderTop: "1px solid rgba(255,255,255,0.05)" }}>
-      <p style={{ fontFamily: "Nunito, sans-serif", color: "rgba(255,255,255,0.2)", fontSize: 12, fontWeight: 300 }}>
-        © 2026 Dra. Valeria Romero · Psicóloga Clínica · Xalapa, Veracruz
+      <p style={{ fontFamily: "Nunito, sans-serif", color: "rgba(255,255,255,0.8)", fontSize: 12, fontWeight: 300 }}>
+        © 2026 Valeria Romero · Psicóloga Clínica · Xalapa, Veracruz
       </p>
       <button onClick={() => setPrivacyOpen(true)}
         className="mt-1 underline-offset-2 hover:underline transition-all"
@@ -794,7 +665,8 @@ export default function ThemeNaturaleza() {
 
   return (
     <div style={{ backgroundColor: C.bg }}>
-      <Navbar />
+      <Navbar onOpenWhatsApp={() => setWaOpen(true)} />
+      <main id="contenido" tabIndex={-1}>
       <Hero onOpenWhatsApp={() => setWaOpen(true)} />
       <Identificacion />
       <SobreMi />
@@ -809,7 +681,8 @@ export default function ThemeNaturaleza() {
         radius={20}
         giro="psicólogo (tema Naturaleza)"
       />
-      <Contacto />
+      <Contacto onOpenWhatsApp={() => setWaOpen(true)} />
+      </main>
       <Footer />
       <WhatsAppPreview
         isOpen={waOpen}
@@ -828,12 +701,6 @@ export default function ThemeNaturaleza() {
         headingFontFamily="Cormorant Garamond, serif"
         radius={20}
         accionLabel="cita"
-      />
-      <OnboardingGuide
-        accentColor={C.green500}
-        fontFamily="Nunito, sans-serif"
-        headingFontFamily="Cormorant Garamond, serif"
-        radius={20}
       />
     </div>
   )

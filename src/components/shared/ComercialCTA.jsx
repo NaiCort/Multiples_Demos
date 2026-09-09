@@ -1,6 +1,7 @@
-import { motion } from "framer-motion"
+import { motion, useReducedMotion } from "framer-motion"
 import { ArrowRight } from "lucide-react"
 import { buildWhatsAppUrl } from "./contactInfo"
+import { contrastingText, dialogAccent } from "../../utils/colors"
 
 // Llamada comercial real (Parte III, Fase 2 del Documento Maestro): visualmente
 // separada de las acciones ficticias del negocio simulado, obligatoria dentro del
@@ -9,15 +10,15 @@ import { buildWhatsAppUrl } from "./contactInfo"
 
 export default function ComercialCTA({
   accentColor,
-  accentTextColor = "#ffffff",
   backgroundColor,
   textColor = "#ffffff",
-  mutedColor = "rgba(255,255,255,0.65)",
   fontFamily,
   headingFontFamily,
   radius = 12,
   giro = "psicólogo",
 }) {
+  const reduced = useReducedMotion()
+  const accent = dialogAccent(accentColor)
   const whatsappUrl = buildWhatsAppUrl(
     `Hola Ian, vi tu demo de ${giro} y me interesa un sitio similar para mi negocio.`
   )
@@ -29,10 +30,10 @@ export default function ComercialCTA({
       style={{ backgroundColor, scrollMarginTop: 140 }}
     >
       <motion.div
-        initial={{ opacity: 0, y: 16 }}
+        initial={reduced ? false : { opacity: 0, y: 16 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: "-80px" }}
-        transition={{ duration: 0.6 }}
+        transition={reduced ? { duration: 0, delay: 0, repeat: 0 } : { duration: 0.6 }}
         className="max-w-3xl mx-auto text-center p-8 sm:p-10"
         style={{
           backgroundColor: "rgba(255,255,255,0.04)",
@@ -42,7 +43,7 @@ export default function ComercialCTA({
       >
         <p
           className="text-xs font-medium uppercase mb-3"
-          style={{ color: accentColor, fontFamily, letterSpacing: "0.1em" }}
+          style={{ color: "#ffffff", fontFamily, letterSpacing: "0.1em" }}
         >
           Sobre esta demo
         </p>
@@ -54,7 +55,7 @@ export default function ComercialCTA({
         </h3>
         <p
           className="mb-7"
-          style={{ fontFamily, color: mutedColor, fontSize: 14.5, lineHeight: 1.7 }}
+          style={{ fontFamily, color: "rgba(255,255,255,0.85)", fontSize: 14.5, lineHeight: 1.7 }}
         >
           Puedo personalizar el estilo, el contenido y los flujos de contacto de un sitio
           como este para tu propio negocio. Este demo es un ejemplo real de lo que puedo construir.
@@ -65,17 +66,10 @@ export default function ComercialCTA({
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center gap-2 px-6 py-3 text-sm font-medium transition-opacity hover:opacity-90"
-            style={{ backgroundColor: accentColor, color: accentTextColor, fontFamily, borderRadius: radius > 20 ? 999 : radius }}
+            style={{ backgroundColor: accent, color: contrastingText(accent), fontFamily, borderRadius: radius > 20 ? 999 : radius }}
           >
             Hablemos
             <ArrowRight size={16} />
-          </a>
-          <a
-            href="#contacto"
-            className="px-6 py-3 text-sm font-medium transition-opacity hover:opacity-70"
-            style={{ color: mutedColor, fontFamily }}
-          >
-            Ver el caso de estudio
           </a>
         </div>
       </motion.div>

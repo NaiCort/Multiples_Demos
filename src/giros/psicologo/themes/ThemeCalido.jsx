@@ -1,13 +1,14 @@
 import { useEffect, useRef, useState } from "react"
-import { motion, useInView, AnimatePresence } from "framer-motion"
+import { motion, useReducedMotion, useInView } from "framer-motion"
 import { Phone, MapPin, Clock, Heart, Users, Award, ChevronDown, MessageCircle, Star } from "lucide-react"
-import useContactForm from "../../../hooks/useContactForm"
-import DemoConfirmation from "../../../components/shared/DemoConfirmation"
+import DemoContactForm from "../../../components/shared/DemoContactForm"
 import PrivacyModal from "../../../components/shared/PrivacyModal"
 import ComercialCTA from "../../../components/shared/ComercialCTA"
 import WhatsAppPreview from "../../../components/shared/WhatsAppPreview"
 import ReservationFlow from "../../../components/shared/ReservationFlow"
-import OnboardingGuide from "../../../components/shared/OnboardingGuide"
+import Modal from "../../../components/shared/Modal"
+import useDemoNavigation from "../../../hooks/useDemoNavigation"
+import { withServiceRules } from "../data/services"
 
 const C = {
   cream: "#F8F5F1",
@@ -16,7 +17,7 @@ const C = {
   sageDark: "#3D5A45",
   terra: "#C17F5A",
   gray: "#5C5C5C",
-  grayLight: "#9A9A9A",
+  grayLight: "#666666",
 }
 
 function useFonts() {
@@ -32,15 +33,16 @@ function useFonts() {
 }
 
 function FadeRise({ children, delay = 0, className = "" }) {
+  const reduced = useReducedMotion()
   const ref = useRef(null)
   const inView = useInView(ref, { once: true, margin: "-80px" })
   return (
     <motion.div
       ref={ref}
       className={className}
-      initial={{ opacity: 0, y: 24 }}
-      animate={inView ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 0.6, delay, ease: "easeOut" }}
+      initial={reduced ? false : { opacity: 0, y: 24 }}
+      animate={reduced || inView ? { opacity: 1, y: 0 } : {}}
+      transition={reduced ? { duration: 0, delay: 0, repeat: 0 } : { duration: 0.6, delay, ease: "easeOut" }}
     >
       {children}
     </motion.div>
@@ -48,12 +50,13 @@ function FadeRise({ children, delay = 0, className = "" }) {
 }
 
 function Counter({ to, suffix = "", duration = 1.5 }) {
+  const reduced = useReducedMotion()
   const ref = useRef(null)
   const inView = useInView(ref, { once: true })
   const [count, setCount] = useState(0)
 
   useEffect(() => {
-    if (!inView) return
+    if (!inView || reduced) return
     let start = 0
     const step = to / (duration * 60)
     const timer = setInterval(() => {
@@ -62,39 +65,16 @@ function Counter({ to, suffix = "", duration = 1.5 }) {
       else setCount(Math.floor(start))
     }, 1000 / 60)
     return () => clearInterval(timer)
-  }, [inView, to, duration])
+  }, [inView, to, duration, reduced])
 
-  return <span ref={ref}>{count}{suffix}</span>
+  return <span ref={ref}>{reduced ? to : count}{suffix}</span>
 }
 
-function Navbar() {
-  const [scrolled, setScrolled] = useState(false)
-  const [menuOpen, setMenuOpen] = useState(false)
-  const [activeSection, setActiveSection] = useState("")
-
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 40)
-    window.addEventListener("scroll", onScroll)
-    return () => window.removeEventListener("scroll", onScroll)
-  }, [])
-
-  useEffect(() => {
-    const ids = ["sobre-mi", "servicios", "primera-cita", "contacto"]
-    const sections = ids.map((id) => document.getElementById(id)).filter(Boolean)
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) setActiveSection(entry.target.id)
-        })
-      },
-      { rootMargin: "-40% 0px -55% 0px" }
-    )
-    sections.forEach((s) => observer.observe(s))
-    return () => observer.disconnect()
-  }, [])
+function Navbar({ onOpenWhatsApp }) {
+  const { scrolled, activeSection, menuOpen, setMenuOpen } = useDemoNavigation()
 
   const links = [
-    { label: "Inicio", href: "#" },
+    { label: "Inicio", href: "#inicio" },
     { label: "Sobre mí", href: "#sobre-mi" },
     { label: "Servicios", href: "#servicios" },
     { label: "Primera cita", href: "#primera-cita" },
@@ -102,7 +82,7 @@ function Navbar() {
   ]
 
   return (
-    <motion.nav
+    <motion.nav aria-label="Navegación de la demo"
       className="fixed top-11 left-0 right-0 z-[55] transition-all duration-300"
       style={{
         backgroundColor: scrolled ? "rgba(248,245,241,0.95)" : "transparent",
@@ -112,28 +92,27 @@ function Navbar() {
     >
       <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
         <span style={{ fontFamily: "Playfair Display, serif", color: C.sageDark, fontSize: 20, fontWeight: 700 }}>
-          Dra. Valeria Romero
+          Valeria Romero
         </span>
 
-        <div className="hidden md:flex items-center gap-8">
+        <div className="hidden xl:flex items-center gap-5">
           {links.map(l => {
-            const isActive = l.href === "#" ? activeSection === "" : activeSection === l.href.slice(1)
+            const isActive = activeSection === l.href.slice(1)
             return (
-              <a key={l.label} href={l.href}
-                style={{ color: isActive ? C.sage : C.gray, fontFamily: "Inter, sans-serif", fontSize: 14, fontWeight: isActive ? 600 : 400 }}
-                className="hover:opacity-70 transition-opacity">{l.label}</a>
+              <a key={l.label} href={l.href} aria-current={activeSection === l.href.slice(1) ? "location" : undefined}
+                style={{ color: isActive ? C.sageDark : C.gray, fontFamily: "Inter, sans-serif", fontSize: 14, fontWeight: isActive ? 600 : 400 }}
+                className="hover:opacity-90 transition-opacity">{l.label}</a>
             )
           })}
-          <a href="https://wa.me/521234567890?text=Hola, me gustaría agendar una cita"
-            target="_blank" rel="noopener noreferrer"
+          <button type="button" onClick={() => { setMenuOpen(false); onOpenWhatsApp() }}
             className="px-4 py-2 rounded-full text-white text-sm font-medium transition-all duration-200 hover:opacity-90"
-            style={{ backgroundColor: C.sage, fontFamily: "Inter, sans-serif" }}>
+            style={{ backgroundColor: C.sageDark, fontFamily: "Inter, sans-serif" }}>
             Agendar cita
-          </a>
+          </button>
         </div>
 
-        <button className="md:hidden flex flex-col gap-1.5 p-2" onClick={() => setMenuOpen(!menuOpen)}
-          aria-expanded={menuOpen} aria-label={menuOpen ? "Cerrar menú" : "Abrir menú"}>
+        <button className="xl:hidden flex flex-col gap-1.5 p-2" onClick={() => setMenuOpen(!menuOpen)}
+          aria-haspopup="dialog" aria-expanded={menuOpen} aria-label={menuOpen ? "Cerrar menú" : "Abrir menú"}>
           <motion.span animate={{ rotate: menuOpen ? 45 : 0, y: menuOpen ? 8 : 0 }}
             className="block w-6 h-0.5" style={{ backgroundColor: C.sageDark }} />
           <motion.span animate={{ opacity: menuOpen ? 0 : 1 }}
@@ -143,29 +122,23 @@ function Navbar() {
         </button>
       </div>
 
-      <AnimatePresence>
+      <>
         {menuOpen && (
-          <motion.div
-            initial={{ opacity: 0, y: -16 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -16 }}
-            transition={{ duration: 0.3 }}
-            className="md:hidden absolute top-full left-0 right-0 py-6 px-6 flex flex-col gap-4"
-            style={{ backgroundColor: "rgba(248,245,241,0.98)", backdropFilter: "blur(12px)", minHeight: "100dvh" }}
-          >
+          <Modal title="Menú de la demo" onClose={() => setMenuOpen(false)} fontFamily="Inter, sans-serif">
+          <div className="flex flex-col gap-2">
             {links.map(l => (
-              <a key={l.label} href={l.href} style={{ color: C.gray, fontFamily: "Inter, sans-serif", fontSize: 18 }}
+              <a key={l.label} className="min-h-11 flex items-center" href={l.href} aria-current={activeSection === l.href.slice(1) ? "location" : undefined} style={{ color: "#ffffff", fontFamily: "Inter, sans-serif", fontSize: 18 }}
                 onClick={() => setMenuOpen(false)}>{l.label}</a>
             ))}
-            <a href="https://wa.me/521234567890?text=Hola, me gustaría agendar una cita"
-              target="_blank" rel="noopener noreferrer"
+            <button type="button" onClick={() => { setMenuOpen(false); onOpenWhatsApp() }}
               className="mt-2 py-3 rounded-full text-white text-center font-medium"
-              style={{ backgroundColor: C.sage, fontFamily: "Inter, sans-serif" }}>
+              style={{ backgroundColor: "#394d43", fontFamily: "Inter, sans-serif" }}>
               Agendar cita por WhatsApp
-            </a>
-          </motion.div>
+            </button>
+          </div>
+          </Modal>
         )}
-      </AnimatePresence>
+      </>
     </motion.nav>
   )
 }
@@ -185,16 +158,17 @@ function GrainOverlay() {
 }
 
 function Hero({ onOpenWhatsApp }) {
+  const reduced = useReducedMotion()
   return (
-    <section className="min-h-screen flex items-center pt-[124px] pb-16 px-6 relative overflow-hidden"
+    <section id="inicio" className="min-h-screen flex items-center pt-[124px] pb-16 px-6 relative overflow-hidden"
       style={{ backgroundColor: C.cream }}>
       <GrainOverlay />
       <div className="max-w-6xl mx-auto w-full grid md:grid-cols-2 gap-12 items-center relative z-10">
         <div>
           <motion.h1
-            initial={{ opacity: 0, y: 24 }}
+            initial={reduced ? false : { opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.15 }}
+            transition={reduced ? { duration: 0, delay: 0, repeat: 0 } : { duration: 0.7, delay: 0.15 }}
             style={{ fontFamily: "Playfair Display, serif", color: C.sageDark, lineHeight: 1.2 }}
             className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6"
           >
@@ -202,9 +176,9 @@ function Hero({ onOpenWhatsApp }) {
           </motion.h1>
 
           <motion.p
-            initial={{ opacity: 0, y: 20 }}
+            initial={reduced ? false : { opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.3 }}
+            transition={reduced ? { duration: 0, delay: 0, repeat: 0 } : { duration: 0.7, delay: 0.3 }}
             style={{ fontFamily: "Inter, sans-serif", color: C.gray, lineHeight: 1.7 }}
             className="text-lg mb-8 max-w-lg"
           >
@@ -214,48 +188,48 @@ function Hero({ onOpenWhatsApp }) {
           </motion.p>
 
           <motion.div
-            initial={{ opacity: 0, y: 16 }}
+            initial={reduced ? false : { opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.5 }}
+            transition={reduced ? { duration: 0, delay: 0, repeat: 0 } : { duration: 0.6, delay: 0.5 }}
             className="flex flex-col sm:flex-row gap-3"
           >
             <button onClick={onOpenWhatsApp}
               className="flex items-center justify-center gap-2 px-6 py-3 rounded-full text-white font-medium text-sm transition-all duration-200 hover:opacity-90 hover:shadow-lg"
-              style={{ backgroundColor: C.sage, fontFamily: "Inter, sans-serif" }}>
+              style={{ backgroundColor: C.sageDark, fontFamily: "Inter, sans-serif" }}>
               <MessageCircle size={18} />
               Agendar por WhatsApp
             </button>
             <a href="#sobre-mi"
-              className="flex items-center justify-center gap-2 px-6 py-3 rounded-full font-medium text-sm border-2 transition-all duration-200 hover:opacity-70"
-              style={{ borderColor: C.sage, color: C.sage, fontFamily: "Inter, sans-serif" }}>
+              className="flex items-center justify-center gap-2 px-6 py-3 rounded-full font-medium text-sm border-2 transition-all duration-200 hover:opacity-90"
+              style={{ borderColor: C.sage, color: C.sageDark, fontFamily: "Inter, sans-serif" }}>
               Conoce mi enfoque
             </a>
           </motion.div>
 
           <motion.div
-            initial={{ opacity: 0 }}
+            initial={reduced ? false : { opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ duration: 0.6, delay: 0.7 }}
+            transition={reduced ? { duration: 0, delay: 0, repeat: 0 } : { duration: 0.6, delay: 0.7 }}
             className="mt-8 flex items-center gap-2"
           >
             <Award size={16} style={{ color: C.terra }} />
             <span style={{ fontFamily: "Inter, sans-serif", color: C.grayLight, fontSize: 13 }}>
-              Cédula profesional: 12345678
+              Cédula de ejemplo: 12345678
             </span>
           </motion.div>
         </div>
 
         <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
+          initial={reduced ? false : { opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.8, delay: 0.3 }}
+          transition={reduced ? { duration: 0, delay: 0, repeat: 0 } : { duration: 0.8, delay: 0.3 }}
           className="flex justify-center"
         >
           <div className="w-72 h-72 md:w-96 md:h-96 rounded-full overflow-hidden border-8"
             style={{ borderColor: `${C.sage}30` }}>
             <img
               src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=600&q=80"
-              alt="Psicóloga"
+              alt="Retrato de referencia para el personaje ficticio" fetchPriority="high"
               className="w-full h-full object-cover"
             />
           </div>
@@ -265,7 +239,7 @@ function Hero({ onOpenWhatsApp }) {
       <motion.div
         className="absolute bottom-8 left-1/2 -translate-x-1/2"
         animate={{ y: [0, 8, 0] }}
-        transition={{ repeat: Infinity, duration: 1.8, ease: "easeInOut" }}
+        transition={reduced ? { duration: 0, delay: 0, repeat: 0 } : { repeat: Infinity, duration: 1.8, ease: "easeInOut" }}
       >
         <ChevronDown size={24} style={{ color: C.grayLight }} />
       </motion.div>
@@ -274,6 +248,7 @@ function Hero({ onOpenWhatsApp }) {
 }
 
 function Identificacion() {
+  const reduced = useReducedMotion()
   const items = [
     { icon: Heart, title: "Siento ansiedad sin razón aparente", desc: "La preocupación constante te impide disfrutar el presente y descansar bien." },
     { icon: Users, title: "Mis relaciones me generan mucho desgaste", desc: "Conflictos repetitivos, dificultad para comunicarte o sentirte solo/a en pareja." },
@@ -301,7 +276,7 @@ function Identificacion() {
                 className="p-7 rounded-3xl cursor-default"
                 style={{ backgroundColor: C.cream }}
                 whileHover={{ y: -4, boxShadow: "0 12px 32px rgba(0,0,0,0.08)" }}
-                transition={{ duration: 0.2 }}
+                transition={reduced ? { duration: 0, delay: 0, repeat: 0 } : { duration: 0.2 }}
               >
                 <div className="w-14 h-14 rounded-full flex items-center justify-center mb-4"
                   style={{ backgroundColor: `${C.terra}18` }}>
@@ -340,12 +315,12 @@ function SobreMi() {
         <FadeRise>
           <div className="relative">
             <img
-              src="https://images.unsplash.com/photo-1551836022-deb4988cc6c0?w=600&q=80"
-              alt="Consultorio"
-              className="w-full rounded-2xl object-cover"
-              style={{ height: 420 }}
+              src="https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?w=600&q=80"
+              alt="Sala con sillones y plantas, imagen de referencia para esta demo" loading="lazy" decoding="async"
+              width={600} height={450}
+              className="demo-room-image rounded-2xl"
             />
-            <div className="absolute -bottom-6 -right-6 bg-white rounded-2xl p-4 shadow-lg">
+            <div className="mt-4 ml-auto w-fit bg-white rounded-2xl p-4 shadow-lg">
               <p className="text-2xl font-bold" style={{ fontFamily: "Playfair Display, serif", color: C.sageDark }}>
                 <Counter to={8} />+ años
               </p>
@@ -360,8 +335,9 @@ function SobreMi() {
           <FadeRise delay={0.1}>
             <h2 className="text-3xl md:text-4xl font-bold mb-4"
               style={{ fontFamily: "Playfair Display, serif", color: C.sageDark }}>
-              Dra. Valeria Romero
+              Valeria Romero
             </h2>
+            <p className="demo-fiction-note">Perfil ficticio. La formación y la trayectoria son contenido de ejemplo.</p>
             <p className="mb-4" style={{ fontFamily: "Inter, sans-serif", color: C.gray, lineHeight: 1.75 }}>
               Soy psicóloga clínica con más de 8 años acompañando a personas que atraviesan momentos difíciles.
               Creo profundamente en que cada persona tiene los recursos para sanar; a veces solo necesitamos
@@ -378,7 +354,7 @@ function SobreMi() {
               {[
                 "Licenciatura en Psicología, UNAM",
                 "Maestría en Psicología Clínica, UNAM",
-                "Cédula profesional: 12345678",
+                "Cédula de ejemplo: 12345678",
                 "Especialidad en Terapia Cognitivo-Conductual",
               ].map((item, i) => (
                 <div key={i} className="flex items-center gap-2.5">
@@ -392,9 +368,9 @@ function SobreMi() {
           <FadeRise delay={0.3}>
             <div className="flex flex-wrap gap-4">
               {[
-                { n: 412, s: "", label: "Pacientes" },
-                { n: 8, s: "+", label: "Años" },
-                { n: 94, s: "%", label: "Satisfacción" },
+                { n: 3, s: "", label: "Servicios" },
+                { n: 50, s: "", label: "Min / individual" },
+                { n: 2, s: "", label: "Modalidades" },
               ].map((stat, i) => (
                 <div key={i} className="w-24 h-24 rounded-full flex flex-col items-center justify-center text-center flex-shrink-0"
                   style={{ backgroundColor: C.white, boxShadow: "0 8px 24px rgba(61,90,69,0.1)" }}>
@@ -412,13 +388,14 @@ function SobreMi() {
   )
 }
 
-const SERVICIOS_ITEMS = [
+const SERVICIOS_ITEMS = withServiceRules([
   { title: "Terapia Individual", desc: "Es un espacio solo para ti, donde hablamos de lo que te está pasando sin prisa ni juicio. Juntos identificamos qué patrones se repiten en tu vida y probamos, sesión a sesión, formas distintas de manejarlos.", duration: "50 min / sesión", mode: "Presencial u online" },
   { title: "Terapia de Pareja", desc: "Nos sentamos los tres a hablar de lo que ya no está funcionando entre ustedes, sin buscar culpables. Trabajamos formas concretas de escucharse y responder distinto la próxima vez que surja el mismo conflicto.", duration: "60 min / sesión", mode: "Presencial u online" },
   { title: "Orientación Psicológica", desc: "Para cuando tienes algo puntual que resolver o entender mejor, sin necesidad de un proceso largo. En pocas sesiones ponemos ese tema sobre la mesa y sales con ideas claras de cómo seguir.", duration: "45 min / sesión", mode: "Online" },
-]
+])
 
 function Servicios({ onSelect }) {
+  const reduced = useReducedMotion()
   const items = SERVICIOS_ITEMS
 
   return (
@@ -443,7 +420,7 @@ function Servicios({ onSelect }) {
                 className="p-6 rounded-2xl border flex flex-col h-full text-left w-full cursor-pointer"
                 style={{ borderColor: `${C.sage}30`, backgroundColor: C.cream }}
                 whileHover={{ y: -4, boxShadow: "0 12px 32px rgba(107,143,113,0.12)" }}
-                transition={{ duration: 0.2 }}
+                transition={reduced ? { duration: 0, delay: 0, repeat: 0 } : { duration: 0.2 }}
               >
                 <h3 className="font-bold text-xl mb-3"
                   style={{ fontFamily: "Playfair Display, serif", color: C.sageDark }}>
@@ -520,7 +497,7 @@ function PrimeraCita({ onStartReservation }) {
           <div className="text-center mt-12">
             <button onClick={onStartReservation}
               className="px-6 py-3 rounded-full text-white font-medium text-sm transition-all hover:opacity-90"
-              style={{ backgroundColor: C.sage, fontFamily: "Inter, sans-serif" }}>
+              style={{ backgroundColor: C.sageDark, fontFamily: "Inter, sans-serif" }}>
               Simular una reserva
             </button>
           </div>
@@ -545,6 +522,7 @@ function Resenas() {
             style={{ fontFamily: "Playfair Display, serif", color: C.sageDark }}>
             Lo que dicen quienes han dado el paso
           </h2>
+            <p className="demo-fiction-note">Reseñas ficticias redactadas para esta demostración.</p>
         </FadeRise>
 
         <div className="grid md:grid-cols-3 gap-6">
@@ -582,9 +560,7 @@ function Resenas() {
   )
 }
 
-function Contacto() {
-  const nombreRef = useRef(null)
-  const form = useContactForm({ nombreRef })
+function Contacto({ onOpenWhatsApp }) {
 
   return (
     <section id="contacto" className="py-20 px-6" style={{ backgroundColor: C.sageDark, scrollMarginTop: 140 }}>
@@ -600,7 +576,7 @@ function Contacto() {
 
           <div className="space-y-4 mb-8">
             {[
-              { icon: Phone, text: "+52 (123) 456-7890" },
+              { icon: Phone, text: "Número de ejemplo · contacto simulado" },
               { icon: MapPin, text: "Xalapa, Veracruz, México" },
               { icon: Clock, text: "Lunes a Viernes · 9:00 – 19:00" },
             ].map((item, i) => (
@@ -613,93 +589,16 @@ function Contacto() {
             ))}
           </div>
 
-          <a href="https://wa.me/521234567890?text=Hola, me gustaría agendar una primera cita"
-            target="_blank" rel="noopener noreferrer"
+          <button type="button" onClick={onOpenWhatsApp}
             className="inline-flex items-center gap-2 px-6 py-3 rounded-full font-medium text-sm transition-all duration-200 hover:opacity-90"
-            style={{ backgroundColor: C.terra, color: "white", fontFamily: "Inter, sans-serif" }}>
+            style={{ backgroundColor: "#985434", color: "white", fontFamily: "Inter, sans-serif" }}>
             <MessageCircle size={18} />
             Escribir por WhatsApp
-          </a>
+          </button>
         </FadeRise>
 
         <FadeRise delay={0.15}>
-          <AnimatePresence mode="wait">
-            {form.status === "success" ? (
-              <DemoConfirmation
-                key="confirmation"
-                onReset={() => form.reset(true)}
-                onClose={() => form.reset(false)}
-                accentColor={C.sage}
-                borderColor="rgba(255,255,255,0.25)"
-                fontFamily="Inter, sans-serif"
-                radius={12}
-              />
-            ) : (
-              <motion.form
-                key="form"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                className="space-y-4"
-                onSubmit={form.handleSubmit}
-                noValidate
-              >
-                <div>
-                  <label className="block text-white/70 text-sm mb-1" style={{ fontFamily: "Inter, sans-serif" }}>
-                    Nombre
-                  </label>
-                  <input type="text" placeholder="Tu nombre" ref={nombreRef}
-                    value={form.values.nombre} onChange={form.handleChange("nombre")}
-                    className="w-full px-4 py-3 rounded-xl bg-white/10 text-white placeholder-white/40 border focus:outline-none transition-colors"
-                    style={{ fontFamily: "Inter, sans-serif", fontSize: 14, borderColor: form.errors.nombre ? "#F87171" : "rgba(255,255,255,0.2)" }} />
-                  {form.errors.nombre && <p className="mt-1 text-xs" style={{ color: "#FCA5A5", fontFamily: "Inter, sans-serif" }}>{form.errors.nombre}</p>}
-                </div>
-                <div>
-                  <label className="block text-white/70 text-sm mb-1" style={{ fontFamily: "Inter, sans-serif" }}>
-                    Correo
-                  </label>
-                  <input type="email" placeholder="tu@correo.com"
-                    value={form.values.correo} onChange={form.handleChange("correo")}
-                    className="w-full px-4 py-3 rounded-xl bg-white/10 text-white placeholder-white/40 border focus:outline-none transition-colors"
-                    style={{ fontFamily: "Inter, sans-serif", fontSize: 14, borderColor: form.errors.correo ? "#F87171" : "rgba(255,255,255,0.2)" }} />
-                  {form.errors.correo && <p className="mt-1 text-xs" style={{ color: "#FCA5A5", fontFamily: "Inter, sans-serif" }}>{form.errors.correo}</p>}
-                </div>
-                <div>
-                  <label className="block text-white/70 text-sm mb-1" style={{ fontFamily: "Inter, sans-serif" }}>
-                    Motivo de consulta
-                  </label>
-                  <select value={form.values.motivo} onChange={form.handleChange("motivo")}
-                    className="w-full px-4 py-3 rounded-xl bg-white/10 text-white border focus:outline-none transition-colors"
-                    style={{ fontFamily: "Inter, sans-serif", fontSize: 14, borderColor: form.errors.motivo ? "#F87171" : "rgba(255,255,255,0.2)" }}>
-                    <option value="" className="bg-gray-800">Selecciona una opción</option>
-                    {["Ansiedad o estrés", "Depresión", "Terapia de pareja", "Duelo", "Otro"].map(o => (
-                      <option key={o} value={o} className="bg-gray-800">{o}</option>
-                    ))}
-                  </select>
-                  {form.errors.motivo && <p className="mt-1 text-xs" style={{ color: "#FCA5A5", fontFamily: "Inter, sans-serif" }}>{form.errors.motivo}</p>}
-                </div>
-                <div>
-                  <label className="block text-white/70 text-sm mb-1" style={{ fontFamily: "Inter, sans-serif" }}>
-                    Mensaje
-                  </label>
-                  <textarea rows={4} placeholder="Cuéntame brevemente qué te trae por aquí..."
-                    value={form.values.mensaje} onChange={form.handleChange("mensaje")}
-                    className="w-full px-4 py-3 rounded-xl bg-white/10 text-white placeholder-white/40 border focus:outline-none transition-colors resize-none"
-                    style={{ fontFamily: "Inter, sans-serif", fontSize: 14, borderColor: form.errors.mensaje ? "#F87171" : "rgba(255,255,255,0.2)" }} />
-                  {form.errors.mensaje && <p className="mt-1 text-xs" style={{ color: "#FCA5A5", fontFamily: "Inter, sans-serif" }}>{form.errors.mensaje}</p>}
-                </div>
-                <motion.button
-                  type="submit"
-                  disabled={form.status === "submitting"}
-                  whileHover={{ scale: form.status === "submitting" ? 1 : 1.02 }}
-                  whileTap={{ scale: form.status === "submitting" ? 1 : 0.98 }}
-                  className="w-full py-3 rounded-xl font-medium text-sm transition-all disabled:opacity-70"
-                  style={{ backgroundColor: C.sage, color: "white", fontFamily: "Inter, sans-serif" }}>
-                  {form.status === "submitting" ? "Enviando..." : "Enviar mensaje"}
-                </motion.button>
-              </motion.form>
-            )}
-          </AnimatePresence>
+          <DemoContactForm accentColor={C.sage} fontFamily="Inter, sans-serif" variant="calido" />
         </FadeRise>
       </div>
     </section>
@@ -710,17 +609,17 @@ function Footer() {
   const [privacyOpen, setPrivacyOpen] = useState(false)
 
   return (
-    <footer className="py-8 px-6 text-center" style={{ backgroundColor: "#2A3D2F" }}>
-      <p style={{ fontFamily: "Inter, sans-serif", color: "rgba(255,255,255,0.4)", fontSize: 13 }}>
-        © 2026 Dra. Valeria Romero · Psicóloga Clínica · Xalapa, Veracruz
+    <footer className="pt-8 pb-28 px-6 text-center" style={{ backgroundColor: "#2A3D2F" }}>
+      <p style={{ fontFamily: "Inter, sans-serif", color: "rgba(255,255,255,0.8)", fontSize: 13 }}>
+        © 2026 Valeria Romero · Psicóloga Clínica · Xalapa, Veracruz
       </p>
       <p className="mt-1" style={{ fontFamily: "Inter, sans-serif", fontSize: 11 }}>
         <button onClick={() => setPrivacyOpen(true)}
           className="underline-offset-2 hover:underline transition-all"
-          style={{ color: "rgba(255,255,255,0.4)", fontFamily: "Inter, sans-serif" }}>
+          style={{ color: "rgba(255,255,255,0.8)", fontFamily: "Inter, sans-serif" }}>
           Aviso de privacidad
         </button>
-        <span style={{ color: "rgba(255,255,255,0.2)" }}> · Todos los derechos reservados</span>
+        <span style={{ color: "rgba(255,255,255,0.8)" }}> · Todos los derechos reservados</span>
       </p>
 
       <PrivacyModal
@@ -735,13 +634,14 @@ function Footer() {
 }
 
 function WhatsAppFloat({ onOpen }) {
+  const reduced = useReducedMotion()
   return (
     <motion.button
       onClick={onOpen}
-      className="fixed bottom-20 right-6 z-40 w-14 h-14 rounded-full flex items-center justify-center shadow-lg"
+      className="fixed bottom-28 right-4 sm:right-6 z-40 w-14 h-14 rounded-full flex items-center justify-center shadow-lg"
       style={{ backgroundColor: "#25D366" }}
       animate={{ scale: [1, 1.08, 1] }}
-      transition={{ repeat: Infinity, duration: 2.5, ease: "easeInOut" }}
+      transition={reduced ? { duration: 0, delay: 0, repeat: 0 } : { repeat: Infinity, duration: 2.5, ease: "easeInOut" }}
       whileHover={{ scale: 1.15 }}
       aria-label="Simular contacto por WhatsApp"
     >
@@ -763,7 +663,8 @@ export default function ThemeCalido() {
 
   return (
     <div style={{ backgroundColor: C.cream }}>
-      <Navbar />
+      <Navbar onOpenWhatsApp={() => setWaOpen(true)} />
+      <main id="contenido" tabIndex={-1}>
       <Hero onOpenWhatsApp={() => setWaOpen(true)} />
       <Identificacion />
       <SobreMi />
@@ -778,7 +679,8 @@ export default function ThemeCalido() {
         radius={16}
         giro="psicólogo (tema Cálido)"
       />
-      <Contacto />
+      <Contacto onOpenWhatsApp={() => setWaOpen(true)} />
+      </main>
       <Footer />
       <WhatsAppFloat onOpen={() => setWaOpen(true)} />
       <WhatsAppPreview
@@ -798,12 +700,6 @@ export default function ThemeCalido() {
         headingFontFamily="Playfair Display, serif"
         radius={20}
         accionLabel="cita"
-      />
-      <OnboardingGuide
-        accentColor={C.sage}
-        fontFamily="Inter, sans-serif"
-        headingFontFamily="Playfair Display, serif"
-        radius={16}
       />
     </div>
   )

@@ -1,13 +1,14 @@
 import { useEffect, useRef, useState } from "react"
-import { motion, useInView, AnimatePresence } from "framer-motion"
+import { motion, useReducedMotion, useInView } from "framer-motion"
 import { Phone, MapPin, Clock, MessageCircle, Award, Shield, CheckCircle, Star } from "lucide-react"
-import useContactForm from "../../../hooks/useContactForm"
-import DemoConfirmation from "../../../components/shared/DemoConfirmation"
+import DemoContactForm from "../../../components/shared/DemoContactForm"
 import PrivacyModal from "../../../components/shared/PrivacyModal"
 import ComercialCTA from "../../../components/shared/ComercialCTA"
 import WhatsAppPreview from "../../../components/shared/WhatsAppPreview"
 import ReservationFlow from "../../../components/shared/ReservationFlow"
-import OnboardingGuide from "../../../components/shared/OnboardingGuide"
+import Modal from "../../../components/shared/Modal"
+import useDemoNavigation from "../../../hooks/useDemoNavigation"
+import { withServiceRules } from "../data/services"
 
 const C = {
   white: "#FFFFFF",
@@ -17,7 +18,7 @@ const C = {
   blueLight: "#4A6FA5",
   bluePale: "#EBF0F8",
   gray: "#5A6A7A",
-  grayLight: "#8A9AAA",
+  grayLight: "#5A6A7A",
   accent: "#C17F5A",
 }
 
@@ -35,14 +36,15 @@ function useFonts() {
 
 // Slide desde izquierda con fade
 function SlideIn({ children, delay = 0 }) {
+  const reduced = useReducedMotion()
   const ref = useRef(null)
   const inView = useInView(ref, { once: true, margin: "-60px" })
   return (
     <motion.div
       ref={ref}
-      initial={{ opacity: 0, x: -20 }}
-      animate={inView ? { opacity: 1, x: 0 } : {}}
-      transition={{ duration: 0.55, delay, ease: "easeOut" }}
+      initial={reduced ? false : { opacity: 0, x: -20 }}
+      animate={reduced || inView ? { opacity: 1, x: 0 } : {}}
+      transition={reduced ? { duration: 0, delay: 0, repeat: 0 } : { duration: 0.55, delay, ease: "easeOut" }}
     >
       {children}
     </motion.div>
@@ -51,14 +53,15 @@ function SlideIn({ children, delay = 0 }) {
 
 // Badge de credencial con efecto sello
 function CredentialBadge({ text, delay = 0 }) {
+  const reduced = useReducedMotion()
   const ref = useRef(null)
   const inView = useInView(ref, { once: true })
   return (
     <motion.div
       ref={ref}
-      initial={{ opacity: 0, scale: 0.85 }}
-      animate={inView ? { opacity: 1, scale: 1 } : {}}
-      transition={{ duration: 0.4, delay, ease: [0.34, 1.56, 0.64, 1] }}
+      initial={reduced ? false : { opacity: 0, scale: 0.85 }}
+      animate={reduced || inView ? { opacity: 1, scale: 1 } : {}}
+      transition={reduced ? { duration: 0, delay: 0, repeat: 0 } : { duration: 0.4, delay, ease: [0.34, 1.56, 0.64, 1] }}
       className="inline-flex items-center gap-2 px-3 py-1.5 rounded"
       style={{ backgroundColor: C.bluePale, border: `1px solid ${C.blue}20` }}
     >
@@ -70,34 +73,11 @@ function CredentialBadge({ text, delay = 0 }) {
   )
 }
 
-function Navbar() {
-  const [scrolled, setScrolled] = useState(false)
-  const [menuOpen, setMenuOpen] = useState(false)
-  const [activeSection, setActiveSection] = useState("")
-
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 40)
-    window.addEventListener("scroll", onScroll)
-    return () => window.removeEventListener("scroll", onScroll)
-  }, [])
-
-  useEffect(() => {
-    const ids = ["sobre-mi", "servicios", "primera-cita", "contacto"]
-    const sections = ids.map((id) => document.getElementById(id)).filter(Boolean)
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) setActiveSection(entry.target.id)
-        })
-      },
-      { rootMargin: "-40% 0px -55% 0px" }
-    )
-    sections.forEach((s) => observer.observe(s))
-    return () => observer.disconnect()
-  }, [])
+function Navbar({ onOpenWhatsApp }) {
+  const { scrolled, activeSection, menuOpen, setMenuOpen } = useDemoNavigation()
 
   const links = [
-    { label: "Inicio", href: "#" },
+    { label: "Inicio", href: "#inicio" },
     { label: "Sobre mí", href: "#sobre-mi" },
     { label: "Servicios", href: "#servicios" },
     { label: "Primera cita", href: "#primera-cita" },
@@ -105,7 +85,7 @@ function Navbar() {
   ]
 
   return (
-    <motion.nav
+    <motion.nav aria-label="Navegación de la demo"
       className="fixed top-11 left-0 right-0 z-[55]"
       style={{
         backgroundColor: scrolled ? "rgba(240,244,248,0.97)" : "rgba(240,244,248,1)",
@@ -115,13 +95,13 @@ function Navbar() {
       }}
     >
       {/* Barra superior institucional — solo en escritorio, en móvil el texto envuelve y descuadra el header */}
-      <div style={{ backgroundColor: C.blueDark }} className="hidden md:block py-1.5 px-8">
+      <div style={{ backgroundColor: C.blueDark }} className="hidden xl:block py-1.5 px-8">
         <div className="max-w-6xl mx-auto flex justify-between items-center">
           <span style={{ fontFamily: "Source Sans 3, sans-serif", color: "rgba(255,255,255,0.6)", fontSize: 11 }}>
             Consulta presencial y en línea · Xalapa, Veracruz
           </span>
           <span style={{ fontFamily: "Source Sans 3, sans-serif", color: "rgba(255,255,255,0.6)", fontSize: 11 }}>
-            Cédula profesional: 12345678
+            Cédula de ejemplo: 12345678
           </span>
         </div>
       </div>
@@ -129,34 +109,33 @@ function Navbar() {
       <div className="max-w-6xl mx-auto px-8 py-4 flex items-center justify-between">
         <div>
           <span style={{ fontFamily: "Lora, serif", color: C.blueDark, fontSize: 17, fontWeight: 600 }}>
-            Dra. Valeria Romero
+            Valeria Romero
           </span>
-          <span style={{ fontFamily: "Source Sans 3, sans-serif", color: C.grayLight, fontSize: 12, marginLeft: 8 }}>
+          <span style={{ fontFamily: "Source Sans 3, sans-serif", color: C.grayLight, fontSize: 12 }} className="block text-xs">
             Psicóloga Clínica
           </span>
         </div>
 
-        <div className="hidden md:flex items-center gap-8">
+        <div className="hidden xl:flex items-center gap-5">
           {links.map(l => {
-            const isActive = l.href === "#" ? activeSection === "" : activeSection === l.href.slice(1)
+            const isActive = activeSection === l.href.slice(1)
             return (
-              <a key={l.label} href={l.href}
+              <a key={l.label} href={l.href} aria-current={activeSection === l.href.slice(1) ? "location" : undefined}
                 style={{ color: isActive ? C.blue : C.gray, fontFamily: "Source Sans 3, sans-serif", fontSize: 14, fontWeight: isActive ? 700 : 400 }}
-                className="hover:opacity-60 transition-opacity">
+                className="hover:opacity-90 transition-opacity">
                 {l.label}
               </a>
             )
           })}
-          <a href="https://wa.me/521234567890?text=Hola, me gustaría agendar una cita"
-            target="_blank" rel="noopener noreferrer"
+          <button type="button" onClick={() => { setMenuOpen(false); onOpenWhatsApp() }}
             className="px-5 py-2 text-white text-sm font-medium transition-all hover:opacity-90"
             style={{ backgroundColor: C.blue, fontFamily: "Source Sans 3, sans-serif", borderRadius: 4 }}>
             Agendar cita
-          </a>
+          </button>
         </div>
 
-        <button className="md:hidden p-2" onClick={() => setMenuOpen(!menuOpen)}
-          aria-expanded={menuOpen} aria-label={menuOpen ? "Cerrar menú" : "Abrir menú"}>
+        <button className="xl:hidden p-2" onClick={() => setMenuOpen(!menuOpen)}
+          aria-haspopup="dialog" aria-expanded={menuOpen} aria-label={menuOpen ? "Cerrar menú" : "Abrir menú"}>
           <div className="space-y-1.5">
             <motion.div animate={{ rotate: menuOpen ? 45 : 0, y: menuOpen ? 8 : 0 }}
               className="w-6 h-0.5" style={{ backgroundColor: C.blueDark }} />
@@ -168,33 +147,30 @@ function Navbar() {
         </button>
       </div>
 
-      <AnimatePresence>
+      <>
         {menuOpen && (
-          <motion.div
-            initial={{ opacity: 0, y: -8 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -8 }}
-            className="md:hidden absolute top-full left-0 right-0 py-6 px-8 flex flex-col gap-4"
-            style={{ backgroundColor: C.bgLight, borderBottom: `1px solid ${C.blue}15`, minHeight: "100dvh" }}
-          >
+          <Modal title="Menú de la demo" onClose={() => setMenuOpen(false)} fontFamily="Source Sans 3, sans-serif">
+          <div className="flex flex-col gap-2">
             {links.map(l => (
-              <a key={l.label} href={l.href}
-                style={{ color: C.gray, fontFamily: "Source Sans 3, sans-serif", fontSize: 16 }}
+              <a key={l.label} className="min-h-11 flex items-center" href={l.href} aria-current={activeSection === l.href.slice(1) ? "location" : undefined}
+                style={{ color: "#ffffff", fontFamily: "Source Sans 3, sans-serif", fontSize: 16 }}
                 onClick={() => setMenuOpen(false)}>{l.label}</a>
             ))}
-            <a href="https://wa.me/521234567890"
+            <button type="button" onClick={() => { setMenuOpen(false); onOpenWhatsApp() }}
               className="mt-2 py-3 text-white text-center font-medium"
-              style={{ backgroundColor: C.blue, fontFamily: "Source Sans 3, sans-serif", borderRadius: 4 }}>
+              style={{ backgroundColor: "#394d43", fontFamily: "Source Sans 3, sans-serif", borderRadius: 4 }}>
               Agendar cita
-            </a>
-          </motion.div>
+            </button>
+          </div>
+          </Modal>
         )}
-      </AnimatePresence>
+      </>
     </motion.nav>
   )
 }
 
 function Hero({ onOpenWhatsApp }) {
+  const reduced = useReducedMotion()
   const staggerItems = [
     { delay: 0.1 },
     { delay: 0.25 },
@@ -203,14 +179,14 @@ function Hero({ onOpenWhatsApp }) {
   ]
 
   return (
-    <section className="min-h-screen flex items-center pt-[112px] md:pt-[156px] pb-16 px-8"
+    <section id="inicio" className="min-h-screen flex items-center pt-[112px] md:pt-[156px] pb-16 px-8"
       style={{ backgroundColor: C.bgLight }}>
       <div className="max-w-6xl mx-auto w-full grid md:grid-cols-2 gap-16 items-center">
         <div>
           <motion.h1
-            initial={{ opacity: 0, y: 16 }}
+            initial={reduced ? false : { opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: staggerItems[1].delay }}
+            transition={reduced ? { duration: 0, delay: 0, repeat: 0 } : { duration: 0.6, delay: staggerItems[1].delay }}
             style={{ fontFamily: "Lora, serif", color: C.blueDark, lineHeight: 1.25, fontSize: "clamp(2rem, 4vw, 3.2rem)" }}
             className="mb-6"
           >
@@ -218,9 +194,9 @@ function Hero({ onOpenWhatsApp }) {
           </motion.h1>
 
           <motion.p
-            initial={{ opacity: 0, y: 12 }}
+            initial={reduced ? false : { opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: staggerItems[2].delay }}
+            transition={reduced ? { duration: 0, delay: 0, repeat: 0 } : { duration: 0.6, delay: staggerItems[2].delay }}
             style={{ fontFamily: "Source Sans 3, sans-serif", color: C.gray, lineHeight: 1.75, fontSize: 15 }}
             className="mb-8 max-w-lg"
           >
@@ -229,9 +205,9 @@ function Hero({ onOpenWhatsApp }) {
           </motion.p>
 
           <motion.div
-            initial={{ opacity: 0, y: 10 }}
+            initial={reduced ? false : { opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: staggerItems[3].delay }}
+            transition={reduced ? { duration: 0, delay: 0, repeat: 0 } : { duration: 0.5, delay: staggerItems[3].delay }}
             className="flex flex-col sm:flex-row gap-3"
           >
             <button onClick={onOpenWhatsApp}
@@ -249,23 +225,23 @@ function Hero({ onOpenWhatsApp }) {
         </div>
 
         <motion.div
-          initial={{ opacity: 0 }}
+          initial={reduced ? false : { opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ duration: 0.8, delay: 0.3 }}
+          transition={reduced ? { duration: 0, delay: 0, repeat: 0 } : { duration: 0.8, delay: 0.3 }}
           className="hidden md:block"
         >
           <div style={{ position: "relative" }}>
             <img
               src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=600&q=80"
-              alt="Psicóloga"
+              alt="Retrato de referencia para el personaje ficticio" fetchPriority="high"
               className="w-full object-cover"
               style={{ height: 500, borderRadius: 4 }}
             />
             {/* Tarjeta de credencial superpuesta */}
             <motion.div
-              initial={{ opacity: 0, y: 12 }}
+              initial={reduced ? false : { opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.7 }}
+              transition={reduced ? { duration: 0, delay: 0, repeat: 0 } : { duration: 0.5, delay: 0.7 }}
               className="absolute bottom-6 left-6 right-6 p-5"
               style={{
                 backgroundColor: C.white,
@@ -277,13 +253,13 @@ function Hero({ onOpenWhatsApp }) {
                 <Award size={20} style={{ color: C.blue, marginTop: 2 }} />
                 <div>
                   <p style={{ fontFamily: "Lora, serif", color: C.blueDark, fontSize: 15, fontWeight: 600 }}>
-                    Dra. Valeria Romero
+                    Valeria Romero
                   </p>
                   <p style={{ fontFamily: "Source Sans 3, sans-serif", color: C.gray, fontSize: 12, marginTop: 2 }}>
                     Maestra en Psicología Clínica · UNAM
                   </p>
                   <p style={{ fontFamily: "Source Sans 3, sans-serif", color: C.grayLight, fontSize: 11, marginTop: 1 }}>
-                    Cédula profesional: 12345678
+                    Cédula de ejemplo: 12345678
                   </p>
                 </div>
               </div>
@@ -296,6 +272,7 @@ function Hero({ onOpenWhatsApp }) {
 }
 
 function Identificacion() {
+  const reduced = useReducedMotion()
   const items = [
     { title: "Trastornos de ansiedad", desc: "Ansiedad generalizada, crisis de pánico, fobias y estrés crónico con impacto en la vida diaria." },
     { title: "Estado de ánimo", desc: "Depresión, distimia, duelo complicado y dificultades en la regulación emocional." },
@@ -323,7 +300,7 @@ function Identificacion() {
                 className="p-6 border-l-2 cursor-default"
                 style={{ borderColor: C.blue, backgroundColor: C.bgLight }}
                 whileHover={{ borderColor: C.accent, x: 3 }}
-                transition={{ duration: 0.2 }}
+                transition={reduced ? { duration: 0, delay: 0, repeat: 0 } : { duration: 0.2 }}
               >
                 <h3 style={{ fontFamily: "Lora, serif", color: C.blueDark, fontSize: 17 }}
                   className="mb-3">
@@ -351,6 +328,7 @@ function SobreMi() {
               className="mb-6">
               Formación y experiencia
             </h2>
+            <p className="demo-fiction-note">Perfil ficticio. La formación y la trayectoria son contenido de ejemplo.</p>
           </SlideIn>
 
           <SlideIn delay={0.1}>
@@ -358,8 +336,8 @@ function SobreMi() {
               className="mb-6">
               Cuento con formación de posgrado en psicología clínica y más de 8 años de práctica
               profesional en atención a adultos. Mi trabajo está fundamentado en terapia
-              cognitivo-conductual de tercera generación, con especial énfasis en ACT y terapia
-              basada en evidencia.
+              cognitivo-conductual, integrando técnicas humanistas y adaptando
+              el acompañamiento a cada proceso.
             </p>
           </SlideIn>
 
@@ -369,8 +347,8 @@ function SobreMi() {
                 "Licenciatura en Psicología, UNAM",
                 "Maestría en Psicología Clínica, UNAM",
                 "Especialidad en Terapia Cognitivo-Conductual",
-                "Cédula profesional: 12345678",
-                "Miembro activo de la Sociedad Mexicana de Psicología",
+                "Cédula de ejemplo: 12345678",
+
               ].map((item, i) => (
                 <div key={i} className="flex items-start gap-3">
                   <CheckCircle size={15} style={{ color: C.blue, marginTop: 2, flexShrink: 0 }} />
@@ -382,7 +360,7 @@ function SobreMi() {
 
           <SlideIn delay={0.25}>
             <div className="flex flex-wrap gap-2 mb-8">
-              {["Sesiones 100% confidenciales", "Modalidad presencial y online", "Evaluación clínica inicial"].map((tag, i) => (
+              {["Atención individualizada", "Modalidad presencial y online", "Evaluación clínica inicial"].map((tag, i) => (
                 <CredentialBadge key={i} text={tag} delay={0.1 + i * 0.1} />
               ))}
             </div>
@@ -391,9 +369,9 @@ function SobreMi() {
           <SlideIn delay={0.3}>
             <div className="grid grid-cols-3 gap-3">
               {[
-                { n: "412", label: "Pacientes atendidos" },
-                { n: "8+", label: "Años de práctica" },
-                { n: "94%", label: "Satisfacción" },
+                { n: "3", label: "Servicios" },
+                { n: "50 min", label: "Sesión individual" },
+                { n: "2", label: "Modalidades" },
               ].map((s, i) => (
                 <div key={i} className="p-4 text-center"
                   style={{ backgroundColor: C.white, border: `1px solid ${C.blue}15` }}>
@@ -408,10 +386,11 @@ function SobreMi() {
 
         <SlideIn delay={0.15}>
           <img
-            src="https://images.unsplash.com/photo-1551836022-deb4988cc6c0?w=600&q=80"
-            alt="Consultorio"
-            className="w-full object-cover"
-            style={{ height: 460, borderRadius: 4 }}
+            src="https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?w=600&q=80"
+            alt="Sala con sillones y plantas, imagen de referencia para esta demo" loading="lazy" decoding="async"
+            width={600} height={450}
+            className="demo-room-image"
+            style={{ borderRadius: 4 }}
           />
         </SlideIn>
       </div>
@@ -419,13 +398,14 @@ function SobreMi() {
   )
 }
 
-const SERVICIOS_ITEMS = [
+const SERVICIOS_ITEMS = withServiceRules([
   { title: "Psicoterapia Individual", desc: "Empezamos con una conversación para entender qué te trae a consulta y qué te gustaría que cambiara. A partir de ahí trabajamos con herramientas con respaldo científico, revisando cada cierto tiempo qué tanto has avanzado hacia lo que buscabas.", duration: "50 min / sesión", mode: "Presencial u online" },
   { title: "Terapia de Pareja", desc: "Ambos comparten, con mi acompañamiento, qué está pasando en la relación desde su propia perspectiva. Identificamos los patrones que generan los conflictos repetidos y practicamos, en sesión, formas distintas de comunicarse.", duration: "60 min / sesión", mode: "Presencial u online" },
   { title: "Consulta de Orientación", desc: "Si tienes una situación específica que resolver, no hace falta iniciar un proceso largo. Evaluamos juntos qué está pasando y sales de la sesión con recomendaciones concretas sobre cómo continuar.", duration: "45 min / sesión", mode: "Online" },
-]
+])
 
 function Servicios({ onSelect }) {
+  const reduced = useReducedMotion()
   const items = SERVICIOS_ITEMS
 
   return (
@@ -446,7 +426,7 @@ function Servicios({ onSelect }) {
                 className="p-6 h-full flex flex-col text-left w-full cursor-pointer"
                 style={{ backgroundColor: C.bgLight, border: `1px solid ${C.blue}10` }}
                 whileHover={{ boxShadow: `0 8px 32px ${C.blue}15`, y: -2 }}
-                transition={{ duration: 0.2 }}
+                transition={reduced ? { duration: 0, delay: 0, repeat: 0 } : { duration: 0.2 }}
               >
                 <h3 style={{ fontFamily: "Lora, serif", color: C.blueDark, fontSize: 17 }}
                   className="mb-3">
@@ -550,6 +530,7 @@ function Resenas() {
             className="mb-12">
             Testimonios de pacientes
           </h2>
+            <p className="demo-fiction-note">Reseñas ficticias redactadas para esta demostración.</p>
         </SlideIn>
 
         <div style={{ borderTop: `1px solid ${C.blue}20` }}>
@@ -585,9 +566,7 @@ function Resenas() {
   )
 }
 
-function Contacto() {
-  const nombreRef = useRef(null)
-  const form = useContactForm({ nombreRef })
+function Contacto({ onOpenWhatsApp }) {
 
   return (
     <section id="contacto" className="py-20 px-8" style={{ backgroundColor: C.blueDark, scrollMarginTop: 164 }}>
@@ -605,12 +584,12 @@ function Contacto() {
 
           <div className="space-y-4 mb-8">
             {[
-              { icon: Phone, text: "+52 (123) 456-7890" },
+              { icon: Phone, text: "Número de ejemplo · contacto simulado" },
               { icon: MapPin, text: "Xalapa, Veracruz, México" },
               { icon: Clock, text: "Lunes a Viernes · 9:00 – 19:00" },
             ].map((item, i) => (
               <div key={i} className="flex items-center gap-3">
-                <item.icon size={15} style={{ color: "rgba(255,255,255,0.4)" }} />
+                <item.icon size={15} style={{ color: "rgba(255,255,255,0.8)" }} />
                 <span style={{ fontFamily: "Source Sans 3, sans-serif", color: "rgba(255,255,255,0.65)", fontSize: 13 }}>
                   {item.text}
                 </span>
@@ -618,126 +597,16 @@ function Contacto() {
             ))}
           </div>
 
-          <a href="https://wa.me/521234567890?text=Hola, me gustaría agendar una primera consulta"
-            target="_blank" rel="noopener noreferrer"
+          <button type="button" onClick={onOpenWhatsApp}
             className="inline-flex items-center gap-2 px-6 py-3 text-sm font-medium transition-all hover:opacity-90"
             style={{ backgroundColor: C.white, color: C.blueDark, fontFamily: "Source Sans 3, sans-serif", borderRadius: 4 }}>
             <MessageCircle size={15} />
             Contactar por WhatsApp
-          </a>
+          </button>
         </SlideIn>
 
         <SlideIn delay={0.15}>
-          <AnimatePresence mode="wait">
-            {form.status === "success" ? (
-              <DemoConfirmation
-                key="confirmation"
-                onReset={() => form.reset(true)}
-                onClose={() => form.reset(false)}
-                accentColor={C.blueLight}
-                borderColor="rgba(255,255,255,0.15)"
-                fontFamily="Source Sans 3, sans-serif"
-                radius={4}
-              />
-            ) : (
-              <motion.form
-                key="form"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                className="space-y-4"
-                onSubmit={form.handleSubmit}
-                noValidate
-              >
-                <div>
-                  <label style={{ fontFamily: "Source Sans 3, sans-serif", color: "rgba(255,255,255,0.5)", fontSize: 12, letterSpacing: "0.06em" }}
-                    className="block mb-1.5 uppercase">
-                    Nombre completo
-                  </label>
-                  <input type="text" placeholder="Su nombre" ref={nombreRef}
-                    value={form.values.nombre} onChange={form.handleChange("nombre")}
-                    className="w-full px-4 py-2.5 text-white focus:outline-none"
-                    style={{
-                      backgroundColor: "rgba(255,255,255,0.07)",
-                      border: `1px solid ${form.errors.nombre ? "#F87171" : "rgba(255,255,255,0.12)"}`,
-                      fontFamily: "Source Sans 3, sans-serif",
-                      fontSize: 14,
-                      borderRadius: 4,
-                    }} />
-                  {form.errors.nombre && <p className="mt-1 text-xs" style={{ color: "#FCA5A5", fontFamily: "Source Sans 3, sans-serif" }}>{form.errors.nombre}</p>}
-                </div>
-                <div>
-                  <label style={{ fontFamily: "Source Sans 3, sans-serif", color: "rgba(255,255,255,0.5)", fontSize: 12, letterSpacing: "0.06em" }}
-                    className="block mb-1.5 uppercase">
-                    Correo electrónico
-                  </label>
-                  <input type="email" placeholder="correo@ejemplo.com"
-                    value={form.values.correo} onChange={form.handleChange("correo")}
-                    className="w-full px-4 py-2.5 text-white focus:outline-none"
-                    style={{
-                      backgroundColor: "rgba(255,255,255,0.07)",
-                      border: `1px solid ${form.errors.correo ? "#F87171" : "rgba(255,255,255,0.12)"}`,
-                      fontFamily: "Source Sans 3, sans-serif",
-                      fontSize: 14,
-                      borderRadius: 4,
-                    }} />
-                  {form.errors.correo && <p className="mt-1 text-xs" style={{ color: "#FCA5A5", fontFamily: "Source Sans 3, sans-serif" }}>{form.errors.correo}</p>}
-                </div>
-                <div>
-                  <label style={{ fontFamily: "Source Sans 3, sans-serif", color: "rgba(255,255,255,0.5)", fontSize: 12, letterSpacing: "0.06em" }}
-                    className="block mb-1.5 uppercase">
-                    Motivo de consulta
-                  </label>
-                  <select value={form.values.motivo} onChange={form.handleChange("motivo")}
-                    className="w-full px-4 py-2.5 text-white focus:outline-none"
-                    style={{
-                      backgroundColor: "rgba(255,255,255,0.07)",
-                      border: `1px solid ${form.errors.motivo ? "#F87171" : "rgba(255,255,255,0.12)"}`,
-                      fontFamily: "Source Sans 3, sans-serif",
-                      fontSize: 14,
-                      borderRadius: 4,
-                    }}>
-                    <option value="" className="bg-gray-900">Seleccione una opción</option>
-                    {["Ansiedad o estrés", "Depresión", "Terapia de pareja", "Duelo", "Otro"].map(o => (
-                      <option key={o} value={o} className="bg-gray-900">{o}</option>
-                    ))}
-                  </select>
-                  {form.errors.motivo && <p className="mt-1 text-xs" style={{ color: "#FCA5A5", fontFamily: "Source Sans 3, sans-serif" }}>{form.errors.motivo}</p>}
-                </div>
-                <div>
-                  <label style={{ fontFamily: "Source Sans 3, sans-serif", color: "rgba(255,255,255,0.5)", fontSize: 12, letterSpacing: "0.06em" }}
-                    className="block mb-1.5 uppercase">
-                    Mensaje
-                  </label>
-                  <textarea rows={4} placeholder="Describa brevemente su motivo de consulta..."
-                    value={form.values.mensaje} onChange={form.handleChange("mensaje")}
-                    className="w-full px-4 py-2.5 text-white focus:outline-none resize-none"
-                    style={{
-                      backgroundColor: "rgba(255,255,255,0.07)",
-                      border: `1px solid ${form.errors.mensaje ? "#F87171" : "rgba(255,255,255,0.12)"}`,
-                      fontFamily: "Source Sans 3, sans-serif",
-                      fontSize: 14,
-                      borderRadius: 4,
-                    }} />
-                  {form.errors.mensaje && <p className="mt-1 text-xs" style={{ color: "#FCA5A5", fontFamily: "Source Sans 3, sans-serif" }}>{form.errors.mensaje}</p>}
-                </div>
-                <motion.button
-                  type="submit"
-                  disabled={form.status === "submitting"}
-                  whileHover={{ opacity: form.status === "submitting" ? 1 : 0.9 }}
-                  whileTap={{ scale: form.status === "submitting" ? 1 : 0.98 }}
-                  className="w-full py-3 text-sm font-medium disabled:opacity-70"
-                  style={{
-                    backgroundColor: C.blueLight,
-                    color: C.white,
-                    fontFamily: "Source Sans 3, sans-serif",
-                    borderRadius: 4,
-                  }}>
-                  {form.status === "submitting" ? "Enviando..." : "Enviar solicitud"}
-                </motion.button>
-              </motion.form>
-            )}
-          </AnimatePresence>
+          <DemoContactForm accentColor={C.blueLight} fontFamily="Source Sans 3, sans-serif" variant="clinico" />
         </SlideIn>
       </div>
     </section>
@@ -748,10 +617,10 @@ function Footer() {
   const [privacyOpen, setPrivacyOpen] = useState(false)
 
   return (
-    <footer className="py-6 px-8 flex flex-col md:flex-row items-center justify-between gap-2"
+    <footer className="pt-8 pb-28 px-8 flex flex-col md:flex-row items-center justify-between gap-2"
       style={{ backgroundColor: "#111B2A", borderTop: "1px solid rgba(255,255,255,0.06)" }}>
       <p style={{ fontFamily: "Source Sans 3, sans-serif", color: "rgba(255,255,255,0.25)", fontSize: 12 }}>
-        © 2026 Dra. Valeria Romero · Psicóloga Clínica · Cédula 12345678
+        © 2026 Valeria Romero · Psicóloga Clínica · Cédula de ejemplo 12345678
       </p>
       <p style={{ fontFamily: "Source Sans 3, sans-serif", fontSize: 11 }}>
         <button onClick={() => setPrivacyOpen(true)}
@@ -759,7 +628,7 @@ function Footer() {
           style={{ color: "rgba(255,255,255,0.35)", fontFamily: "Source Sans 3, sans-serif" }}>
           Aviso de privacidad
         </button>
-        <span style={{ color: "rgba(255,255,255,0.15)" }}> · Confidencialidad garantizada</span>
+        <span style={{ color: "rgba(255,255,255,0.15)" }}> · Espacio de escucha</span>
       </p>
 
       <PrivacyModal
@@ -786,7 +655,8 @@ export default function ThemeClinico() {
 
   return (
     <div style={{ backgroundColor: C.bgLight }}>
-      <Navbar />
+      <Navbar onOpenWhatsApp={() => setWaOpen(true)} />
+      <main id="contenido" tabIndex={-1}>
       <Hero onOpenWhatsApp={() => setWaOpen(true)} />
       <Identificacion />
       <SobreMi />
@@ -801,7 +671,8 @@ export default function ThemeClinico() {
         radius={4}
         giro="psicólogo (tema Clínico)"
       />
-      <Contacto />
+      <Contacto onOpenWhatsApp={() => setWaOpen(true)} />
+      </main>
       <Footer />
       <WhatsAppPreview
         isOpen={waOpen}
@@ -820,12 +691,6 @@ export default function ThemeClinico() {
         headingFontFamily="Lora, serif"
         radius={4}
         accionLabel="consulta"
-      />
-      <OnboardingGuide
-        accentColor={C.blue}
-        fontFamily="Source Sans 3, sans-serif"
-        headingFontFamily="Lora, serif"
-        radius={4}
       />
     </div>
   )
