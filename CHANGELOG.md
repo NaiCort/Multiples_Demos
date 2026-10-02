@@ -1,5 +1,22 @@
 # Historial de cambios
 
+## V4.1.3 · 2026-10-02
+
+Base: V4.1.2 (`f08237f26916b619929b3f3b6230caac17032696`). Candidata al cierre de Psicólogo, pendiente del visto bueno de Ian.
+
+- “Agendar” abre la reserva simulada; las acciones identificadas como WhatsApp conservan la conversación de demostración. Se armonizan el menú de Cálido y los iconos de reserva.
+- Los diálogos mantienen el recorrido circular de Tab y Shift+Tab, Escape, aislamiento del fondo y devolución de foco.
+- Al elegir una sección del menú, el foco continúa desde su encabezado. El indicador activo considera la altura del encabezado fijo.
+- El retrato de Cálido se adapta a pantallas estrechas. La sala mantiene la solución 4:3 aprobada en V4.1.2.
+- Se mejora el contraste de textos secundarios, números y pie de página. La llamada a reservar de Minimalista también se ve sin hover.
+- Se amplían a 44 px los controles de menú, carrusel y privacidad y se añade espacio de desplazamiento para el foco.
+- La clase de botones respeta las utilidades responsive: el menú móvil se oculta en escritorio.
+- El selector retira el oscurecimiento al confirmar un tema y distingue ratón de uso táctil. El hover respeta movimiento reducido.
+- La cédula de Minimalista se identifica como ejemplo. Su encabezado animado conserva espacios reales entre palabras.
+- Se actualiza brace-expansion para corregir el aviso de seguridad detectado.
+- Se añaden recorridos reproducibles de navegador con Playwright y axe-core como herramientas de desarrollo.
+- Se conservan la portada temporal, los canales comerciales y el alcance de los giros futuros.
+
 ## V4.1.2 · 2026-09-09
 
 Base: V4.1.1.

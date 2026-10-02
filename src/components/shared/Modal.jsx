@@ -2,13 +2,30 @@ import { useEffect, useId, useRef } from "react"
 import { createPortal } from "react-dom"
 import { X } from "lucide-react"
 
-// El diálogo nativo mantiene el foco dentro, bloquea el fondo y admite Escape.
+// El diálogo nativo bloquea el fondo y admite Escape; Tab recorre sus controles.
 // Se monta solo mientras está abierto; su estado pertenece a cada apertura.
 export default function Modal({ title, onClose, children, fontFamily, radius = 16, className = "" }) {
   const dialogRef = useRef(null)
   const headingRef = useRef(null)
   const titleId = useId()
   const backdropPress = useRef(false)
+
+  const keepFocusInside = event => {
+    if (event.key !== "Tab") return
+    const controls = [...dialogRef.current.querySelectorAll("a[href], button, input, select, textarea, [tabindex]")]
+      .filter(element => element.tabIndex >= 0 && !element.matches(":disabled") && element.getClientRects().length > 0)
+    const index = controls.indexOf(document.activeElement)
+    if (controls.length === 0) {
+      event.preventDefault()
+      headingRef.current?.focus()
+    } else if (event.shiftKey && index <= 0) {
+      event.preventDefault()
+      controls.at(-1).focus()
+    } else if (!event.shiftKey && (index === -1 || index === controls.length - 1)) {
+      event.preventDefault()
+      controls[0].focus()
+    }
+  }
 
   useEffect(() => {
     const dialog = dialogRef.current
@@ -27,6 +44,7 @@ export default function Modal({ title, onClose, children, fontFamily, radius = 1
   return createPortal(
     <dialog ref={dialogRef} aria-labelledby={titleId} className={`demo-modal ${className}`}
       style={{ fontFamily, borderRadius: radius }}
+      onKeyDown={keepFocusInside}
       onCancel={(event) => { event.preventDefault(); onClose() }}
       onPointerDown={(event) => { backdropPress.current = event.target === event.currentTarget }}
       onClick={(event) => {

@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react"
 import { motion, useReducedMotion, useInView } from "framer-motion"
-import { Phone, MapPin, Clock, MessageCircle, Award, Shield, CheckCircle, Star } from "lucide-react"
+import { Phone, MapPin, Clock, MessageCircle, CalendarDays, Award, Shield, CheckCircle, Star } from "lucide-react"
 import DemoContactForm from "../../../components/shared/DemoContactForm"
 import PrivacyModal from "../../../components/shared/PrivacyModal"
 import ComercialCTA from "../../../components/shared/ComercialCTA"
@@ -73,8 +73,8 @@ function CredentialBadge({ text, delay = 0 }) {
   )
 }
 
-function Navbar({ onOpenWhatsApp }) {
-  const { scrolled, activeSection, menuOpen, setMenuOpen } = useDemoNavigation()
+function Navbar({ onStartReservation }) {
+  const { scrolled, activeSection, menuOpen, setMenuOpen, navigateToSection } = useDemoNavigation()
 
   const links = [
     { label: "Inicio", href: "#inicio" },
@@ -120,21 +120,21 @@ function Navbar({ onOpenWhatsApp }) {
           {links.map(l => {
             const isActive = activeSection === l.href.slice(1)
             return (
-              <a key={l.label} href={l.href} aria-current={activeSection === l.href.slice(1) ? "location" : undefined}
+              <a key={l.label} href={l.href} onClick={navigateToSection} aria-current={activeSection === l.href.slice(1) ? "location" : undefined}
                 style={{ color: isActive ? C.blue : C.gray, fontFamily: "Source Sans 3, sans-serif", fontSize: 14, fontWeight: isActive ? 700 : 400 }}
                 className="hover:opacity-90 transition-opacity">
                 {l.label}
               </a>
             )
           })}
-          <button type="button" onClick={() => { setMenuOpen(false); onOpenWhatsApp() }}
-            className="px-5 py-2 text-white text-sm font-medium transition-all hover:opacity-90"
+          <button type="button" onClick={() => { setMenuOpen(false); onStartReservation() }}
+            className="min-h-11 px-5 py-2 text-white text-sm font-medium transition-all hover:opacity-90"
             style={{ backgroundColor: C.blue, fontFamily: "Source Sans 3, sans-serif", borderRadius: 4 }}>
             Agendar cita
           </button>
         </div>
 
-        <button className="xl:hidden p-2" onClick={() => setMenuOpen(!menuOpen)}
+        <button type="button" className="demo-icon-button xl:hidden p-2" onClick={() => setMenuOpen(!menuOpen)}
           aria-haspopup="dialog" aria-expanded={menuOpen} aria-label={menuOpen ? "Cerrar menú" : "Abrir menú"}>
           <div className="space-y-1.5">
             <motion.div animate={{ rotate: menuOpen ? 45 : 0, y: menuOpen ? 8 : 0 }}
@@ -154,9 +154,9 @@ function Navbar({ onOpenWhatsApp }) {
             {links.map(l => (
               <a key={l.label} className="min-h-11 flex items-center" href={l.href} aria-current={activeSection === l.href.slice(1) ? "location" : undefined}
                 style={{ color: "#ffffff", fontFamily: "Source Sans 3, sans-serif", fontSize: 16 }}
-                onClick={() => setMenuOpen(false)}>{l.label}</a>
+                onClick={navigateToSection}>{l.label}</a>
             ))}
-            <button type="button" onClick={() => { setMenuOpen(false); onOpenWhatsApp() }}
+            <button type="button" onClick={() => { setMenuOpen(false); onStartReservation() }}
               className="mt-2 py-3 text-white text-center font-medium"
               style={{ backgroundColor: "#394d43", fontFamily: "Source Sans 3, sans-serif", borderRadius: 4 }}>
               Agendar cita
@@ -169,7 +169,7 @@ function Navbar({ onOpenWhatsApp }) {
   )
 }
 
-function Hero({ onOpenWhatsApp }) {
+function Hero({ onStartReservation }) {
   const reduced = useReducedMotion()
   const staggerItems = [
     { delay: 0.1 },
@@ -210,10 +210,10 @@ function Hero({ onOpenWhatsApp }) {
             transition={reduced ? { duration: 0, delay: 0, repeat: 0 } : { duration: 0.5, delay: staggerItems[3].delay }}
             className="flex flex-col sm:flex-row gap-3"
           >
-            <button onClick={onOpenWhatsApp}
+            <button onClick={onStartReservation}
               className="flex items-center justify-center gap-2 px-6 py-3 text-white text-sm font-medium transition-all hover:opacity-90"
               style={{ backgroundColor: C.blue, fontFamily: "Source Sans 3, sans-serif", borderRadius: 4 }}>
-              <MessageCircle size={16} />
+              <CalendarDays size={16} aria-hidden="true" />
               Solicitar primera consulta
             </button>
             <a href="#sobre-mi"
@@ -299,7 +299,7 @@ function Identificacion() {
               <motion.div
                 className="p-6 border-l-2 cursor-default"
                 style={{ borderColor: C.blue, backgroundColor: C.bgLight }}
-                whileHover={{ borderColor: C.accent, x: 3 }}
+                whileHover={reduced ? undefined : { borderColor: C.accent, x: 3 }}
                 transition={reduced ? { duration: 0, delay: 0, repeat: 0 } : { duration: 0.2 }}
               >
                 <h3 style={{ fontFamily: "Lora, serif", color: C.blueDark, fontSize: 17 }}
@@ -425,7 +425,7 @@ function Servicios({ onSelect }) {
                 onClick={() => onSelect(item)}
                 className="p-6 h-full flex flex-col text-left w-full cursor-pointer"
                 style={{ backgroundColor: C.bgLight, border: `1px solid ${C.blue}10` }}
-                whileHover={{ boxShadow: `0 8px 32px ${C.blue}15`, y: -2 }}
+                whileHover={reduced ? undefined : { boxShadow: `0 8px 32px ${C.blue}15`, y: -2 }}
                 transition={reduced ? { duration: 0, delay: 0, repeat: 0 } : { duration: 0.2 }}
               >
                 <h3 style={{ fontFamily: "Lora, serif", color: C.blueDark, fontSize: 17 }}
@@ -619,16 +619,16 @@ function Footer() {
   return (
     <footer className="pt-8 pb-28 px-8 flex flex-col md:flex-row items-center justify-between gap-2"
       style={{ backgroundColor: "#111B2A", borderTop: "1px solid rgba(255,255,255,0.06)" }}>
-      <p style={{ fontFamily: "Source Sans 3, sans-serif", color: "rgba(255,255,255,0.25)", fontSize: 12 }}>
+      <p style={{ fontFamily: "Source Sans 3, sans-serif", color: "rgba(255,255,255,0.8)", fontSize: 12 }}>
         © 2026 Valeria Romero · Psicóloga Clínica · Cédula de ejemplo 12345678
       </p>
       <p style={{ fontFamily: "Source Sans 3, sans-serif", fontSize: 11 }}>
         <button onClick={() => setPrivacyOpen(true)}
-          className="underline-offset-2 hover:underline transition-all"
-          style={{ color: "rgba(255,255,255,0.35)", fontFamily: "Source Sans 3, sans-serif" }}>
+          className="min-h-11 px-2 underline-offset-2 hover:underline transition-all"
+          style={{ color: "rgba(255,255,255,0.8)", fontFamily: "Source Sans 3, sans-serif" }}>
           Aviso de privacidad
         </button>
-        <span style={{ color: "rgba(255,255,255,0.15)" }}> · Espacio de escucha</span>
+        <span style={{ color: "rgba(255,255,255,0.8)" }}> · Espacio de escucha</span>
       </p>
 
       <PrivacyModal
@@ -655,9 +655,9 @@ export default function ThemeClinico() {
 
   return (
     <div style={{ backgroundColor: C.bgLight }}>
-      <Navbar onOpenWhatsApp={() => setWaOpen(true)} />
+      <Navbar onStartReservation={() => openReservation(null)} />
       <main id="contenido" tabIndex={-1}>
-      <Hero onOpenWhatsApp={() => setWaOpen(true)} />
+      <Hero onStartReservation={() => openReservation(null)} />
       <Identificacion />
       <SobreMi />
       <Servicios onSelect={openReservation} />

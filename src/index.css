@@ -1,10 +1,11 @@
 @import "tailwindcss";
 
-html { scroll-behavior: smooth; overflow-x: clip; scrollbar-gutter: stable; }
+html { scroll-behavior: smooth; scroll-padding-bottom: 9rem; overflow-x: clip; scrollbar-gutter: stable; }
 body { margin: 0; }
 button, a, input, select, textarea { -webkit-tap-highlight-color: transparent; }
 button:not(:disabled), a { cursor: pointer; }
 button:disabled { opacity: 0.5; cursor: not-allowed; }
+:where(button, a, input, select, textarea) { scroll-margin-block: 10rem 9rem; }
 :where(a, button, input, select, textarea, [tabindex]):focus-visible {
   outline: 3px solid #f5b942;
   outline-offset: 3px;
@@ -24,7 +25,9 @@ button:disabled { opacity: 0.5; cursor: not-allowed; }
 .demo-modal::backdrop { background: #0009; }
 .demo-modal-content { padding: clamp(1rem, 4vw, 1.5rem); }
 .demo-modal fieldset { min-width: 0; }
-.demo-icon-button { display: inline-flex; align-items: center; justify-content: center; min-width: 44px; min-height: 44px; }
+@layer components {
+  .demo-icon-button { display: inline-flex; align-items: center; justify-content: center; min-width: 44px; min-height: 44px; }
+}
 .demo-theme-switcher { bottom: calc(1.9rem + env(safe-area-inset-bottom, 0px)); }
 .demo-watermark { bottom: calc(0.25rem + env(safe-area-inset-bottom, 0px)); }
 .demo-contact-form[hidden] { display: none; }

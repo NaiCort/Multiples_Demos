@@ -80,7 +80,7 @@ function TypeWriter({ text, delay = 0 }) {
           transition={reduced ? { duration: 0, delay: 0, repeat: 0 } : { duration: 0.4, delay: delay + i * 0.06, ease: "easeOut" }}
           style={{ display: "inline-block", marginRight: "0.25em" }}
         >
-          {word}
+          {word}{i < words.length - 1 ? " " : ""}
         </motion.span>
       ))}
     </span>
@@ -89,7 +89,7 @@ function TypeWriter({ text, delay = 0 }) {
 
 function Navbar() {
   const reduced = useReducedMotion()
-  const { scrolled, activeSection, menuOpen, setMenuOpen } = useDemoNavigation()
+  const { scrolled, activeSection, menuOpen, setMenuOpen, navigateToSection } = useDemoNavigation()
 
   const links = [
     { label: "Inicio", href: "#inicio" },
@@ -118,7 +118,7 @@ function Navbar() {
           {links.map(l => {
             const isActive = activeSection === l.href.slice(1)
             return (
-              <a key={l.label} href={l.href} aria-current={activeSection === l.href.slice(1) ? "location" : undefined}
+              <a key={l.label} href={l.href} onClick={navigateToSection} aria-current={activeSection === l.href.slice(1) ? "location" : undefined}
                 style={{ color: isActive ? C.black : C.gray600, fontFamily: "DM Sans, sans-serif", fontSize: 13, letterSpacing: "0.04em" }}
                 className="hover:opacity-90 transition-opacity uppercase tracking-widest">
                 {l.label}
@@ -127,7 +127,7 @@ function Navbar() {
           })}
         </div>
 
-        <button className="xl:hidden p-2" onClick={() => setMenuOpen(!menuOpen)}
+        <button type="button" className="demo-icon-button xl:hidden p-2" onClick={() => setMenuOpen(!menuOpen)}
           aria-haspopup="dialog" aria-expanded={menuOpen} aria-label={menuOpen ? "Cerrar menú" : "Abrir menú"}>
           <div className="space-y-1.5">
             <motion.div animate={{ rotate: menuOpen ? 45 : 0, y: menuOpen ? 8 : 0 }}
@@ -151,7 +151,7 @@ function Navbar() {
                 animate={{ opacity: 1, x: 0 }}
                 transition={reduced ? { duration: 0, delay: 0, repeat: 0 } : { delay: i * 0.05 }}
                 style={{ color: "#ffffff", fontFamily: "DM Serif Display, serif", fontSize: 22 }}
-                onClick={() => setMenuOpen(false)}>
+                onClick={navigateToSection}>
                 {l.label}
               </motion.a>
             ))}
@@ -163,7 +163,7 @@ function Navbar() {
   )
 }
 
-function Hero({ onOpenWhatsApp }) {
+function Hero({ onStartReservation }) {
   const reduced = useReducedMotion()
   return (
     <section id="inicio" className="min-h-screen flex flex-col justify-center pt-[140px] pb-16 px-8"
@@ -193,7 +193,7 @@ function Hero({ onOpenWhatsApp }) {
               transition={reduced ? { duration: 0, delay: 0, repeat: 0 } : { duration: 0.5, delay: 1 }}
               className="flex flex-col sm:flex-row gap-4"
             >
-              <button onClick={onOpenWhatsApp}
+              <button onClick={onStartReservation}
                 className="group flex items-center gap-3 px-6 py-3 text-sm font-medium transition-all duration-200"
                 style={{ backgroundColor: C.black, color: C.white, fontFamily: "DM Sans, sans-serif", letterSpacing: "0.04em" }}>
                 Agendar primera consulta
@@ -222,7 +222,7 @@ function Hero({ onOpenWhatsApp }) {
             <div className="absolute bottom-6 left-6 right-6 p-4"
               style={{ backgroundColor: "rgba(255,255,255,0.95)", backdropFilter: "blur(8px)" }}>
               <p style={{ fontFamily: "DM Sans, sans-serif", color: C.gray400, fontSize: 11, letterSpacing: "0.08em" }} className="uppercase mb-1">
-                Cédula profesional
+                Cédula de ejemplo
               </p>
               <p style={{ fontFamily: "DM Serif Display, serif", color: C.black, fontSize: 16 }}>
                 12345678 · UNAM · Psicología Clínica
@@ -381,7 +381,7 @@ function Servicios({ onSelect }) {
               <motion.button
                 onClick={() => onSelect(item)}
                 className="py-8 grid grid-cols-12 gap-4 items-center cursor-pointer group w-full text-left"
-                whileHover={{ x: 4 }}
+                whileHover={reduced ? undefined : { x: 4 }}
                 transition={reduced ? { duration: 0, delay: 0, repeat: 0 } : { duration: 0.2 }}
               >
                 <h3 style={{ fontFamily: "DM Serif Display, serif", color: C.black, fontSize: 20 }}
@@ -399,7 +399,7 @@ function Servicios({ onSelect }) {
                   <p style={{ fontFamily: "DM Sans, sans-serif", color: C.gray400, fontSize: 12 }}>
                     <MapPin size={11} className="inline mr-1" />{item.mode}
                   </p>
-                  <p className="text-xs font-medium opacity-0 group-hover:opacity-100 transition-opacity"
+                  <p className="text-xs font-medium"
                     style={{ fontFamily: "DM Sans, sans-serif", color: C.black }}>
                     Reservar →
                   </p>
@@ -440,7 +440,7 @@ function PrimeraCita({ onStartReservation }) {
           {pasos.map((paso, i) => (
             <FadePure key={i} delay={i * 0.08}>
               <div>
-                <p style={{ fontFamily: "DM Sans, sans-serif", color: C.gray200, fontSize: 48, lineHeight: 1, fontWeight: 300 }}
+                <p style={{ fontFamily: "DM Sans, sans-serif", color: C.gray400, fontSize: 48, lineHeight: 1, fontWeight: 300 }}
                   className="mb-4">
                   {paso.n}
                 </p>
@@ -518,14 +518,14 @@ function Resenas() {
 
         <div className="flex items-center justify-center gap-6">
           <button onClick={prev} aria-label="Reseña anterior"
-            className="p-2 hover:opacity-90 transition-opacity">
+            className="demo-icon-button p-2 hover:opacity-90 transition-opacity">
             <ChevronLeft size={18} style={{ color: C.black }} />
           </button>
           <span style={{ fontFamily: "DM Sans, sans-serif", color: C.gray400, fontSize: 12 }}>
             {index + 1} / {reviews.length}
           </span>
           <button onClick={next} aria-label="Siguiente reseña"
-            className="p-2 hover:opacity-90 transition-opacity">
+            className="demo-icon-button p-2 hover:opacity-90 transition-opacity">
             <ChevronRight size={18} style={{ color: C.black }} />
           </button>
         </div>
@@ -605,7 +605,7 @@ function Footer() {
       <Monogram />
 
       <button onClick={() => setPrivacyOpen(true)}
-        className="underline-offset-2 hover:underline transition-all"
+        className="min-h-11 px-2 underline-offset-2 hover:underline transition-all"
         style={{ fontFamily: "DM Sans, sans-serif", color: "rgba(255,255,255,0.8)", fontSize: 11 }}>
         Aviso de privacidad
       </button>
@@ -635,9 +635,9 @@ export default function ThemeMinimalista() {
 
   return (
     <div style={{ backgroundColor: C.white }}>
-      <Navbar onOpenWhatsApp={() => setWaOpen(true)} />
+      <Navbar />
       <main id="contenido" tabIndex={-1}>
-      <Hero onOpenWhatsApp={() => setWaOpen(true)} />
+      <Hero onStartReservation={() => openReservation(null)} />
       <Identificacion />
       <SobreMi />
       <Servicios onSelect={openReservation} />

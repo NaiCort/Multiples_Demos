@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react"
 import { motion, useReducedMotion, useInView, useScroll, useTransform } from "framer-motion"
-import { Phone, MapPin, Clock, MessageCircle, Leaf, Wind, Sun, Star } from "lucide-react"
+import { Phone, MapPin, Clock, MessageCircle, CalendarDays, Leaf, Wind, Sun, Star } from "lucide-react"
 import DemoContactForm from "../../../components/shared/DemoContactForm"
 import PrivacyModal from "../../../components/shared/PrivacyModal"
 import ComercialCTA from "../../../components/shared/ComercialCTA"
@@ -57,7 +57,7 @@ function FadeBlur({ children, delay = 0 }) {
 function FloatingOrb({ size, color, top, left, duration = 8, delay = 0 }) {
   const reduced = useReducedMotion()
   return (
-    <motion.div
+    <motion.div aria-hidden="true"
       style={{
         position: "absolute",
         width: size,
@@ -88,8 +88,8 @@ function FloatingOrb({ size, color, top, left, duration = 8, delay = 0 }) {
   )
 }
 
-function Navbar({ onOpenWhatsApp }) {
-  const { scrolled, activeSection, menuOpen, setMenuOpen } = useDemoNavigation()
+function Navbar({ onStartReservation }) {
+  const { scrolled, activeSection, menuOpen, setMenuOpen, navigateToSection } = useDemoNavigation()
 
   const links = [
     { label: "Inicio", href: "#inicio" },
@@ -121,21 +121,21 @@ function Navbar({ onOpenWhatsApp }) {
           {links.map(l => {
             const isActive = activeSection === l.href.slice(1)
             return (
-              <a key={l.label} href={l.href} aria-current={activeSection === l.href.slice(1) ? "location" : undefined}
+              <a key={l.label} href={l.href} onClick={navigateToSection} aria-current={activeSection === l.href.slice(1) ? "location" : undefined}
                 style={{ color: isActive ? C.green700 : C.gray, fontFamily: "Nunito, sans-serif", fontSize: 14, fontWeight: isActive ? 600 : 400 }}
                 className="hover:opacity-90 transition-opacity">
                 {l.label}
               </a>
             )
           })}
-          <button type="button" onClick={() => { setMenuOpen(false); onOpenWhatsApp() }}
-            className="px-5 py-2 text-white text-sm transition-all hover:opacity-90 rounded-full"
+          <button type="button" onClick={() => { setMenuOpen(false); onStartReservation() }}
+            className="min-h-11 px-5 py-2 text-white text-sm transition-all hover:opacity-90 rounded-full"
             style={{ backgroundColor: C.green700, fontFamily: "Nunito, sans-serif" }}>
             Agendar cita
           </button>
         </div>
 
-        <button className="xl:hidden p-2" onClick={() => setMenuOpen(!menuOpen)}
+        <button type="button" className="demo-icon-button xl:hidden p-2" onClick={() => setMenuOpen(!menuOpen)}
           aria-haspopup="dialog" aria-expanded={menuOpen} aria-label={menuOpen ? "Cerrar menú" : "Abrir menú"}>
           <div className="space-y-1.5">
             <motion.div animate={{ rotate: menuOpen ? 45 : 0, y: menuOpen ? 8 : 0 }}
@@ -155,9 +155,9 @@ function Navbar({ onOpenWhatsApp }) {
             {links.map(l => (
               <a key={l.label} className="min-h-11 flex items-center" href={l.href} aria-current={activeSection === l.href.slice(1) ? "location" : undefined}
                 style={{ color: "#ffffff", fontFamily: "Cormorant Garamond, serif", fontSize: 22 }}
-                onClick={() => setMenuOpen(false)}>{l.label}</a>
+                onClick={navigateToSection}>{l.label}</a>
             ))}
-            <button type="button" onClick={() => { setMenuOpen(false); onOpenWhatsApp() }}
+            <button type="button" onClick={() => { setMenuOpen(false); onStartReservation() }}
               className="mt-2 py-3 text-white text-center rounded-full"
               style={{ backgroundColor: "#394d43", fontFamily: "Nunito, sans-serif" }}>
               Agendar cita
@@ -170,7 +170,7 @@ function Navbar({ onOpenWhatsApp }) {
   )
 }
 
-function Hero({ onOpenWhatsApp }) {
+function Hero({ onStartReservation }) {
   const reduced = useReducedMotion()
   const ref = useRef(null)
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end start"] })
@@ -219,10 +219,10 @@ function Hero({ onOpenWhatsApp }) {
             transition={reduced ? { duration: 0, delay: 0, repeat: 0 } : { duration: 0.8, delay: 0.8 }}
             className="flex flex-col sm:flex-row gap-4"
           >
-            <button onClick={onOpenWhatsApp}
+            <button onClick={onStartReservation}
               className="flex items-center justify-center gap-2 px-6 py-3 text-white text-sm rounded-full transition-all hover:opacity-90"
               style={{ backgroundColor: C.green700, fontFamily: "Nunito, sans-serif" }}>
-              <MessageCircle size={16} />
+              <CalendarDays size={16} aria-hidden="true" />
               Comenzar el proceso
             </button>
             <a href="#sobre-mi"
@@ -303,7 +303,7 @@ function Identificacion() {
               <motion.div
                 className="p-8 rounded-3xl cursor-default"
                 style={{ backgroundColor: C.bg }}
-                whileHover={{ y: -5, backgroundColor: C.green100 }}
+                whileHover={reduced ? undefined : { y: -5, backgroundColor: C.green100 }}
                 transition={reduced ? { duration: 0, delay: 0, repeat: 0 } : { duration: 0.3 }}
               >
                 <item.icon size={24} className="mb-5" style={{ color: C.sage }} />
@@ -425,7 +425,7 @@ function Servicios({ onSelect }) {
                 onClick={() => onSelect(item)}
                 className="p-8 rounded-3xl flex flex-col h-full text-left w-full cursor-pointer"
                 style={{ backgroundColor: C.bg, border: `1px solid ${C.green200}` }}
-                whileHover={{ y: -4, boxShadow: `0 16px 48px ${C.green200}80` }}
+                whileHover={reduced ? undefined : { y: -4, boxShadow: `0 16px 48px ${C.green200}80` }}
                 transition={reduced ? { duration: 0, delay: 0, repeat: 0 } : { duration: 0.35 }}
               >
                 <h3 style={{ fontFamily: "Cormorant Garamond, serif", color: C.green900, fontSize: 21, fontWeight: 400 }}
@@ -612,7 +612,7 @@ function Contacto({ onOpenWhatsApp }) {
 
           <button type="button" onClick={onOpenWhatsApp}
             className="inline-flex items-center gap-2 px-6 py-3 text-sm rounded-full transition-all hover:opacity-90"
-            style={{ backgroundColor: C.sage, color: C.white, fontFamily: "Nunito, sans-serif" }}>
+            style={{ backgroundColor: C.green700, color: C.white, fontFamily: "Nunito, sans-serif" }}>
             <MessageCircle size={15} />
             Escribir por WhatsApp
           </button>
@@ -636,8 +636,8 @@ function Footer() {
         © 2026 Valeria Romero · Psicóloga Clínica · Xalapa, Veracruz
       </p>
       <button onClick={() => setPrivacyOpen(true)}
-        className="mt-1 underline-offset-2 hover:underline transition-all"
-        style={{ fontFamily: "Nunito, sans-serif", color: "rgba(255,255,255,0.35)", fontSize: 11, fontWeight: 300 }}>
+        className="min-h-11 px-2 mt-1 underline-offset-2 hover:underline transition-all"
+        style={{ fontFamily: "Nunito, sans-serif", color: "rgba(255,255,255,0.8)", fontSize: 11, fontWeight: 300 }}>
         Aviso de privacidad
       </button>
 
@@ -665,9 +665,9 @@ export default function ThemeNaturaleza() {
 
   return (
     <div style={{ backgroundColor: C.bg }}>
-      <Navbar onOpenWhatsApp={() => setWaOpen(true)} />
+      <Navbar onStartReservation={() => openReservation(null)} />
       <main id="contenido" tabIndex={-1}>
-      <Hero onOpenWhatsApp={() => setWaOpen(true)} />
+      <Hero onStartReservation={() => openReservation(null)} />
       <Identificacion />
       <SobreMi />
       <Servicios onSelect={openReservation} />
