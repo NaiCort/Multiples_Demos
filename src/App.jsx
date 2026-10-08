@@ -6,6 +6,7 @@ import NotFound from "./pages/NotFound"
 import RouteErrorBoundary from "./components/shared/RouteErrorBoundary"
 
 const PsicologoApp = lazy(() => import("./giros/psicologo/PsicologoApp"))
+const RestauranteApp = lazy(() => import("./giros/restaurante/RestauranteApp"))
 
 function RouteLoading() {
   return <div className="route-message" role="status">Cargando demo…</div>
@@ -24,6 +25,7 @@ export default function App() {
           <Routes>
             <Route path="/" element={<Bienvenida />} />
             <Route path="/psicologo" element={<PsicologoApp />} />
+            <Route path="/restaurante" element={<RestauranteApp />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </Suspense>

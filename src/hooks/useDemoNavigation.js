@@ -1,11 +1,11 @@
 import { useEffect, useRef, useState, useSyncExternalStore } from "react"
 
 const IDS = ["inicio", "sobre-mi", "servicios", "primera-cita", "contacto"]
-function readNavigation() {
+function readNavigation(ids) {
   let active = "inicio"
   const navbar = document.querySelector('nav[aria-label="Navegación de la demo"]')
   const threshold = Math.max(160, (navbar?.getBoundingClientRect().bottom || 0) + 24)
-  for (const id of IDS) {
+  for (const id of ids) {
     const section = document.getElementById(id)
     if (section && section.getBoundingClientRect().top <= threshold) active = id
   }
@@ -22,8 +22,8 @@ function subscribe(callback) {
     window.removeEventListener("resize", update)
   }
 }
-export default function useDemoNavigation() {
-  const snapshot = useSyncExternalStore(subscribe, readNavigation, () => "false:inicio")
+export default function useDemoNavigation(ids = IDS) {
+  const snapshot = useSyncExternalStore(subscribe, () => readNavigation(ids), () => "false:inicio")
   const [menuOpen, setMenuOpen] = useState(false)
   const navigationFrame = useRef(null)
   useEffect(() => () => cancelAnimationFrame(navigationFrame.current), [])

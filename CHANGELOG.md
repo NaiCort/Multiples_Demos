@@ -1,5 +1,20 @@
 # Historial de cambios
 
+## V4.2.0 · 2026-10-05
+
+Base: V4.1.3 (`d3c393cbc06eac8685f00911b7b3f17f6f606bd8`). Psicólogo aprobado por Ian el 2 de octubre. Primera entrega de Restaurante, pendiente de revisión.
+
+- Se añade `/restaurante` con carga diferida y se habilita su entrada en el directorio temporal.
+- Patio 12 tiene identidad, contenido, tipografía y composición propios de un restaurante de barrio.
+- Carta con categorías, búsqueda, estado vacío y 12 productos con precios e ingredientes de ejemplo.
+- Carrito en memoria con extras, cantidades, límite de nueve unidades por combinación, retiro de productos, recogida y entrega simuladas, totales y recibo.
+- Reserva de mesa con fechas futuras, cierre de lunes, disponibilidad por tamaño de grupo e invalidación del horario al corregir la selección.
+- WhatsApp adaptado al restaurante; ubicación ficticia, privacidad, ayuda y contacto comercial real.
+- Fotografías WebP y fuentes WOFF2 locales con licencias; nombres de fuente aislados de otros giros.
+- Navegación compartida admite IDs por giro y DemoBanner admite una guía propia. Los valores predeterminados de Psicólogo se conservan.
+- Se añaden seis pruebas unitarias y recorridos de navegador de Restaurante. Los resultados y límites están en docs/VALIDACION_V4.2.md.
+- Las otras identidades de Restaurante y la gestión de empleados continúan como entregas posteriores; no se cierra el giro completo.
+
 ## V4.1.3 · 2026-10-02
 
 Base: V4.1.2 (`f08237f26916b619929b3f3b6230caac17032696`). Candidata al cierre de Psicólogo, pendiente del visto bueno de Ian.

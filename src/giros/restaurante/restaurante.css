@@ -1,0 +1,206 @@
+@font-face { font-family: "Patio Bitter"; src: url("/restaurante/bitter-latin.woff2") format("woff2"); font-style: normal; font-weight: 400 700; font-display: swap; }
+@font-face { font-family: "Patio Sans"; src: url("/restaurante/dm-sans-latin.woff2") format("woff2"); font-style: normal; font-weight: 400 700; font-display: swap; }
+
+.restaurant-root { --r-ink: #203b2e; --r-yellow: #edd068; --r-muted: #526155; padding-top: 44px; background: #fff; color: var(--r-ink); font-family: "Patio Sans", sans-serif; font-size: 16px; line-height: 1.6; }
+.restaurant-root h1, .restaurant-root h2, .restaurant-root h3, .restaurant-modal h2, .restaurant-modal h3 { font-family: "Patio Bitter", Georgia, serif; line-height: 1.15; font-weight: 600; }
+.restaurant-root section[id] { scroll-margin-top: 148px; }
+.restaurant-root h2 { font-size: clamp(2rem, 4.5vw, 3.6rem); letter-spacing: -0.045em; }
+.restaurant-root button, .restaurant-root a, .restaurant-modal button { transition: background-color 160ms, color 160ms; }
+.restaurant-root :where(button, a, input):focus-visible, .restaurant-modal :where(button, a, input, select):focus-visible { outline: 3px solid #1260bc; outline-offset: 3px; box-shadow: 0 0 0 5px #fff; }
+.r-sr-only { position: absolute; width: 1px; height: 1px; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+.r-nav { position: sticky; top: 44px; z-index: 55; display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 16px clamp(20px, 4vw, 64px); background: var(--r-yellow); border-bottom: 1px solid #203b2e35; min-height: 88px; }
+.r-brand { display: flex; align-items: center; gap: 10px; line-height: 0.95; font-family: "Patio Bitter", Georgia, serif; font-size: 31px; letter-spacing: -0.07em; }
+.r-brand small { display: block; font-family: "Patio Sans", sans-serif; font-size: 10px; letter-spacing: 0.12em; margin-top: 8px; line-height: 1; }
+.r-desktop-nav { display: none; align-items: center; gap: 32px; }
+.r-desktop-nav a { padding-block: 12px; font-size: 15px; }
+.r-desktop-nav a[aria-current] { text-decoration: underline; text-underline-offset: 7px; }
+.r-nav-reserve { display: flex; align-items: center; gap: 7px; font-weight: 600; border-bottom: 1px solid currentColor; min-height: 44px; }
+.r-nav-actions { display: flex; gap: 12px; align-items: center; }
+.r-cart-button { display: flex; align-items: center; gap: 8px; min-height: 46px; padding: 4px 11px; border: 1px solid var(--r-ink); border-radius: 3px; font-size: 14px; }
+.r-cart-count { display: grid; place-items: center; min-width: 22px; height: 22px; background: var(--r-ink); color: #fff; font-size: 12px; border-radius: 50%; }
+.r-cart-label { display: none; }
+.r-mobile-menu { display: grid; place-items: center; min-width: 44px; min-height: 44px; }
+.r-hero { display: grid; background: var(--r-yellow); }
+.r-hero-copy { padding: 42px 24px 32px; }
+.r-hero h1 { font-size: clamp(3.25rem, 6.6vw, 6.7rem); line-height: 0.99; letter-spacing: -0.065em; margin-bottom: 25px; }
+.r-hero h1 em { font-style: normal; }
+.r-hero-copy > p:first-of-type { max-width: 365px; font-size: 17px; line-height: 1.65; }
+.r-hero-actions { display: flex; gap: 12px; flex-wrap: wrap; margin: 28px 0 35px; }
+.r-button, .r-secondary-button { display: inline-flex; align-items: center; justify-content: center; gap: 10px; min-height: 50px; padding: 12px 21px; border-radius: 3px; font-size: 14px; font-weight: 600; line-height: 1.5; text-align: center; }
+.r-button { color: #fff; background: #203b2e; border: 1px solid #203b2e; }
+.r-button:hover:not(:disabled) { background: #365441; }
+.r-secondary-button { color: #203b2e; background: transparent; border: 1px solid #203b2e; }
+.r-secondary-button:hover { background: #203b2e0d; }
+.r-hero-facts { display: flex; gap: 28px; flex-wrap: wrap; font-size: 13px; line-height: 1.55; }
+.r-hero-facts p { display: flex; align-items: flex-start; gap: 9px; }
+.r-hero-facts svg { margin-top: 4px; flex-shrink: 0; }
+.r-hero-facts small { font-size: 12px; }
+.r-hero-note { font-size: 12px; margin-top: 22px; max-width: 370px; }
+.r-hero-photo { position: relative; background: #183325; min-width: 0; }
+.r-hero-photo img { width: 100%; height: 100%; display: block; object-fit: cover; aspect-ratio: 1.25; }
+.r-photo-caption { position: absolute; right: 20px; bottom: 20px; display: grid; gap: 4px; padding: 14px 19px; background: #fff; color: #203b2e; border-radius: 2px; font-size: 12px; }
+.r-photo-caption strong { font-family: "Patio Bitter", Georgia, serif; font-size: 20px; line-height: 1.2; }
+.r-intro-strip { display: flex; gap: 24px; justify-content: space-around; align-items: center; background: #203b2e; color: #fff; padding: 20px 24px; font-size: 14px; }
+.r-intro-strip > span { color: #edd068; font-size: 24px; line-height: 1; }
+.r-featured, .r-menu-section, .r-visit { padding: 70px 24px; max-width: 1360px; margin-inline: auto; }
+.r-section-head { display: flex; justify-content: space-between; align-items: flex-end; gap: 25px; flex-wrap: wrap; margin-bottom: 36px; }
+.r-section-head > p { font-size: 14px; color: #526155; }
+.r-featured-grid { display: grid; gap: 36px; }
+.r-food-photo { display: block; position: relative; width: 100%; overflow: hidden; border-radius: 4px; }
+.r-food-photo img { display: block; width: 100%; aspect-ratio: 1.4; object-fit: cover; }
+.r-food-photo > span { position: absolute; right: 12px; bottom: 12px; display: grid; place-items: center; width: 44px; height: 44px; background: #edd068; border-radius: 50%; }
+.r-food-photo:hover > span { background: #fff; }
+.r-food-title { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin: 18px 0 10px; }
+.r-food-title h3 { font-size: 22px; letter-spacing: -0.025em; }
+.r-food-title strong { font-size: 15px; white-space: nowrap; }
+.r-featured-item > p { color: #526155; font-size: 14px; max-width: 380px; }
+.r-menu-section { padding-top: 25px; }
+.r-menu-tools { display: flex; align-items: center; justify-content: space-between; gap: 22px; flex-wrap: wrap; padding: 20px 0; border-top: 1px solid #a3aea5; border-bottom: 1px solid #a3aea5; }
+.r-category-list { display: flex; flex-wrap: wrap; gap: 4px; }
+.r-category-list button { padding: 9px 13px; min-height: 44px; border-radius: 3px; font-size: 14px; transition: none; }
+.r-category-list button[aria-pressed="true"] { color: #fff; background: #203b2e; }
+.r-category-list button:hover:not([aria-pressed="true"]) { background: #eff4ef; }
+.r-search { display: flex; align-items: center; gap: 10px; min-height: 46px; padding: 9px 13px; border: 1px solid #85948a; border-radius: 3px; min-width: 0; width: 100%; }
+.r-search input { min-width: 0; width: 100%; background: transparent; font-size: 14px; }
+.r-search input::placeholder { color: #526155; opacity: 1; }
+.r-menu-count { margin: 18px 0 5px; font-size: 12px; color: #526155; overflow-wrap: anywhere; }
+.r-menu-list { display: grid; column-gap: 52px; }
+.r-menu-item { display: flex; justify-content: space-between; gap: 18px; align-items: flex-start; padding: 26px 0; border-bottom: 1px solid #d1d8d2; }
+.r-menu-item h3 { font-size: 19px; margin-bottom: 8px; }
+.r-menu-item p { color: #526155; font-size: 13px; max-width: 345px; }
+.r-menu-tag { display: inline-block; margin-top: 10px; font-size: 11px; color: #315342; padding: 1px 8px; background: #edf2ec; border-radius: 3px; }
+.r-menu-price { display: grid; flex-shrink: 0; gap: 8px; text-align: right; }
+.r-menu-price > strong { font-size: 16px; }
+.r-menu-price button { display: flex; align-items: center; justify-content: flex-end; gap: 10px; font-size: 12px; min-height: 44px; min-width: 70px; }
+.r-menu-price button span { display: grid; place-items: center; width: 26px; height: 26px; border: 1px solid #85948a; border-radius: 50%; font-size: 18px; }
+.r-menu-foot { display: flex; justify-content: space-between; align-items: center; gap: 20px; flex-wrap: wrap; margin-top: 24px; font-size: 12px; color: #526155; }
+.r-menu-foot > p { max-width: 550px; }
+.r-text-button { display: inline-flex; align-items: center; justify-content: center; min-height: 44px; gap: 8px; padding: 6px 0; text-decoration: underline; text-underline-offset: 4px; font-size: 14px; }
+.r-empty-search { padding: 38px 0; }
+.r-empty-search h3 { font-size: 24px; margin-bottom: 12px; }
+.r-empty-search p { margin-bottom: 20px; }
+.r-place { display: grid; background: #edf2ec; }
+.r-place-photo { position: relative; min-width: 0; }
+.r-place-photo img { display: block; width: 100%; height: 100%; aspect-ratio: 1.1; object-fit: cover; }
+.r-place-photo > span { position: absolute; left: 20px; bottom: 20px; background: #fff; padding: 8px 12px; font-size: 12px; color: #203b2e; }
+.r-place-copy { padding: 40px 24px; }
+.r-place-copy h2 { margin-bottom: 24px; }
+.r-place-copy h2 em { font-style: normal; }
+.r-place-copy > p { max-width: 430px; margin-bottom: 17px; font-size: 15px; }
+.r-place-copy .r-button { margin: 12px 0 20px; }
+.r-place-copy > .r-demo-note { font-size: 12px; }
+.r-visit { display: grid; gap: 40px; }
+.r-visit-details { display: grid; gap: 32px; font-size: 14px; }
+.r-visit-details h3 { font-size: 19px; margin-bottom: 17px; }
+.r-visit-details p { margin-bottom: 10px; }
+.r-visit-details dl { margin-bottom: 14px; }
+.r-visit-details dl > div { display: flex; gap: 24px; justify-content: space-between; max-width: 340px; }
+.r-footer { display: flex; justify-content: space-between; gap: 20px; align-items: center; flex-wrap: wrap; padding: 28px 24px 76px; background: #203b2e; color: #fff; border-top: 1px solid #ffffff38; }
+.r-footer > a { font-family: "Patio Bitter", Georgia, serif; font-size: 28px; letter-spacing: -0.06em; min-height: 44px; }
+.r-footer > p { font-size: 12px; max-width: 360px; }
+.r-floating-cart { position: fixed; bottom: calc(56px + env(safe-area-inset-bottom, 0px)); right: 20px; z-index: 58; display: flex; align-items: center; justify-content: space-between; gap: 14px; padding: 14px 18px; max-width: calc(100vw - 40px); background: #203b2e; color: #fff; border: 1px solid #ffffff66; box-shadow: 0 3px 14px #0002; border-radius: 4px; font-size: 14px; }
+.r-announcement { position: fixed; bottom: 123px; left: 20px; z-index: 57; display: flex; align-items: center; gap: 12px; max-width: calc(100vw - 40px); font-size: 13px; }
+.r-announcement:empty { display: none; }
+.r-announcement:not(:empty) { padding: 7px 12px; background: #fff; color: #203b2e; border: 1px solid #85948a; border-radius: 3px; }
+.r-announcement button { display: grid; place-items: center; width: 44px; height: 44px; flex-shrink: 0; }
+.restaurant-modal { background: #fff; color: #203b2e; border: 1px solid #526155; font-family: "Patio Sans", sans-serif; }
+.restaurant-modal h2 { font-size: 24px; letter-spacing: -0.025em; }
+.restaurant-modal h3 { font-size: 20px; }
+.r-mobile-links { display: grid; gap: 14px; }
+.r-mobile-links > a { padding: 12px; border-bottom: 1px solid #d1d8d2; min-height: 48px; }
+.r-muted { color: #526155; font-size: 14px; line-height: 1.65; }
+.r-allergens { padding: 16px 0; margin-top: 15px; border-top: 1px solid #d1d8d2; border-bottom: 1px solid #d1d8d2; font-size: 12px; line-height: 1.7; }
+.r-options { margin: 20px 0; border: none; padding: 0; }
+.r-options > legend { font-weight: 600; font-size: 14px; margin-bottom: 10px; }
+.r-option { display: flex; align-items: center; gap: 10px; padding: 13px 0; border-top: 1px solid #d1d8d2; font-size: 14px; }
+.r-option > input { flex-shrink: 0; width: 18px; height: 18px; accent-color: #203b2e; }
+.r-option > span { flex: 1; }
+.r-option strong { flex-shrink: 0; }
+.r-option small { font-size: 12px; color: #526155; }
+.r-quantity-row { display: flex; justify-content: space-between; align-items: center; margin: 20px 0; }
+.r-quantity { display: inline-flex; align-items: center; border: 1px solid #85948a; border-radius: 3px; }
+.r-quantity button { display: grid; place-items: center; min-width: 44px; min-height: 44px; }
+.r-quantity output { display: grid; place-items: center; min-width: 36px; font-size: 14px; }
+.r-demo-note { font-size: 12px; color: #526155; line-height: 1.65; margin: 18px 0; }
+.r-full { width: 100%; }
+.r-error { font-size: 13px; line-height: 1.6; color: #982823; margin: 12px 0; }
+.r-progress { font-size: 12px; color: #526155; margin-bottom: 22px; }
+.r-cart-list { list-style: none; margin: 0; padding: 0; }
+.r-cart-list > li { padding: 18px 0; border-bottom: 1px solid #d1d8d2; }
+.r-cart-title { display: flex; align-items: flex-start; justify-content: space-between; gap: 14px; margin-bottom: 6px; }
+.r-cart-title > h3 { font-size: 18px; }
+.r-cart-title > strong { font-size: 14px; white-space: nowrap; }
+.r-cart-controls { display: flex; justify-content: space-between; align-items: center; margin-top: 15px; gap: 15px; }
+.r-total { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin: 23px 0; font-size: 14px; }
+.r-total > strong { font-size: 17px; white-space: nowrap; }
+.r-field { display: grid; gap: 7px; font-size: 14px; font-weight: 500; margin: 18px 0; }
+.r-field input, .r-field select { width: 100%; min-width: 0; padding: 12px; min-height: 48px; border: 1px solid #85948a; border-radius: 3px; font-weight: 400; color: #203b2e; background: #fff; font-size: 16px; }
+.r-price-summary > p { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin: 10px 0; font-size: 14px; }
+.r-price-summary > .r-total { border-top: 1px solid #85948a; padding-top: 14px; margin-top: 14px; margin-bottom: 23px; }
+.r-time-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.restaurant-modal .r-time { display: grid; gap: 4px; padding: 15px 10px; border: 1px solid #85948a; border-radius: 3px; min-height: 73px; font-size: 17px; transition: none; }
+.r-time > small { font-size: 11px; line-height: 1.4; }
+.r-time[aria-pressed="true"] { background: #203b2e; border-color: #203b2e; color: #fff; }
+.r-time:disabled { opacity: 1; background: #edf2ec; color: #526155; border-style: dashed; }
+.r-reservation-summary { margin-bottom: 22px; font-size: 18px !important; }
+.r-result-icon { display: grid; place-items: center; width: 54px; height: 54px; border-radius: 50%; background: #203b2e; color: #fff; margin-bottom: 20px; }
+.r-result > h3 { margin-bottom: 20px; }
+.r-result > p { font-size: 14px; margin-block: 14px; }
+.r-result > .r-demo-note { font-size: 12px; }
+.r-receipt { list-style: none; padding: 0; margin-block: 20px; }
+.r-receipt > li { display: flex; justify-content: space-between; gap: 12px; padding: 9px 0; border-bottom: 1px solid #d1d8d2; font-size: 13px; }
+.r-processing { text-align: center; padding: 32px 0; }
+.r-processing h3 { margin: 20px 0 12px; }
+.r-processing > p { color: #526155; font-size: 14px; }
+.r-spinner { display: inline-block; width: 38px; height: 38px; border: 3px solid #d1d8d2; border-top-color: #203b2e; border-radius: 50%; animation: r-spin 800ms linear infinite; }
+@keyframes r-spin { to { transform: rotate(360deg); } }
+.r-empty > h3 { margin-bottom: 14px; }
+.r-empty > p { font-size: 14px; line-height: 1.7; margin-bottom: 24px; color: #526155; }
+.r-location-plan { display: grid; gap: 12px; background: #edf2ec; border: 1px solid #85948a; padding: 20px; margin-top: 22px; }
+.r-location-plan > div { padding: 24px 15px; text-align: center; border: 1px dashed #526155; color: #526155; font-size: 13px; }
+.r-location-plan > p { text-align: center; border-block: 1px solid #85948a; padding: 9px; font-size: 12px; }
+.r-location-plan > strong { display: flex; justify-content: center; align-items: center; gap: 8px; }
+.r-privacy { display: grid; gap: 18px; font-size: 14px; line-height: 1.7; }
+.r-privacy + button { margin-top: 24px; }
+
+@media (min-width: 640px) {
+  .r-cart-label { display: inline; }
+  .r-hero-copy { padding: 65px 40px 42px; }
+  .r-featured, .r-menu-section, .r-visit { padding-inline: 40px; }
+  .r-search { width: 275px; }
+  .r-featured-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; }
+  .r-food-title { align-items: flex-start; flex-direction: column; gap: 8px; }
+  .r-food-title h3 { font-size: 20px; }
+  .r-featured-1 { margin-top: 42px; }
+  .r-featured-2 { margin-top: 84px; }
+  .r-food-photo img { aspect-ratio: 0.9; }
+  .r-place-copy { padding: 60px 40px; }
+  .r-visit-details { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 40px; }
+}
+@media (min-width: 900px) {
+  .r-hero { grid-template-columns: 1fr 1fr; }
+  .r-hero-copy { padding: 64px clamp(35px, 4vw, 64px) 40px; }
+  .r-hero-photo img { aspect-ratio: auto; }
+  .r-featured, .r-menu-section, .r-visit { padding: 85px 64px; }
+  .r-menu-section { padding-top: 25px; }
+  .r-menu-list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .r-place { grid-template-columns: 1fr 1fr; }
+  .r-place-copy { padding: 65px; }
+  .r-visit { grid-template-columns: 0.8fr 1.5fr; align-items: start; }
+  .r-footer { padding-inline: 64px; }
+  .r-announcement { left: auto; right: 20px; bottom: 124px; }
+}
+@media (min-width: 1280px) {
+  .r-desktop-nav { display: flex; }
+  .r-mobile-menu { display: none; }
+  .r-food-title { flex-direction: row; }
+}
+@media (max-width: 639px) {
+  .r-intro-strip { gap: 12px; flex-wrap: wrap; font-size: 12px; }
+  .r-intro-strip p:last-child, .r-intro-strip > span:last-of-type { display: none; }
+  .r-nav { gap: 8px; padding-inline: 16px; }
+  .r-nav-actions { gap: 5px; }
+  .r-brand { font-size: 27px; gap: 7px; }
+  .r-brand > svg { width: 19px; }
+  .r-cart-button { gap: 6px; padding-inline: 8px; }
+}

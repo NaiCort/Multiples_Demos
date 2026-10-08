@@ -40,7 +40,7 @@ function getGreeting() {
 
 const GIROS = [
   { path: "/psicologo", name: "Psicólogo", desc: "Consultas, citas y un primer acercamiento sin fricción.", available: true },
-  { path: null, name: "Restaurante", desc: "Reservas, menú y la primera impresión de un buen lugar para comer.", available: false },
+  { path: "/restaurante", name: "Restaurante", desc: "Patio 12: carta, pedido y reserva de mesa simulados.", available: true },
   { path: null, name: "Café", desc: "Calidez, ritmo pausado, y motivo suficiente para quedarse un rato.", available: false },
   { path: null, name: "Gimnasio", desc: "Energía, comunidad, y una razón real para inscribirse.", available: false },
   { path: null, name: "Taller mecánico", desc: "Confianza técnica, mostrada, no solo prometida.", available: false },

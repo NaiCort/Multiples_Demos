@@ -12,7 +12,7 @@ function ContactRow({ icon: Icon, label, sublabel, href }) {
     <span className="min-w-0"><span className="block text-sm text-white">{label}</span><span className="block text-sm text-slate-300 break-words">{sublabel}</span></span>
   </a>
 }
-export default function DemoBanner() {
+export default function DemoBanner({ guide }) {
   const [panel, setPanel] = useState(null)
   return <>
     <div className="fixed top-0 left-0 right-0 z-[60] h-11 flex items-center px-2 sm:px-5 gap-1" style={{ backgroundColor: "#111318", fontFamily: "system-ui, sans-serif" }}>
@@ -35,7 +35,7 @@ export default function DemoBanner() {
         </button>
       </div>
     </div>
-    {panel === "about" && <Modal title="Cómo funciona esta demo" onClose={() => setPanel(null)}><OnboardingGuide /></Modal>}
+    {panel === "about" && <Modal title="Cómo funciona esta demo" onClose={() => setPanel(null)}>{guide || <OnboardingGuide />}</Modal>}
     {panel === "contact" && <Modal title="Hablemos de tu proyecto" onClose={() => setPanel(null)}>
       <p className="text-sm text-slate-300 mb-3">Estos son los canales reales de Ian.</p>
       <ContactRow icon={MessageCircle} label="WhatsApp" sublabel="+52 228 162 8345" href={WHATSAPP_URL} />
