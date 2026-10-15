@@ -280,3 +280,95 @@
 .restaurant-root :where(select,summary):focus-visible, .restaurant-modal :where(summary):focus-visible { outline: 3px solid #1260bc; outline-offset: 3px; }
 .r-button:disabled { cursor: not-allowed; opacity: 0.65; }
 @media (max-width: 380px) { .r-menu-item { grid-template-columns: minmax(0,0.85fr) minmax(0,1.5fr); gap: 12px; } .r-item-title h3 { font-size: 17px; } .r-menu-item p { font-size: 12px; } .r-nutrition dl { grid-template-columns: repeat(2,minmax(0,1fr)); } .r-cart-controls { flex-wrap: wrap; } }
+
+/* Patio 12 · V4.2.2. Papel cálido, tinta verde y un sello de cocina propio. */
+.restaurant-root { background: #fcfaf4; --r-rust: #9c3b26; }
+.r-kicker { font-family: "Patio Sans",sans-serif; font-size: 11px; font-weight: 700; letter-spacing: .13em; line-height: 1.6; }
+.r-hero-copy > p.r-kicker { margin-bottom: 28px; font-size: 11px; }
+.r-hero-copy > p:not(.r-kicker):not(.r-hero-note) { max-width: 365px; font-size: 17px; }
+.r-hero-seal { position: absolute; top: 26px; right: 26px; z-index: 1; transform: rotate(9deg); }
+.r-seal { display: inline-flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; width: 126px; height: 126px; border: 2px solid currentColor; border-radius: 50%; background: #f5e7b6; color: #7a2d1b; outline: 1px dashed currentColor; outline-offset: -7px; text-align: center; line-height: 1; user-select: none; }
+.r-seal > span { font-size: 8px; font-weight: 700; letter-spacing: .06em; }
+.r-seal strong { font-family: "Patio Bitter", Georgia, serif; font-size: 54px; font-weight: 600; letter-spacing: -.08em; padding-right: 3px; }
+.r-seal-small { width: 75px; height: 75px; margin: 0 0 16px; outline-offset: -5px; gap: 3px; }
+.r-seal-small > span { font-size: 5px; }
+.r-seal-small strong { font-size: 31px; }
+.r-welcome { display: flex; align-items: center; gap: 18px; }
+.r-welcome .r-seal { flex-shrink: 0; margin-bottom: 0; }
+.r-entry-settings { padding-block: 10px; border-bottom: 1px solid #d1d8d2; margin-bottom: 8px; font-size: 13px; }
+.r-entry-settings summary { cursor: pointer; padding-block: 12px; min-height: 44px; }
+.r-featured { border-bottom: 1px solid #d1d8d2; margin-bottom: 55px; }
+.r-food-photo img { transition: transform 350ms ease; }
+@media (hover: hover) { .r-food-photo:hover img { transform: scale(1.035); } }
+.r-menu-number { display: block; font: 11px/1.5 "Patio Sans",sans-serif; letter-spacing: .1em; color: #9c3b26; margin-bottom: 7px; }
+.r-menu-item { padding-block: 30px; }
+.r-photo-count { position: absolute; top: 8px; left: 8px; padding: 3px 7px; background: #203b2eea; color: #fff; border-radius: 2px; font-size: 11px; font-variant-numeric: tabular-nums; }
+.r-point-trigger { gap: 5px; }
+.r-point-trigger svg { flex-shrink: 0; }
+.r-choice-grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 10px; }
+.r-choice { display: flex; align-items: flex-start; gap: 8px; padding: 14px 10px; border: 1px solid #85948a; border-radius: 4px; font-size: 13px; cursor: pointer; line-height: 1.5; }
+.r-choice.is-selected { border-color: #203b2e; background: #edf2ec; box-shadow: inset 0 0 0 1px #203b2e; }
+.r-choice input { accent-color: #203b2e; width: 16px; height: 16px; flex-shrink: 0; margin-top: 2px; }
+.r-choice small { display: block; font-size: 11px; margin-top: 5px; color: #526155; }
+.r-choice-photo { flex-direction: column; padding: 0 0 12px; overflow: hidden; }
+.r-choice-photo > img { width: 100%; height: auto; aspect-ratio: 4/3; object-fit: cover; }
+.r-choice-photo > span { padding: 0 10px; }
+.r-combo { border: 1px solid #85948a; padding: 16px; border-radius: 4px; margin: 26px 0 14px; background: #fcfaf4; }
+.r-combo > legend { font-family: "Patio Bitter", Georgia,serif; font-size: 21px; padding: 0 7px; }
+.r-combo > .r-option { flex-wrap: wrap; border: none; padding: 8px 0; }
+.r-combo .r-option > span { min-width: 120px; }
+.r-config-price { display: flex; justify-content: space-between; align-items: center; gap: 14px; border-block: 1px solid #85948a; margin-top: 22px; padding-block: 16px; font-size: 14px; }
+.r-config-price > strong { font: 26px/1.4 "Patio Bitter",Georgia,serif; white-space: nowrap; }
+.r-config-price small { font: 11px/1.5 "Patio Sans",sans-serif; color: #526155; }
+.r-tracking-steps { list-style: none; padding: 0; margin: 24px 0; display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 9px; }
+.r-tracking-steps li { display: grid; align-content: start; justify-items: start; gap: 9px; padding-top: 12px; border-top: 2px solid #b6c1b9; color: #526155; font-size: 11px; line-height: 1.5; }
+.r-tracking-steps li > span { width: 25px; height: 25px; display: grid; place-items: center; border-radius: 50%; border: 1px solid #85948a; }
+.r-tracking-steps .is-done { border-color: #203b2e; color: #203b2e; }
+.r-tracking-steps .is-done > span { background: #203b2e; border-color: #203b2e; color: #fff; }
+.r-eta-grid { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 10px; padding-block: 12px; }
+.r-eta-grid p { font-size: 10px; }
+.r-eta-grid strong { display: block; font-size: 13px; line-height: 1.4; margin-top: 6px; }
+.r-location-modal { width: min(60rem,calc(100vw - 2rem)); }
+.r-location-intro { font-family: "Patio Bitter",Georgia,serif; font-size: clamp(23px,3vw,34px); line-height: 1.2; max-width: 550px; }
+.r-location-grid { display: grid; gap: 26px; margin-block: 25px; align-items: start; }
+.r-point-list { display: grid; gap: 0; border-top: 1px solid #85948a; }
+.r-point-mobile { display: none; }
+.r-point-list > button { display: flex; gap: 12px; text-align: left; align-items: center; padding: 13px 10px; border-bottom: 1px solid #d1d8d2; border-left: 3px solid transparent; min-height: 68px; }
+.r-point-list > button[aria-pressed="true"] { background: #edf2ec; border-left-color: #203b2e; }
+.r-point-list strong { display: block; font-size: 13px; line-height: 1.5; }
+.r-point-list small { display: block; font-size: 11px; color: #526155; }
+.r-point-list button > svg { margin-left: auto; flex-shrink: 0; }
+.r-point-number { font-size: 11px; color: #9c3b26; font-variant-numeric: tabular-nums; }
+.r-point-detail { min-width: 0; padding: 20px; background: #fcfaf4; border: 1px solid #d1d8d2; border-radius: 4px; }
+.r-point-detail h3 { margin-block: 12px 8px; font-size: 27px; }
+.r-point-detail > p:not(.r-kicker) { font-size: 13px; }
+.r-local-time { color: #526155; margin: 8px 0 20px; overflow-wrap: anywhere; font-size: 11px !important; }
+.r-map-block { margin-block: 20px; min-width: 0; }
+.r-map-surface { position: relative; height: 300px; width: 100%; min-width: 0; background: #e8eddf; border: 1px solid #85948a; border-radius: 4px; overflow: hidden; }
+.r-map-surface > .r-map-canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+.r-map-placeholder { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; padding: 24px 16px; text-align: center; background: radial-gradient(circle at 50% 50%,#fff7,#e8eddf); }
+.r-map-placeholder strong { font-family: "Patio Bitter",Georgia,serif; font-size: 20px; }
+.r-map-placeholder > p { font-size: 12px; line-height: 1.6; max-width: 290px; }
+.r-map-placeholder .r-secondary-button { min-height: 44px; padding: 8px 12px; font-size: 12px; }
+.r-map-caption { margin-top: 10px; font-size: 11px; color: #526155; line-height: 1.6; }
+.r-map-credit { margin-top: 8px; font-size: 10px; line-height: 1.6; color: #526155; }
+.r-map-credit a { text-decoration: underline; text-underline-offset: 2px; }
+.r-map-marker { display: grid; place-items: center; width: 32px; height: 32px; background: #203b2e; border: 2px solid #fff; border-radius: 50%; color: #fff; font: 700 13px/1 "Patio Sans",sans-serif; box-shadow: 0 2px 7px #0004; }
+.r-map-destination { background: #9c3b26; }
+.r-map-courier { width: 25px; height: 25px; background: #edd068; color: #203b2e; z-index: 1; }
+.r-map-canvas .maplibregl-control-container { font-family: "Patio Sans",sans-serif; }
+.r-map-canvas .maplibregl-ctrl-attrib { color: #1c2920; font-size: 10px; background: #fffffff0; }
+.r-map-canvas .maplibregl-ctrl button { width: 36px; height: 36px; }
+.r-map-canvas .maplibregl-ctrl-attrib-button { width: 24px; height: 24px; }
+.r-map-canvas .maplibregl-canvas:focus-visible { outline: 3px solid #1260bc; outline-offset: -3px; }
+.r-qr-section { padding-top: 20px; border-top: 1px solid #85948a; margin-top: 30px; }
+.r-qr-section > summary { display: flex; align-items: center; gap: 10px; min-height: 48px; cursor: pointer; font-size: 15px; font-weight: 600; }
+.r-share-link { overflow-wrap: anywhere; font-size: 13px; padding: 16px; background: #edf2ec; margin-block: 15px; }
+.r-share-link a { text-decoration: underline; }
+.r-inline-actions { display: flex; flex-wrap: wrap; gap: 12px; }
+.r-qr-result { display: grid; justify-items: center; gap: 10px; font-size: 12px; text-align: center; }
+.r-qr-result img { max-width: 100%; height: auto; }
+@media (min-width: 700px) { .r-location-grid { grid-template-columns: minmax(0,.8fr) minmax(0,1.2fr); gap: 25px; } .r-point-detail { position: sticky; top: 0; } }
+@media (max-width: 699px) { .r-point-mobile { display: grid; } .r-point-list { display: none; } .r-location-intro { font-size: 23px; } .r-location-grid { gap: 10px; } }
+@media (max-width: 639px) { .r-seal { width: 100px; height: 100px; } .r-seal strong { font-size: 44px; } .r-seal > span { font-size: 6px; } .r-seal-small { width: 65px; height: 65px; } .r-seal-small strong { font-size: 27px; } .r-seal-small > span { font-size: 4px; } .r-map-surface { height: 280px; } .r-point-detail { padding: 16px; } }
+@media (prefers-reduced-motion: reduce) { .restaurant-root *, .restaurant-modal * { animation-duration: .01ms !important; transition-duration: .01ms !important; scroll-behavior: auto !important; } }

@@ -2,9 +2,12 @@ import { useEffect, useRef, useState } from "react"
 import { Check } from "lucide-react"
 import Modal from "../../../components/shared/Modal"
 import { reservationTimes, upcomingDates } from "../data/reservation"
+import { pointOrDefault } from "../data/locations"
+import PatioSeal from "./PatioSeal"
 
-export default function TableReservation({ onClose }) {
-  const [dates] = useState(upcomingDates)
+export default function TableReservation({ onClose, pointId = "xalapa" }) {
+  const point = pointOrDefault(pointId)
+  const [dates] = useState(() => upcomingDates(new Date(), point.timeZone))
   const [date, setDate] = useState("")
   const [party, setParty] = useState("2")
   const [time, setTime] = useState("")
@@ -22,8 +25,9 @@ export default function TableReservation({ onClose }) {
     timer.current = setTimeout(() => setStep("done"), 800)
   }
   return <Modal title="Reservar una mesa de ejemplo" onClose={onClose} className="restaurant-modal" fontFamily="'Patio Sans', sans-serif" radius={4}>
+    <p className="r-demo-note">Referencia: {point.name}, {point.city}. Horarios en {point.timeZone}. No es una sucursal ni una reserva real.</p>
     {step === "done" ? <div className="r-result"><span className="r-result-icon"><Check size={28} aria-hidden="true" /></span>
-      <h3 ref={heading} tabIndex={-1}>Reserva simulada completada</h3><p><strong>{party} personas · {dateLabel} · {time}</strong></p><p>A nombre de {name.trim()}.</p>
+      <PatioSeal small /><h3 ref={heading} tabIndex={-1}>Reserva simulada completada</h3><p><strong>{party} personas · {dateLabel} · {time}</strong></p><p>A nombre de {name.trim()}.</p>
       <p className="r-demo-note">No se reservó una mesa ni se transmitieron datos. Las fechas y la disponibilidad sirven para probar el recorrido.</p>
       <button type="button" className="r-button r-full" onClick={reset}>Probar otra reserva</button><button type="button" className="r-text-button r-full" onClick={onClose}>Finalizar</button>
     </div> : step === "processing" ? <div className="r-processing" role="status" aria-live="polite"><span className="r-spinner" aria-hidden="true" /><h3 ref={heading} tabIndex={-1}>Simulando reserva…</h3><p>Sin reservar una mesa real.</p></div> : <>

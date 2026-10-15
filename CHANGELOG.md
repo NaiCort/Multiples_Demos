@@ -1,5 +1,19 @@
 # Historial de cambios
 
+## V4.2.2 · 2026-10-15
+
+Base: V4.2.1 publicada (`53118a2d698327c30d8e5b6e4ed398e5358668ec`). Candidata para revisión de Ian; no se publica automáticamente ni se cierra el giro completo.
+
+- Identidad de Patio 12 con sello propio, carta numerada, contador de fotos y entrada con ajustes secundarios desplegables.
+- Porciones, proteína y guarnición según receta; tamaños de bebidas, temperatura de café, dulzor/hielo y combos de entrada pequeña más bebida con suplementos. Precio, clasificación, nutrientes y alérgenos consideran la configuración completa.
+- Ocho puntos de demostración en siete ciudades mexicanas: referencias geográficas reales, sin presentarlas como sucursales. Selector compacto en teléfono y lista en escritorio.
+- Mapa MapLibre/OpenFreeMap bajo demanda, worker local, atribuciones visibles, cobertura y trazos ficticios preparados, y recuperación ante fallos de red o WebGL.
+- Geolocalización opcional bajo acción explícita, referencia más cercana en línea recta, sin persistir la coordenada.
+- Pedido vinculado al punto al confirmar; preparación, ruta y total separados; avance del marcador según el mismo reloj y botón Avanzar simulación. Rechazo de entregas fuera de cobertura también en el modelo.
+- Enlaces y QR descargables para puntos y mesas 1–25; QR de mesa ya ocupada separado de la espera normal, recuperación de enlaces inválidos y protección de la visita activa.
+- Fechas, horas y recibos con huso del punto; migración del almacenamiento anterior sin perder su visita o perfil.
+- Pruebas de integración y navegador para controles, mapa, QR, cobertura, precios, recuperación y accesibilidad. Se conserva Psicólogo y la portada temporal.
+
 ## V4.2.1 · 2026-10-08
 
 Base: V4.2.0 publicada (`4cf4dc8b50e849aaaa7a23187fb89902b35332dc`), con source-map-js 1.2.2. Candidata para revisión de Ian; amplía Patio 12 y no cierra todavía todo el giro Restaurante.

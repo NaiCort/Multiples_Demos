@@ -1,6 +1,6 @@
 # Recursos de Patio 12
 
-Los recursos se sirven desde public/restaurante, sin peticiones a sus proveedores al abrir directamente /restaurante. Fotografías ilustrativas; no se afirma que muestren un negocio real ni cada ingrediente de la carta.
+Las fotografías y fuentes de Patio 12 se sirven desde public/restaurante. El mapa de V4.2.2 consulta cartografía externa al abrirlo; los estilos generales del portafolio conservan sus proveedores previos. Fotografías ilustrativas; no se afirma que muestren un negocio real ni cada ingrediente de la carta.
 
 | Archivo | Origen |
 |---|---|
@@ -40,3 +40,9 @@ El registro [fotos-origen-v4.2.1.json](../public/restaurante/fotos-origen-v4.2.1
 | `tocino.webp` | Donald Giannatti |
 
 Para producción se necesitan fotos de la misma receta y de sus variantes, además de información de ingredientes, alérgenos y nutrición validada por el establecimiento. Las fotografías de muestra no permiten inferir esos datos.
+
+## Mapa y QR añadidos en V4.2.2
+
+MapLibre GL JS 6.14.0 (BSD-3-Clause) y qrcode 1.5.4 (MIT), instalados mediante npm. Se conservan los textos íntegros de ambas licencias en `public/restaurante/licencias/`; se publican junto con el sitio. No se añadieron fotografías nuevas para esta entrega.
+
+OpenFreeMap sirve la cartografía pública del mapa bajo demanda. Se conservan sus atribuciones a OpenMapTiles y OpenStreetMap, tanto dentro del mapa como en texto accesible. Las referencias de coordenadas y el carácter ficticio de rutas/cobertura se explican en [Mapa de Restaurante](MAPA_RESTAURANTE.md). No se redistribuye una base de datos de teselas con el proyecto.

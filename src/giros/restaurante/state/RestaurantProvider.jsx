@@ -13,7 +13,7 @@ export default function RestaurantProvider({ children }) {
   const dispatch = action => { if (action.type === "start") setNow(action.visit.startedAt); if (action.type === "confirm-order") setNow(action.now); rawDispatch(action) }
   useEffect(() => {
     try {
-      if (!state.visit && !state.profile.member && !state.profile.history.length && state.widget.x === 1 && state.widget.y === 1 && !state.widget.compact) localStorage.removeItem(STORAGE_KEY)
+      if (state.pointId === "xalapa" && !state.visit && !state.profile.member && !state.profile.history.length && state.widget.x === 1 && state.widget.y === 1 && !state.widget.compact) localStorage.removeItem(STORAGE_KEY)
       else localStorage.setItem(STORAGE_KEY, serializeState(state))
     } catch { markStorageUnavailable() }
   }, [state])

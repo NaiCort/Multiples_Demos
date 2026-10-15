@@ -15,6 +15,7 @@ export default function PhotoGallery({ product, compact = false }) {
       start.current = null
     }} onPointerCancel={() => { start.current = null }}>
       <img id={id} src={current.src} alt={`${product.name}: ${current.label.toLowerCase()}`} width="800" height="600" loading="lazy" />
+      {count > 1 && <span className="r-photo-count" aria-hidden="true">{index + 1} / {count}</span>}
       {count > 1 && <div className="r-gallery-arrows"><button type="button" aria-label={`Foto anterior de ${product.name}`} aria-controls={id} onClick={() => move(-1)}><ChevronLeft size={17} aria-hidden="true" /></button><button type="button" aria-label={`Foto siguiente de ${product.name}`} aria-controls={id} onClick={() => move(1)}><ChevronRight size={17} aria-hidden="true" /></button></div>}
     </div>
     {count > 1 && <div className="r-gallery-dots" aria-label="Elegir fotografía">{product.photos.map((photo, i) => <button type="button" key={photo.src} aria-label={`Foto ${i + 1} de ${product.name}`} aria-pressed={i === index} onClick={() => setIndex(i)}><span aria-hidden="true" /></button>)}<span className="r-sr-only" aria-live="polite">Foto {index + 1} de {count}</span></div>}

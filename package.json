@@ -1,7 +1,7 @@
 {
   "name": "multiples-demos",
   "private": true,
-  "version": "4.2.1",
+  "version": "4.2.2",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -10,12 +10,15 @@
     "preview": "vite preview",
     "test": "vitest run",
     "test:browser": "node scripts/verify-psicologo.mjs",
-    "test:browser:restaurante": "node scripts/verify-restaurante.mjs"
+    "test:browser:restaurante": "node scripts/verify-restaurante.mjs",
+    "test:browser:restaurante:v422": "node scripts/verify-restaurante-v422.mjs"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.3.2",
     "framer-motion": "^12.42.2",
     "lucide-react": "^1.24.0",
+    "maplibre-gl": "6.14.0",
+    "qrcode": "1.5.4",
     "react": "^19.2.7",
     "react-dom": "^19.2.7",
     "react-router-dom": "^7.18.2",

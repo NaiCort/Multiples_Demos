@@ -27,7 +27,18 @@ export const MENU = [
   { id: "limonada", name: "Limonada de la casa", category: "Bebidas", price: 55, description: "Limón recién exprimido con agua mineral. Ajusta el azúcar o pide el hielo aparte.", portion: "Un vaso · 400 ml de ejemplo", photos: [photo("limonada")], ingredients: [ingredient("limon", "Limón y agua mineral", "350 ml", nutrient(15, 0, 4, 0)), ingredient("azucar", "Azúcar", "20 g", nutrient(80, 0, 20, 0), true), ingredient("hielo", "Hielo", "50 g", nutrient(0, 0, 0, 0), true)], extras: [] },
   { id: "agua", name: "Agua de jamaica", category: "Bebidas", price: 45, description: "Infusión fría de jamaica con un poco de azúcar. Puedes elegir menos dulce o sin azúcar.", portion: "Un vaso · 400 ml de ejemplo", photos: [photo("agua")], ingredients: [ingredient("jamaica", "Infusión de jamaica", "350 ml", nutrient(5, 0, 1, 0)), ingredient("azucar", "Azúcar", "20 g", nutrient(80, 0, 20, 0), true), ingredient("hielo", "Hielo", "50 g", nutrient(0, 0, 0, 0), true)], extras: [] },
   { id: "cafe", name: "Café americano", category: "Bebidas", price: 45, description: "Café de filtro recién hecho. Si quieres, añade leche o ajusta el azúcar.", portion: "Una taza · 240 ml de ejemplo", photos: [photo("cafe")], ingredients: [ingredient("cafe", "Café de filtro", "240 ml", nutrient(2, 0, 0, 0)), ingredient("azucar", "Azúcar aparte", "8 g", nutrient(32, 0, 8, 0), true)], extras: [extra("leche", "Leche", 10, nutrient(30, 2, 3, 1), "dairy", ["Leche"])] },
-]
+].map(product => {
+  if (product.id === "hamburguesa") return { ...product, swaps: [
+    { id: "proteina", ingredientId: "res", name: "Proteína", options: [
+      { id: "pollo", name: "Pollo a la plancha · 150 g", price: 0, nutrients: nutrient(240, 40, 2, 8, 0, 250), animal: "meat", allergens: [] },
+      { id: "hongos", name: "Medallón de hongos · 150 g", price: 0, nutrients: nutrient(150, 6, 16, 7, 4, 180), animal: "plant", allergens: ["Trigo"] },
+      { id: "doble", name: "Doble res · 300 g", price: 65, nutrients: nutrient(600, 60, 0, 40, 0, 320), animal: "meat", allergens: [] },
+    ] },
+    { id: "guarnicion", ingredientId: "papas", name: "Guarnición", options: [{ id: "ensalada", name: "Ensalada en lugar de papas", price: 0, nutrients: nutrient(65, 1, 5, 5, 2, 75), animal: "plant", allergens: ["Mostaza"] }] },
+  ] }
+  if (product.id === "pollo") return { ...product, swaps: [{ id: "guarnicion", ingredientId: "arroz", name: "Guarnición", options: [{ id: "verduras", name: "Más verduras en lugar de arroz", price: 0, nutrients: nutrient(55, 2, 8, 2, 3), animal: "plant", allergens: [] }] }] }
+  return product
+})
 export const FEATURED = ["pasta", "hamburguesa", "ensalada"].map(id => MENU.find(item => item.id === id))
 export const money = value => new Intl.NumberFormat("es-MX", { style: "currency", currency: "MXN", maximumFractionDigits: 0 }).format(value)
 export const normalizeSearch = value => value.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim()

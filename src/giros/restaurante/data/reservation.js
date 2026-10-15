@@ -1,10 +1,12 @@
-export function upcomingDates(today = new Date()) {
+export function upcomingDates(today = new Date(), timeZone = "America/Mexico_City") {
+  const parts = Object.fromEntries(new Intl.DateTimeFormat("en-CA", { timeZone, year: "numeric", month: "2-digit", day: "2-digit" }).formatToParts(today).map(part => [part.type, part.value]))
+  const localDay = Date.UTC(Number(parts.year), Number(parts.month) - 1, Number(parts.day), 12)
   const dates = []
   for (let offset = 1; dates.length < 6; offset++) {
-    const day = new Date(today.getFullYear(), today.getMonth(), today.getDate() + offset, 12)
-    if (day.getDay() === 1) continue // Lunes cerrado; no se ofrece una fecha que el local no atiende.
-    const id = `${day.getFullYear()}-${String(day.getMonth() + 1).padStart(2, "0")}-${String(day.getDate()).padStart(2, "0")}`
-    dates.push({ id, label: day.toLocaleDateString("es-MX", { weekday: "long", day: "numeric", month: "short" }) })
+    const day = new Date(localDay + offset * 86_400_000)
+    if (day.getUTCDay() === 1) continue
+    const id = day.toISOString().slice(0, 10)
+    dates.push({ id, label: day.toLocaleDateString("es-MX", { timeZone: "UTC", weekday: "long", day: "numeric", month: "short" }) })
   }
   return dates
 }

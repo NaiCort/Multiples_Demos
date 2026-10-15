@@ -23,7 +23,9 @@ async function audit(page) {
   assert.deepEqual(violations, [])
 }
 async function bounds(page) {
+  await page.waitForFunction(() => document.documentElement.scrollWidth <= innerWidth, null, { timeout: 2000 })
   assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true, "Desborde horizontal")
+  if (await page.locator(".r-timer").count()) await page.waitForFunction(() => { const b = document.querySelector(".r-timer")?.getBoundingClientRect(); return !b || b.left >= 0 && b.top >= 0 && b.right <= document.documentElement.clientWidth + 1 && b.bottom <= innerHeight + 1 }, null, { timeout: 2000 })
   if (await page.locator(".r-timer").count()) assert.equal(await page.locator(".r-timer").evaluate(el => { const b = el.getBoundingClientRect(); return b.left >= 0 && b.top >= 0 && b.right <= document.documentElement.clientWidth + 1 && b.bottom <= innerHeight + 1 }), true, "Contador fuera de pantalla")
 }
 async function choose(page, mode = "Comer aquí") { await dialog(page).getByRole("button", { name: mode, exact: true }).click() }
@@ -110,7 +112,7 @@ try {
       await dialog(page).getByRole("button", { name: "Simular pedido · $125", exact: true }).click()
       await dialog(page).getByRole("heading", { name: "En preparación", exact: true }).waitFor()
       await audit(page)
-      await dialog(page).getByRole("button", { name: "Saltar esta etapa de demostración", exact: true }).click()
+      await dialog(page).getByRole("button", { name: "Avanzar simulación", exact: true }).click()
       await dialog(page).getByRole("button", { name: "Terminar visita de ejemplo", exact: true }).click()
       await dialog(page).getByRole("heading", { name: "Visita finalizada", exact: true }).waitFor()
       assert.equal(await page.locator(".r-timer").count(), 0)
@@ -126,6 +128,8 @@ try {
       await page.clock.fastForward(60_100)
       assert((await page.locator(".r-timer-main").innerText()).includes("Mesa"))
       await page.locator(".r-timer").getByRole("button", { name: "Elegir esquina del contador", exact: true }).click(); await page.locator(".r-timer").getByRole("button", { name: "Superior izquierda", exact: true }).click()
+      // Dejar que ResizeObserver y el reloj instrumentado apliquen el nuevo tamaño/posición.
+      await page.clock.runFor(100)
       const handle = await page.locator(".r-timer-grip").boundingBox()
       await page.mouse.move(handle.x + 10, handle.y + 10); await page.mouse.down(); await page.mouse.move(handle.x + 210, handle.y + 110, { steps: 8 }); await page.mouse.up()
       await page.waitForFunction(() => { const widget = JSON.parse(localStorage.getItem("patio12-demo-v1")).widget; return widget.x > 0 && widget.y > 0 })
@@ -153,8 +157,8 @@ try {
       const reference = await page.evaluate(() => JSON.parse(localStorage.getItem("patio12-demo-v1")).order.id)
       await page.reload(); await dialog(page).getByRole("heading", { name: "En preparación", exact: true }).waitFor()
       assert.equal(await page.evaluate(() => JSON.parse(localStorage.getItem("patio12-demo-v1")).order.id), reference)
-      await dialog(page).getByRole("button", { name: "Saltar esta etapa de demostración", exact: true }).click(); await dialog(page).getByRole("heading", { name: "En camino", exact: true }).waitFor()
-      await dialog(page).getByRole("button", { name: "Saltar esta etapa de demostración", exact: true }).click(); await dialog(page).getByRole("button", { name: "Finalizar entrega de ejemplo", exact: true }).click()
+      await dialog(page).getByRole("button", { name: "Avanzar simulación", exact: true }).click(); await dialog(page).getByRole("heading", { name: "En camino", exact: true }).waitFor()
+      await dialog(page).getByRole("button", { name: "Avanzar simulación", exact: true }).click(); await dialog(page).getByRole("button", { name: "Finalizar entrega de ejemplo", exact: true }).click()
       await dialog(page).getByRole("button", { name: "Perfil y recibos de ejemplo", exact: true }).click(); assert((await dialog(page).innerText()).includes("4 visitas de ejemplo"))
       await dialog(page).getByRole("button", { name: new RegExp(reference) }).click(); await dialog(page).getByRole("button", { name: "Vista del correo de ejemplo", exact: true }).click()
       assert((await dialog(page).innerText()).includes("alex@example.invalid")); await audit(page)
