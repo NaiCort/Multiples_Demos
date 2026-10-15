@@ -1,5 +1,21 @@
 # Historial de cambios
 
+## V4.2.1 · 2026-10-08
+
+Base: V4.2.0 publicada (`4cf4dc8b50e849aaaa7a23187fb89902b35332dc`), con source-map-js 1.2.2. Candidata para revisión de Ian; amplía Patio 12 y no cierra todavía todo el giro Restaurante.
+
+- Se añade la elección inicial de comer aquí, para llevar o a domicilio y se conserva la reserva futura independiente.
+- La espera de mesa dura un minuto, permite explorar y saltar la demostración, asigna una mesa del 1 al 25 una sola vez y habilita el pedido al terminar.
+- Los doce productos tienen fotos locales, nombre y descripción a su lado. Tres productos tienen galería manual y deslizamiento táctil.
+- Se añaden filtros de receta base, ingredientes, nutrientes y alérgenos ficticios, modificaciones de cantidades, retiro, extras ilustrados y sustituciones. El carrito conserva y permite editar cada configuración.
+- El pedido distingue mesa, turno o entrega por zona ficticia, informa tarifa y tiempos y avanza por preparación, recogida/ruta y cierre simulados.
+- El perfil opcional de ejemplo incorpora beneficios, visitas y recibos locales; pago digital ficticio disponible también para invitados, con vista de correo y explicación de factura sin emitir documentos fiscales.
+- La visita y pedido se recuperan al recargar, con contadores basados en fechas de finalización, caducidad de seis horas y recuperación ante almacenamiento bloqueado.
+- Contador rectangular semitransparente, arrastre táctil/ratón, esquinas, minimización, posición guardada y retorno a la misma visita desde otras rutas.
+- Ventana externa opcional mediante Document Picture-in-Picture, con retorno y recuperación visible cuando el navegador rechaza la apertura. Termina junto con su pestaña.
+- Se amplían las pruebas y la documentación de calidad, estado y procedencia de recursos. Se conserva la corrección de dependencias de la base.
+- La portada temporal, los cuatro temas de Psicólogo y las identidades futuras mantienen el alcance acordado.
+
 ## V4.2.0 · 2026-10-05
 
 Base: V4.1.3 (`d3c393cbc06eac8685f00911b7b3f17f6f606bd8`). Psicólogo aprobado por Ian el 2 de octubre. Primera entrega de Restaurante, pendiente de revisión.

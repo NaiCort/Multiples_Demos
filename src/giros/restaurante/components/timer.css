@@ -1,0 +1,26 @@
+.r-timer { position: fixed; z-index: 65; width: 190px; box-sizing: border-box; padding: 6px; overflow: auto; overscroll-behavior: contain; border: 1px solid #fff9; border-radius: 9px; background: #f7f8f0eb; color: #203b2e; box-shadow: 0 4px 20px #13291d29; backdrop-filter: blur(14px); font: 13px/1.4 "Patio Sans", system-ui, sans-serif; }
+.r-timer button { font: inherit; cursor: pointer; }
+.r-timer button:focus-visible { outline: 3px solid #1260bc; outline-offset: -3px; }
+.r-timer-head { display: flex; align-items: center; }
+.r-timer-grip, .r-timer-icon { display: grid; place-items: center; width: 30px; min-height: 30px; flex-shrink: 0; background: transparent; border: 0; color: #203b2e; padding: 0; }
+.r-timer-grip { touch-action: none; cursor: grab !important; }
+.r-timer-grip:active { cursor: grabbing !important; }
+.r-timer-open { flex: 1; text-align: left; min-width: 0; border: 0; background: transparent; color: inherit; padding: 2px; font-weight: 600 !important; }
+.r-timer-main { display: grid; justify-items: center; gap: 2px; width: 100%; padding: 1px 0 5px; background: transparent; color: inherit; border: 0; min-height: 56px; }
+.r-timer-main strong { font-size: 30px; font-weight: 600; line-height: 1.25; font-variant-numeric: tabular-nums; }
+.r-timer-main span { font-size: 11px; display: inline-flex; align-items: center; gap: 5px; }
+.r-timer-actions button.r-timer-skip { border-radius: 4px; background: #203b2e; color: #fff; flex: 1; justify-content: center; padding: 4px 6px; min-height: 32px; width: auto; }
+.r-timer-actions { display: flex; gap: 4px; justify-content: space-between; align-items: center; }
+.r-timer-actions button { display: flex; align-items: center; gap: 5px; min-height: 34px; padding: 3px 7px; background: transparent; border: 0; color: inherit; font-size: 11px !important; }
+.r-timer-compact { width: 154px; padding: 4px; }
+.r-timer-compact .r-timer-open { display: grid; gap: 2px; }
+.r-timer-compact .r-timer-open span { font-size: 10px; }
+.r-timer-compact .r-timer-open strong { font-size: 20px; line-height: 1; font-variant-numeric: tabular-nums; }
+.r-timer-positions { display: grid; gap: 3px; padding: 4px; }
+.r-timer-positions p { margin: 4px 0; font-size: 11px; }
+.r-timer-positions button { min-height: 36px; padding: 5px; border: 1px solid #526155; border-radius: 3px; color: inherit; background: #fff; text-align: left; font-size: 11px; }
+.r-timer-error, .r-timer-pip-note { font-size: 11px; margin: 6px 3px; }
+.r-timer-pip-note button { display: inline-grid; place-items: center; width: 30px; height: 30px; background: transparent; border: 0; color: inherit; }
+@media (prefers-reduced-transparency: reduce) { .r-timer { background: #f7f8f0; backdrop-filter: none; } }
+:root { --r-timer-safe-left: env(safe-area-inset-left,0px); --r-timer-safe-right: env(safe-area-inset-right,0px); --r-timer-safe-top: env(safe-area-inset-top,0px); --r-timer-safe-bottom: env(safe-area-inset-bottom,0px); }
+.r-timer-actions > button:not(.r-timer-skip) { min-width: 32px; justify-content: center; padding-inline: 4px; }

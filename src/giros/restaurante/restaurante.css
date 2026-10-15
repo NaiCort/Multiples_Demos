@@ -98,7 +98,6 @@
 .r-footer { display: flex; justify-content: space-between; gap: 20px; align-items: center; flex-wrap: wrap; padding: 28px 24px 76px; background: #203b2e; color: #fff; border-top: 1px solid #ffffff38; }
 .r-footer > a { font-family: "Patio Bitter", Georgia, serif; font-size: 28px; letter-spacing: -0.06em; min-height: 44px; }
 .r-footer > p { font-size: 12px; max-width: 360px; }
-.r-floating-cart { position: fixed; bottom: calc(56px + env(safe-area-inset-bottom, 0px)); right: 20px; z-index: 58; display: flex; align-items: center; justify-content: space-between; gap: 14px; padding: 14px 18px; max-width: calc(100vw - 40px); background: #203b2e; color: #fff; border: 1px solid #ffffff66; box-shadow: 0 3px 14px #0002; border-radius: 4px; font-size: 14px; }
 .r-announcement { position: fixed; bottom: 123px; left: 20px; z-index: 57; display: flex; align-items: center; gap: 12px; max-width: calc(100vw - 40px); font-size: 13px; }
 .r-announcement:empty { display: none; }
 .r-announcement:not(:empty) { padding: 7px 12px; background: #fff; color: #203b2e; border: 1px solid #85948a; border-radius: 3px; }
@@ -204,3 +203,80 @@
   .r-brand > svg { width: 19px; }
   .r-cart-button { gap: 6px; padding-inline: 8px; }
 }
+
+/* V4.2.1: carta fotográfica y visita por modalidad. */
+.r-service-bar { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 6px 18px; padding: 8px clamp(20px,4vw,64px); background: #f4f3eb; border-bottom: 1px solid #d1d8d2; font-size: 13px; }
+.r-service-bar > span { font-weight: 600; }
+.r-service-bar > div { display: flex; flex-wrap: wrap; gap: 8px 18px; }
+.r-service-bar .r-text-button { font-size: 12px; }
+.r-storage-note { padding: 12px 24px; background: #fff4d1; font-size: 13px; }
+.r-table-alert { display: flex; align-items: center; flex-wrap: wrap; gap: 12px; padding: 14px 24px; background: #edf2ec; color: #203b2e; font-size: 14px; }
+.r-table-alert .r-text-button { margin-left: auto; }
+.r-diet-filter { display: grid; gap: 4px; font-size: 12px; flex: 1; min-width: 160px; }
+.r-diet-filter select { background: #fff; padding: 10px; min-height: 44px; border: 1px solid #85948a; border-radius: 3px; color: #203b2e; font-size: 14px; }
+.r-menu-list { gap: 0 36px; }
+.r-menu-item { display: grid; grid-template-columns: minmax(0,0.85fr) minmax(0,1.5fr); gap: 15px; align-items: start; }
+.r-item-copy { min-width: 0; }
+.r-item-title { display: flex; align-items: flex-start; flex-wrap: wrap; justify-content: space-between; gap: 6px; margin-bottom: 10px; }
+.r-item-title h3 { font-size: 20px; margin: 0; max-width: 210px; }
+.r-item-title strong { font-size: 14px; }
+.r-item-copy .r-text-button { display: flex; justify-content: flex-start; font-size: 12px; text-align: left; }
+.r-menu-item .r-card-nutrients { margin-top: 8px; font-size: 11px; line-height: 1.6; }
+.r-gallery { min-width: 0; margin-bottom: 18px; }
+.r-gallery-frame { position: relative; aspect-ratio: 4/3; background: #f1f0e8; overflow: hidden; border-radius: 4px; touch-action: pan-y pinch-zoom; }
+.r-gallery-frame img { display: block; width: 100%; height: 100%; object-fit: contain; }
+.r-gallery-arrows { display: flex; justify-content: space-between; position: absolute; inset: auto 5px 5px; pointer-events: none; }
+.r-gallery-arrows button { display: grid; place-items: center; background: #fffffff2; color: #203b2e; min-width: 38px; min-height: 38px; border-radius: 3px; border: 1px solid #526155; pointer-events: auto; }
+.r-gallery-dots { display: flex; align-items: center; justify-content: center; gap: 2px; }
+.r-gallery-dots button { display: grid; place-items: center; width: 34px; min-height: 30px; }
+.r-gallery-dots button span { width: 6px; height: 6px; border: 1px solid #526155; border-radius: 50%; }
+.r-gallery-dots button[aria-pressed="true"] span { background: #203b2e; border-color: #203b2e; }
+.r-gallery-small { margin: 0; }
+.r-gallery-small .r-gallery-frame { aspect-ratio: 1/1; }
+.r-gallery-small .r-gallery-arrows { inset: auto 2px 2px; }
+.r-gallery-small .r-gallery-arrows button { min-width: 30px; min-height: 32px; }
+.r-nutrition, .r-receipt-details { margin-block: 22px; padding-block: 13px; border-block: 1px solid #d1d8d2; font-size: 13px; }
+.r-nutrition summary, .r-receipt-details summary { cursor: pointer; padding-block: 7px; font-weight: 600; min-height: 38px; }
+.r-nutrition > p { margin-top: 14px; line-height: 1.7; }
+.r-nutrition dl { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 12px; margin-top: 18px; }
+.r-nutrition dl > div { padding: 10px; background: #f4f3eb; }
+.r-nutrition dd { font-weight: 600; font-size: 17px; }
+.r-modifier { display: flex; justify-content: space-between; gap: 10px; align-items: center; padding: 12px 0; border-top: 1px solid #d1d8d2; font-size: 14px; }
+.r-modifier > span { flex: 1; min-width: 0; }
+.r-modifier small { display: block; font-size: 11px; color: #526155; }
+.r-modifier select { max-width: 50%; padding: 10px 8px; min-height: 44px; border: 1px solid #85948a; border-radius: 3px; background: #fff; font-size: 13px; }
+.r-fixed-ingredient { font-size: 13px; border-top: 1px solid #d1d8d2; padding: 12px 0; }
+.r-fixed-ingredient small { color: #526155; }
+.r-extra-photo { width: 50px; height: 50px; object-fit: cover; border-radius: 4px; }
+.r-option:has(.r-extra-photo) { flex-wrap: wrap; }
+.r-wait-notice { padding: 12px; margin-bottom: 18px; background: #fff4d1; font-size: 13px; }
+.r-service-options { display: grid; gap: 12px; margin-top: 22px; }
+.r-service-card { display: flex; align-items: center; gap: 16px; border: 1px solid #85948a; border-radius: 4px; padding: 20px 16px; text-align: left; }
+.r-service-card:hover { background: #edf2ec; }
+.r-service-card > svg { flex-shrink: 0; }
+.r-service-card span { flex: 1; }
+.r-service-card strong { display: block; font-family: "Patio Bitter",Georgia,serif; font-size: 22px; }
+.r-service-card small { display: block; margin-top: 6px; color: #526155; font-size: 12px; line-height: 1.7; }
+.r-big-clock { font-size: 54px; font-weight: 600; line-height: 1.3; font-variant-numeric: tabular-nums; margin: 22px 0; }
+.r-wait-screen .r-muted { margin-block: 18px; }
+.r-table-ready > svg { color: #203b2e; margin-bottom: 15px; }
+.r-table-ready h3 { font-size: 48px; margin: 16px 0; }
+.r-table-ready .r-button { margin-top: 25px; }
+.r-checkout-mode { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; padding: 12px; background: #f4f3eb; font-size: 14px; }
+.r-delivery-summary { font-size: 13px; line-height: 1.7; padding: 14px; background: #edf2ec; margin-block: 15px; }
+.r-delivery-summary small { font-size: 11px; }
+.r-receipt-id { font-size: 12px; overflow-wrap: anywhere; margin-bottom: 12px; }
+.r-receipt-id strong { display: block; font-size: 13px; }
+.r-receipt small { display: block; font-size: 11px; margin-top: 4px; }
+.r-receipt li > span { white-space: nowrap; }
+.r-member-card { padding: 20px; background: #edf2ec; border: 1px solid #85948a; margin: 22px 0; font-size: 14px; }
+.r-member-card h3 { font-size: 28px; margin: 12px 0; }
+.r-member-card small { display: block; font-size: 12px; margin-top: 10px; }
+.r-history { list-style: none; margin: 15px 0; padding: 0; }
+.r-history li { border-bottom: 1px solid #d1d8d2; overflow-wrap: anywhere; }
+.r-history button { text-align: left; justify-content: flex-start; font-size: 12px; }
+.r-profile-receipt { border-top: 1px solid #d1d8d2; padding-top: 20px; margin-top: 25px; }
+.r-mail-preview { padding: 15px; background: #f4f3eb; font-size: 13px; line-height: 1.7; margin-block: 15px; }
+.restaurant-root :where(select,summary):focus-visible, .restaurant-modal :where(summary):focus-visible { outline: 3px solid #1260bc; outline-offset: 3px; }
+.r-button:disabled { cursor: not-allowed; opacity: 0.65; }
+@media (max-width: 380px) { .r-menu-item { grid-template-columns: minmax(0,0.85fr) minmax(0,1.5fr); gap: 12px; } .r-item-title h3 { font-size: 17px; } .r-menu-item p { font-size: 12px; } .r-nutrition dl { grid-template-columns: repeat(2,minmax(0,1fr)); } .r-cart-controls { flex-wrap: wrap; } }

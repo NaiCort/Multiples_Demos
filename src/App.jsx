@@ -3,6 +3,8 @@ import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom"
 import { MotionConfig } from "framer-motion"
 import Bienvenida from "./pages/Bienvenida"
 import NotFound from "./pages/NotFound"
+import RestaurantProvider from "./giros/restaurante/state/RestaurantProvider"
+import FloatingTimer from "./giros/restaurante/components/FloatingTimer"
 import RouteErrorBoundary from "./components/shared/RouteErrorBoundary"
 
 const PsicologoApp = lazy(() => import("./giros/psicologo/PsicologoApp"))
@@ -19,17 +21,20 @@ function RoutePosition() {
 export default function App() {
   return <BrowserRouter>
     <MotionConfig reducedMotion="user">
-      <RoutePosition />
-      <RouteErrorBoundary>
-        <Suspense fallback={<RouteLoading />}>
-          <Routes>
-            <Route path="/" element={<Bienvenida />} />
-            <Route path="/psicologo" element={<PsicologoApp />} />
-            <Route path="/restaurante" element={<RestauranteApp />} />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </Suspense>
-      </RouteErrorBoundary>
+      <RestaurantProvider>
+        <RoutePosition />
+        <RouteErrorBoundary>
+          <Suspense fallback={<RouteLoading />}>
+            <Routes>
+              <Route path="/" element={<Bienvenida />} />
+              <Route path="/psicologo" element={<PsicologoApp />} />
+              <Route path="/restaurante" element={<RestauranteApp />} />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </Suspense>
+        </RouteErrorBoundary>
+        <FloatingTimer />
+      </RestaurantProvider>
     </MotionConfig>
   </BrowserRouter>
 }

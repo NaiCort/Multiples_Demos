@@ -1,18 +1,17 @@
-# Multiples_Demos · V4.2.0
+# Multiples_Demos · V4.2.1
 
 Portafolio de demos interactivas de **Ian Habid Aldana Martínez**.
 
 - Repositorio: https://github.com/NaiCort/Multiples_Demos
-- Despliegue: https://multiples-demos.vercel.app/
-- Base de esta entrega: V4.1.3, commit `d3c393cbc06eac8685f00911b7b3f17f6f606bd8`.
-- Fecha: 5 de octubre de 2026.
-- Psicólogo fue aprobado por Ian el 2 de octubre. V4.2.0 inicia Restaurante con Patio 12 y queda pendiente de revisión.
+- Despliegue habitual: https://multiples-demos.vercel.app/
+- Base: V4.2.0 publicada por Ian, commit `4cf4dc8b50e849aaaa7a23187fb89902b35332dc`, incluida la corrección de `source-map-js` a 1.2.2.
+- Fecha de esta candidata: 8 de octubre de 2026. Pendiente de revisión de Ian y publicación.
 
-La portada sigue como directorio temporal. Psicólogo conserva sus cuatro estilos. Restaurante abre una primera identidad completa de restaurante de barrio; fonda, comida rápida, lujo y gestión de empleados siguen pendientes dentro de V4.2. Café, Gimnasio, Taller, Despacho y Revista todavía muestran “Próximamente”.
+V4.2.1 amplía **Patio 12**, la primera identidad del giro Restaurante. La portada sigue como directorio temporal y Psicólogo conserva sus cuatro temas aprobados. Las demás identidades de Restaurante y la gestión de empleados siguen pendientes; Café, Gimnasio, Taller, Despacho y Revista continúan como “Próximamente”.
 
 ## Desarrollo
 
-Node 22.22.2+ de la rama 22, 24.15.0+ de la rama 24 o 26+. Esta entrega se comprobó con Node 24.19.0.
+Node 22.22.2+ de la rama 22, 24.15.0+ de la rama 24 o 26+. Se comprobó con Node 24.19.0.
 
 ```bash
 npm ci
@@ -26,63 +25,66 @@ npm run lint
 npm test
 npm run build
 npm audit
-npm run preview
 ```
 
-## Recorridos de Restaurante
+## Recorridos de Patio 12
 
-- Carta de 12 productos: categorías, búsqueda que ignora acentos, resultado vacío y recuperación.
-- Producto: descripción, alérgenos de ejemplo, extras con precio y cantidad. Máximo nueve unidades por combinación.
-- Pedido: corregir cantidades, quitar productos, volver a la carta, recogida o entrega simulada, costo explícito y total actualizado.
-- Confirmación: 800 ms de procesamiento, recibo y reinicio. Cerrar durante el procesamiento cancela la simulación y conserva el carrito.
-- Reserva: seis fechas futuras, lunes cerrado, grupos de una a seis personas y horarios de ejemplo. Cambiar fecha o grupo invalida el horario anterior.
-- WhatsApp: selección de mensaje, procesamiento, respuesta ficticia y reinicio.
-- Ubicación: esquema y dirección ficticios, sin enlaces que dirijan a negocios ajenos.
-- Guía, privacidad y canales reales de Ian separados de las acciones del restaurante.
+- **Modalidad inicial:** comer aquí, para llevar o a domicilio. Se permite explorar como invitado y cambiar modalidad antes de confirmar un pedido.
+- **Comer aquí:** espera de 60 segundos, exploración y configuración durante la espera, botón para saltarla y mesa ficticia del 1 al 25. La mesa se asigna una vez y habilita añadir platos. La reserva futura mantiene su recorrido independiente.
+- **Carta:** doce productos con fotografía, nombre y descripción a su lado; categorías, búsqueda sin acentos y filtros de receta base vegetariana, vegana o con carne. Ensalada, pasta y hamburguesa tienen dos fotografías, controles y deslizamiento táctil.
+- **Configuración:** cantidades normales, reducidas, aparte o sin el ingrediente; sustituciones, extras con imágenes, precios y cantidad. La receta base conserva los ingredientes que definen el plato. Nutrientes y alérgenos cambian con la configuración y se señalan expresamente como ficticios.
+- **Pedido:** carrito editable, máximo nueve unidades de cada combinación y recibo con los cambios exactos. Se identifica la mesa o turno. El envío usa tres zonas ficticias con distancia, tiempo orientativo y tarifa; la dirección escrita no se geocodifica.
+- **Seguimiento:** 30 segundos de preparación y 10–30 segundos de ruta acelerados, avance automático, saltos de prueba, recogida/entrega y cierre. En producción estos estados dependerían de la cocina y del reparto.
+- **Perfil opcional:** Alex Demo, visitas ficticias iniciales, categorías de beneficio, descuentos sobre los platos y hasta diez recibos locales. Solo un pedido finalizado suma una visita. Existe vista previa del correo y explicación de factura; no se envían mensajes ni se emite CFDI.
+- **Pago:** efectivo o digital simulados, disponibles también para invitados. No se solicita tarjeta ni se realiza un cobro.
+- **Contador:** tarjeta rectangular semitransparente, arrastre con ratón o tacto, cuatro esquinas accesibles por botones, minimización y posición adaptable. Aparece compacto al cambiar de giro o ir al portafolio; tocarlo recupera la misma visita.
+- **Ventana externa opcional:** Document Picture-in-Picture, cuando el navegador la expone. Puede mostrar el seguimiento fuera de la pestaña y ofrecer el retorno. Al cerrar la pestaña también termina esta ventana. No se promete una superposición externa en iOS/Android.
+- **Reserva futura, WhatsApp, ubicación, privacidad, guía y contacto comercial:** conservan sus recorridos propios. Las acciones del restaurante son ficticias; los canales de contacto con Ian son reales.
 
-Los pedidos y reservas viven en memoria; no hay almacenamiento del carrito, backend, pagos, agenda ni mensajes reales. Se pierden al recargar o salir de Restaurante. Las fuentes y fotos de Patio 12 están alojadas con el proyecto; sus nombres de fuente están aislados para no alterar Psicólogo.
+## Estado local y límites
 
-Psicólogo conserva su selector y almacenamiento de preferencias, sus recorridos y la imagen completa de la sala en 4:3. La portada y ese giro pueden solicitar Google Fonts y Unsplash.
+La visita activa, carrito, pedido, perfil de muestra y posición se guardan en `localStorage` bajo `patio12-demo-v1`. Los contadores usan fechas de finalización, por lo que recargar o regresar actualiza el tiempo transcurrido. La visita caduca **seis horas después de comenzar**. Al completar un pedido de invitado, su recibo deja de persistirse; con el perfil de muestra se conserva en el historial. “Reiniciar datos de la demo”, en Mi perfil, borra el estado del restaurante. Si el almacenamiento está bloqueado se ofrece el mismo recorrido en memoria con un aviso.
+
+No hay cuentas autenticadas, servidor, sincronización entre dispositivos, gestión real de mesas o cocina, pagos, correos ni facturación. No existe seguimiento móvil externo mediante Live Activities, notificaciones o servicios en segundo plano. Una implementación real requiere esos servicios y confirmación de disponibilidad por parte del negocio. El prototipo nunca debe usarse como ficha nutricional o de alérgenos de un restaurante.
+
+Las imágenes y fuentes del restaurante se sirven localmente. Las fotos son referencias y las distintas vistas no representan necesariamente la misma receta real. La portada y Psicólogo conservan sus proveedores externos y sus preferencias independientes. Véanse [recursos](docs/RECURSOS_RESTAURANTE.md) y [estado de V4.2.1](docs/ESTADO_V4.2.1.md).
 
 ## Comprobación opcional en navegador
 
-Con Vite abierto en otra terminal y Edge instalado en Windows:
+Con Edge instalado en Windows, después del build:
 
 ```bash
-DEMO_BROWSER_CHANNEL=msedge npm run test:browser:restaurante
+DEMO_START_PREVIEW=1 DEMO_BROWSER_CHANNEL=msedge npm run test:browser:restaurante
+```
+
+El script inicia y cierra su propia vista previa de producción. También admite Chrome con `DEMO_BROWSER_CHANNEL=chrome` o un Chromium instalado con `npx playwright install chromium`, omitiendo la variable de canal.
+
+Para Psicólogo, deja `npm run dev` en otra terminal y ejecuta:
+
+```bash
 DEMO_BROWSER_CHANNEL=msedge npm run test:browser
 ```
 
-Alternativamente:
-
-```bash
-npx playwright install chromium
-npm run test:browser:restaurante
-npm run test:browser
-```
-
-Los scripts admiten `DEMO_BASE_URL` para probar el preview de producción, `DEMO_BROWSER_EXECUTABLE` para un Chromium compatible y `DEMO_TEST_OUTPUT` para elegir el directorio de evidencias. `DEMO_TEST_FIXTURES` admite copias exactas de fuentes y fotografías para comprobar portada/Psicólogo cuando el entorno restringe las conexiones. Los resultados y capturas quedan en `test-results/`, fuera de Git.
-
-Véase [Validación de V4.2](docs/VALIDACION_V4.2.md) para cobertura y límites. No se afirma certificación completa de accesibilidad ni pruebas en teléfonos físicos.
+Ambos scripts admiten `DEMO_BASE_URL`, `DEMO_BROWSER_EXECUTABLE`, `DEMO_TEST_OUTPUT` y `DEMO_TEST_FIXTURES`. Esta última permite usar copias exactas de recursos externos en entornos de prueba sin acceso a sus proveedores. Las capturas y resultados se guardan en `test-results/`, fuera de Git. Véase [validación](docs/VALIDACION_V4.2.1.md) para resultados y límites.
 
 ## Estructura
 
 | Ruta | Contenido |
 |---|---|
-| `src/pages/` | Directorio temporal y página de ruta inexistente |
-| `src/giros/psicologo/` | Cuatro temas y datos de servicios |
-| `src/giros/restaurante/` | Patio 12, carta, carrito y reserva |
+| `src/pages/` | Directorio temporal y página 404 |
+| `src/giros/psicologo/` | Cuatro temas aprobados y recorridos propios |
+| `src/giros/restaurante/data/` | Carta, ingredientes, precios y reservas |
+| `src/giros/restaurante/state/` | Visitas, pedidos, recuperación y perfil local |
+| `src/giros/restaurante/components/` | Galerías, personalización, modalidades, seguimiento, contador y perfil |
 | `src/components/shared/` | Diálogos, banner, WhatsApp y contacto comercial |
-| `src/hooks/` | Navegación, metadatos, foco y formularios |
-| `public/restaurante/` | Fotografías, fuentes y licencias de Patio 12 |
-| `tests/` | Pruebas de estado y recorridos con React/JSDOM |
-| `scripts/` | Recorridos reproducibles en navegador |
-| `docs/` | Estado, validación y recursos |
+| `public/restaurante/` | Imágenes, fuentes, procedencia y licencias |
+| `tests/` y `scripts/` | Comprobaciones de estado, integración y navegador |
+| `docs/` | Estado y validación de las entregas |
+
+El proveedor del restaurante vive por encima de las rutas para conservar su visita y contador. Las páginas completas de ambos giros siguen cargándose de forma diferida. Sus estilos mantienen prefijos propios.
 
 ## Actualización y publicación
 
-El ZIP contiene la fuente completa en `proyecto/` y un actualizador incremental desde el commit base indicado. Requiere un árbol limpio y crea `actualizacion/v4.2`, sin borrar archivos, cambiar el historial, hacer commits o publicar. Consulta `LEEME_PRIMERO.md` en el ZIP.
+El ZIP incluye la fuente completa en `proyecto/` y un actualizador incremental desde el commit base indicado. Requiere un árbol limpio, conserva el historial y crea `actualizacion/v4.2.1`. No hace commits ni publica. Consulta `LEEME_PRIMERO.md` dentro del ZIP.
 
-Se conserva `vercel.json`. Revisa localmente antes de hacer merge y push a la rama de producción. La portada comercial, el configurador de paquetes y el CV quedan para después de las demos. Los metadatos se actualizan en el navegador; la aplicación sigue como SPA sin tarjetas sociales prerenderizadas por ruta.
-
-Las fotografías son ilustrativas y no representan negocios reales. Los textos, precios, ingredientes y datos deben adaptarse y validarse para un cliente real. [Recursos y licencias](docs/RECURSOS_RESTAURANTE.md).
+Se conserva `vercel.json`. Revisa localmente antes de hacer merge y push a la rama de producción. La portada comercial, el configurador de paquetes y el CV siguen para después de terminar las demos. La aplicación continúa como SPA; no se han añadido tarjetas sociales prerenderizadas por ruta.

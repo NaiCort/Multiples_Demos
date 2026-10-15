@@ -13,4 +13,30 @@ Descargados el 5 de octubre de 2026 bajo la licencia pública de Unsplash: https
 
 Bitter y DM Sans provienen de Google Fonts. Se incluyen sus licencias SIL Open Font License en LICENSE-bitter.txt y LICENSE-dmsans.txt; fuentes originales en https://github.com/google/fonts/tree/main/ofl/bitter y https://github.com/google/fonts/tree/main/ofl/dmsans. Se conserva la respuesta CSS de origen en fuentes-origen.css.txt. Los alias CSS Patio Bitter y Patio Sans aíslan su uso en esta demo; no modifican el contenido de los archivos de fuente.
 
-Para un cliente, sustituir imágenes y textos de muestra por materiales autorizados y representativos de su restaurante. No se usan marcas, reseñas ni datos reales de terceros para fingir un caso comercial.
+Para un cliente, sustituir imágenes y textos de muestra por materiales autorizados y representativos de su restaurante. La demo no presenta estas fotografías como trabajo para un cliente ni como imágenes de un restaurante real. Algunas referencias pueden contener marcas de productos; no implican una relación comercial.
+
+## Fotografías añadidas en V4.2.1
+
+Cada producto tiene una fotografía local; ensalada, pasta y hamburguesa tienen dos vistas de referencia. Los extras incluyen imágenes orientativas. Se conserva el encuadre completo con `object-fit: contain`, sin estirar las fotografías. Las recetas, ingredientes y cifras nutricionales son ejemplos ficticios independientes de las fotografías.
+
+El registro [fotos-origen-v4.2.1.json](../public/restaurante/fotos-origen-v4.2.1.json) conserva la URL de descarga, la página y autor cuando fueron identificados, las dimensiones y la huella del archivo. Las imágenes nuevas se descargaron el 8 de octubre de 2026 bajo la [licencia de Unsplash](https://unsplash.com/license).
+
+| Archivo | Autor o referencia |
+|---|---|
+| `sopa.webp` | sunorwind |
+| `flan.webp` | J. Luis Esquivel |
+| `queso.webp` | Ahmet Koç |
+| `pollo.webp` | Angela Bailey |
+| `pastel.webp` | Jennifer Pallian |
+| `limonada.webp` | Rajasekhar R |
+| `agua.webp` | Anshu A |
+| `tacos.webp` | Jarritos Mexican Soda |
+| `cafe.webp` | Gerson Cifuentes |
+| `pasta-2.webp` | Referencia de Unsplash; URL en el registro |
+| `hamburguesa-2.webp` | Referencia de Unsplash; URL en el registro |
+| `ensalada-2.webp` | Referencia de Unsplash; URL en el registro |
+| `aguacate.webp` | Referencia de Unsplash; URL en el registro |
+| `hongos.webp` | engin akyurt |
+| `tocino.webp` | Donald Giannatti |
+
+Para producción se necesitan fotos de la misma receta y de sus variantes, además de información de ingredientes, alérgenos y nutrición validada por el establecimiento. Las fotografías de muestra no permiten inferir esos datos.
