@@ -1,5 +1,19 @@
 # Historial de cambios
 
+## V4.2.3 · 2026-10-15
+
+Base: V4.2.2 publicada (`72a4c56da2a240fd572a2fc0a84bbb51645a8560`). Candidata para revisión de Ian, sin publicación automática.
+
+- Separar Inicio, Carta, Locales, Conócenos, Pedido y Seguimiento en rutas propias; añadir fichas individuales para ocho locales simulados.
+- Inicio presenta la marca, tres platos destacados, modalidades, reserva y ejemplos de locales. Se permite explorar sin ventana de entrada automática.
+- Reunir la carta completa, categorías y filtros en su página; conservar búsqueda y filtros en la URL y al volver desde carrito/edición.
+- Mostrar mapa general encima de las fichas, filtrar por ciudad y explorar marcadores sin cambiar el local del pedido. Conservar carga bajo demanda, geolocalización opcional y recuperación manual.
+- Usar CDMX–Chapultepec como selección nueva para todas las modalidades, respetando sesiones y recibos anteriores. Identificar el local en barra, pedido, reserva y recibo.
+- Conservar carrito al cambiar de local; reiniciar espera/asignación de mesa cuando corresponde. Un pedido confirmado mantiene su local. La reserva futura puede elegir otro independientemente.
+- Mantener el contador entre páginas y giros, con retorno a Seguimiento; evitar duplicarlo mientras se muestra esa página.
+- Extraer QR y selección de local en componentes propios, retirar el explorador modal sustituido y admitir enlaces antiguos de seguimiento y mesa.
+- Ampliar pruebas de estado, rutas, móvil, teclado, mapas, QR y regresiones. Conservar carta común sin inventarios ficticios por local, Psicólogo aprobado y portada temporal.
+
 ## V4.2.2 · 2026-10-15
 
 Base: V4.2.1 publicada (`53118a2d698327c30d8e5b6e4ed398e5358668ec`). Candidata para revisión de Ian; no se publica automáticamente ni se cierra el giro completo.

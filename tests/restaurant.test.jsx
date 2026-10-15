@@ -1,4 +1,4 @@
-import { MemoryRouter } from "react-router-dom"
+import { MemoryRouter, Routes, Route } from "react-router-dom"
 import { describe, expect, it, vi } from "vitest"
 import RestauranteApp from "../src/giros/restaurante/RestauranteApp"
 import RestaurantProvider from "../src/giros/restaurante/state/RestaurantProvider"
@@ -18,7 +18,7 @@ function session(mode = "pickup", member = false) {
   return restaurantReducer(state, { type: "cart", action: productAction() })
 }
 const confirm = (state, suffix = "A", now = NOW) => restaurantReducer(state, { type: "confirm-order", id: `P12-TEST-${suffix}`, now, name: "Alex Demo", address: "Calle ficticia 10", zoneId: "centro", payment: "digital" })
-const app = () => <MemoryRouter initialEntries={["/restaurante"]}><RestaurantProvider><RestauranteApp /></RestaurantProvider></MemoryRouter>
+const app = () => <MemoryRouter initialEntries={["/restaurante"]}><RestaurantProvider><Routes><Route path="/restaurante/*" element={<RestauranteApp />} /></Routes></RestaurantProvider></MemoryRouter>
 
 describe("Carta y configuraciones", () => {
   it("ofrece fotografías e ingredientes en los doce productos, sin valores nutricionales negativos", () => {
@@ -146,7 +146,7 @@ describe("Integración de restaurante", () => {
     await render(app()); await click(button("Comer aquí")); expect(document.body.textContent).toContain("01:00")
     await click(button("Explorar la carta mientras espero")); await click(button("Elegir Pasta de la casa", document.querySelector(".r-menu-list")))
     expect(button("Añadir al pedido · $195").disabled).toBe(true)
-    await click(button("Ver mi espera")); await click(button("Saltar espera de demostración")); expect(document.querySelector("dialog").textContent).toContain("Tu mesa ya te espera")
+    await click(button("Ver mi espera")); await click(button("Saltar espera de demostración")); expect(document.querySelector(".r-panel-body").textContent).toContain("Tu mesa ya te espera")
     await click(button("Elegir mi comida")); await click(button("Elegir Pasta de la casa", document.querySelector(".r-menu-list")))
     expect(button("Añadir al pedido · $195").disabled).toBe(false)
   })
@@ -156,9 +156,9 @@ describe("Integración de restaurante", () => {
     await click(button("Mi perfil · demo")); await click(document.querySelector('.r-option input[type="checkbox"]')); await click(button("Cerrar ventana"))
     await click(button("Elegir Pasta de la casa", document.querySelector(".r-menu-list"))); await click(button("Añadir al pedido · $195")); await click(button("Ver pedido, 1 productos")); await click(button("Continuar con el pedido"))
     await click(document.querySelector('input[type="radio"][name="payment"]:not(:checked)')); await click(button("Simular pedido · $185"))
-    expect(document.querySelector("dialog").textContent).toContain("En preparación")
+    expect(document.querySelector(".r-panel-body").textContent).toContain("En preparación")
     await advance(30_000); await click(button("Confirmar recogida de ejemplo"))
-    expect(document.querySelector("dialog").textContent).toContain("Visita finalizada")
+    expect(document.querySelector(".r-panel-body").textContent).toContain("Visita finalizada")
     await handle.unmount(); await render(app()); await click(button("Para llevar")); await click(button("Mi perfil · demo"))
     expect(document.querySelector("dialog").textContent).toContain("4 visitas de ejemplo")
     expect(document.querySelectorAll(".r-history li")).toHaveLength(1)

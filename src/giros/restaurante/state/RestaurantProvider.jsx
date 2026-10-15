@@ -2,6 +2,7 @@ import { useEffect, useReducer, useState } from "react"
 import { RestaurantContext } from "./context"
 import { useStorageStatus, markStorageUnavailable } from "./storageStatus"
 import { initialState, restaurantReducer, restoreState, serializeState, STORAGE_KEY } from "./model"
+import { DEFAULT_POINT } from "../data/locations"
 function load() {
   try { return restoreState(localStorage.getItem(STORAGE_KEY), Date.now()) } catch { return initialState() }
 }
@@ -10,10 +11,10 @@ export default function RestaurantProvider({ children }) {
   const [now, setNow] = useState(() => Date.now())
   const storageAvailable = useStorageStatus()
   const visitId = state.visit?.id
-  const dispatch = action => { if (action.type === "start") setNow(action.visit.startedAt); if (action.type === "confirm-order") setNow(action.now); rawDispatch(action) }
+  const dispatch = action => { if (action.type === "start") setNow(action.visit.startedAt); if (action.type === "confirm-order") setNow(action.now); rawDispatch(action.type === "point" ? { ...action, now: Date.now() } : action) }
   useEffect(() => {
     try {
-      if (state.pointId === "xalapa" && !state.visit && !state.profile.member && !state.profile.history.length && state.widget.x === 1 && state.widget.y === 1 && !state.widget.compact) localStorage.removeItem(STORAGE_KEY)
+      if (state.pointId === DEFAULT_POINT && !state.visit && !state.profile.member && !state.profile.history.length && state.widget.x === 1 && state.widget.y === 1 && !state.widget.compact) localStorage.removeItem(STORAGE_KEY)
       else localStorage.setItem(STORAGE_KEY, serializeState(state))
     } catch { markStorageUnavailable() }
   }, [state])

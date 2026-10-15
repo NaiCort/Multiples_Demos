@@ -8,10 +8,12 @@ export const POINTS = [
   { id: "guadalajara", city: "Guadalajara, Jalisco", name: "Parque Agua Azul", coordinates: [-103.3481931, 20.6598678], timeZone: "America/Mexico_City", osm: "relation/13589817" },
   { id: "monterrey", city: "Monterrey, Nuevo León", name: "Parque Fundidora", coordinates: [-100.282186, 25.6771028], timeZone: "America/Monterrey", osm: "way/30987006" },
   { id: "tijuana", city: "Tijuana, Baja California", name: "Parque Morelos", coordinates: [-116.9387316, 32.4989374], timeZone: "America/Tijuana", osm: "way/161454528" },
-]
-export const DEFAULT_POINT = POINTS[0].id
+].map(point => ({ ...point, localName: ({ xalapa: "Centro", chapultepec: "Chapultepec", alameda: "Alameda", puebla: "Centro", merida: "Centro", guadalajara: "Agua Azul", monterrey: "Fundidora", tijuana: "Morelos" })[point.id], cityLabel: point.city === "Ciudad de México" ? "CDMX" : point.city.split(",")[0] }))
+export const DEFAULT_POINT = "chapultepec"
+export const LEGACY_POINT = "xalapa"
 export const findPoint = id => POINTS.find(point => point.id === id)
-export const pointOrDefault = id => findPoint(id) || POINTS[0]
+export const pointOrDefault = id => findPoint(id) || findPoint(DEFAULT_POINT)
+export const localLabel = id => { const point = pointOrDefault(id); return `${point.cityLabel} · ${point.localName}` }
 export function distanceKm(a, b) {
   const rad = value => value * Math.PI / 180
   const dlat = rad(b[1] - a[1]), dlon = rad(b[0] - a[0])

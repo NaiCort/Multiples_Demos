@@ -1,4 +1,4 @@
-import { MemoryRouter } from "react-router-dom"
+import { MemoryRouter, Routes, Route } from "react-router-dom"
 import { describe, expect, it, vi } from "vitest"
 import RestauranteApp from "../src/giros/restaurante/RestauranteApp"
 import RestaurantProvider from "../src/giros/restaurante/state/RestaurantProvider"
@@ -9,7 +9,7 @@ import { canOrder, createVisit, initialState, restaurantReducer, restoreState, s
 import { button, click, enter, render } from "./helpers"
 
 const NOW = Date.parse("2026-10-15T18:00:00Z")
-const app = (url = "/restaurante") => <MemoryRouter initialEntries={[url]}><RestaurantProvider><RestauranteApp /></RestaurantProvider></MemoryRouter>
+const app = (url = "/restaurante") => <MemoryRouter initialEntries={[url]}><RestaurantProvider><Routes><Route path="/restaurante/*" element={<RestauranteApp />} /></Routes></RestaurantProvider></MemoryRouter>
 function withCart(pointId = "xalapa") {
   let state = restaurantReducer(initialState(), { type: "start", visit: createVisit("delivery", 2, NOW, pointId) })
   return restaurantReducer(state, { type: "cart", action: { type: "add", productId: "pasta", quantity: 1, config: {} } })
@@ -115,8 +115,8 @@ describe("Integración de V4.2.2", () => {
     await render(app("/restaurante?punto=puebla&mesa=7"))
     expect(document.querySelectorAll("dialog")).toHaveLength(1)
     await click(button("Sentarme en la mesa 7 · demo"))
-    expect(document.querySelector("dialog").textContent).toContain("Mesa 7")
-    expect(document.querySelector("dialog").textContent).toContain("Zócalo de Puebla")
+    expect(document.querySelector(".r-panel-body").textContent).toContain("Mesa 7")
+    expect(document.querySelector(".r-panel-body").textContent).toContain("Zócalo de Puebla")
     await click(button("Elegir mi comida"))
     expect(document.querySelector(".r-service-bar").textContent).toContain("Mesa 7")
   })
@@ -132,17 +132,17 @@ describe("Integración de V4.2.2", () => {
     await click(document.querySelector('input[name="choice-size"]:not(:checked)'))
     await enter(document.querySelector('select[aria-label="Cantidad de Azúcar"]'), "none")
     await click(button("Añadir al pedido · $70")); await click(button("Ver pedido, 1 productos"))
-    expect(document.querySelector("dialog").textContent).toContain("Grande · 600 ml")
-    expect(document.querySelector("dialog").textContent).toContain("Sin este ingrediente: Azúcar")
+    expect(document.querySelector(".r-panel-body").textContent).toContain("Grande · 600 ml")
+    expect(document.querySelector(".r-panel-body").textContent).toContain("Sin este ingrediente: Azúcar")
   })
   it("no solicita ubicación al abrir y permite seguir cuando se deniega", async () => {
     const getCurrentPosition = vi.fn((_ok, error) => error({ code: 1 }))
     Object.defineProperty(navigator, "geolocation", { configurable: true, value: { getCurrentPosition } })
-    await render(app()); await click(button("Para llevar")); await click(button("Explorar puntos y mapa"))
+    await render(app()); await click(button("Para llevar")); await click(document.querySelector('.r-desktop-nav a[href="/restaurante/locales"]'))
     expect(getCurrentPosition).not.toHaveBeenCalled()
-    expect(document.querySelectorAll(".r-point-list button")).toHaveLength(8)
+    expect(document.querySelectorAll(".r-local-card")).toHaveLength(8)
     await click(button("Usar mi ubicación")); expect(getCurrentPosition).toHaveBeenCalledOnce()
-    expect(document.querySelector("dialog").textContent).toContain("Ubicación no autorizada")
+    expect(document.body.textContent).toContain("Ubicación no autorizada")
     expect(button("Mostrar mapa interactivo")).toBeTruthy()
   })
 })

@@ -1,5 +1,5 @@
 import { cartReducer, findProduct, MODES, subtotal, ZONES } from "../data/order"
-import { DEFAULT_POINT, findPoint, pointOrDefault } from "../data/locations"
+import { DEFAULT_POINT, LEGACY_POINT, findPoint, pointOrDefault } from "../data/locations"
 export const STORAGE_KEY = "patio12-demo-v1"
 export const SESSION_TTL = 6 * 60 * 60 * 1000
 export const WAIT_MS = 60_000
@@ -35,7 +35,11 @@ export function restaurantReducer(state, action) {
   if (action.type === "reset") return initialState()
   if (action.type === "point") {
     if (!findPoint(action.pointId) || state.order && state.order.status !== "completed") return state
-    return { ...state, pointId: action.pointId, visit: state.visit ? { ...state.visit, pointId: action.pointId } : null }
+    if (state.pointId === action.pointId) return state
+    const moveTable = state.visit?.mode === "dine"
+    if (moveTable && !Number.isFinite(action.now)) return state
+    const visit = state.visit ? { ...state.visit, pointId: action.pointId, ...(moveTable ? { stage: "waiting", table: null, deadline: action.now + WAIT_MS, acknowledged: false, fromQR: false } : {}) } : null
+    return { ...state, pointId: action.pointId, visit }
   }
   if (action.type === "start") {
     if (state.order && state.order.status !== "completed") return state
@@ -91,20 +95,20 @@ function cleanOrder(raw) {
   if (raw.mode === "delivery" && zone.unavailable) return null
   const base = subtotal(rows), fee = raw.mode === "delivery" ? zone.fee : 0
   const discount = [0, Math.round(base * 0.05), Math.round(base * 0.1)].includes(raw.quote?.discount) ? raw.quote.discount : 0
-  return { ...raw, rows, pointId: pointOrDefault(raw.pointId).id, travelStartedAt: Number.isFinite(raw.travelStartedAt) ? raw.travelStartedAt : raw.arrivalDeadline - zone.minutes * 1000, zoneId: zone.id, address: typeof raw.address === "string" ? raw.address.slice(0, 120) : "", name: typeof raw.name === "string" ? raw.name.slice(0, 60) : "Alex Demo", quote: { subtotal: base, fee, discount, total: base + fee - discount } }
+  return { ...raw, rows, pointId: pointOrDefault(raw.pointId || LEGACY_POINT).id, travelStartedAt: Number.isFinite(raw.travelStartedAt) ? raw.travelStartedAt : raw.arrivalDeadline - zone.minutes * 1000, zoneId: zone.id, address: typeof raw.address === "string" ? raw.address.slice(0, 120) : "", name: typeof raw.name === "string" ? raw.name.slice(0, 60) : "Alex Demo", quote: { subtotal: base, fee, discount, total: base + fee - discount } }
 }
 export function restoreState(text, now) {
   const state = initialState()
   try {
     const raw = JSON.parse(text)
     if (![1, 2].includes(raw?.schema)) return state
-    state.pointId = pointOrDefault(raw.pointId).id
+    state.pointId = pointOrDefault(raw.pointId || (raw.schema === 1 ? LEGACY_POINT : DEFAULT_POINT)).id
     if (raw.widget) state.widget = { x: Number.isFinite(raw.widget.x) ? Math.max(0, Math.min(1, raw.widget.x)) : 1, y: Number.isFinite(raw.widget.y) ? Math.max(0, Math.min(1, raw.widget.y)) : 1, compact: !!raw.widget.compact }
     if (raw.profile) state.profile = { member: !!raw.profile.member, visits: Number.isInteger(raw.profile.visits) ? Math.max(3, Math.min(10_000, raw.profile.visits)) : 3, history: Array.isArray(raw.profile.history) ? raw.profile.history.map(cleanOrder).filter(order => order?.status === "completed").slice(0, 10) : [] }
     const visit = raw.visit
     if (visit && typeof visit.id === "string" && /^VISITA-[A-Z0-9-]+$/.test(visit.id) && Object.hasOwn(MODES, visit.mode) && ["waiting", "seated", "active"].includes(visit.stage) && Number.isFinite(visit.expiresAt) && visit.expiresAt > now && visit.expiresAt <= now + SESSION_TTL && Number.isInteger(visit.candidate) && visit.candidate >= 1 && visit.candidate <= 25) {
       if (visit.stage === "waiting" && (!Number.isFinite(visit.deadline) || visit.deadline > now + WAIT_MS)) return state
-      state.visit = { ...visit, pointId: pointOrDefault(visit.pointId || raw.pointId).id, table: visit.stage === "seated" ? visit.candidate : null }
+      state.visit = { ...visit, pointId: pointOrDefault(visit.pointId || raw.pointId || (raw.schema === 1 ? LEGACY_POINT : DEFAULT_POINT)).id, table: visit.stage === "seated" ? visit.candidate : null }
       state.cart = cleanRows(raw.cart)
       const order = cleanOrder(raw.order)
       state.order = order?.visitId === visit.id && order.status !== "completed" ? order : null

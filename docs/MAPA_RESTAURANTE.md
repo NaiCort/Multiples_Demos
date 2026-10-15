@@ -1,6 +1,6 @@
 # Mapa y QR de Patio 12
 
-Implementación: `data/locations.js`, `components/DemoMap.jsx`, `components/mapEngine.js`, `components/LocationExplorer.jsx` y `components/EntryPanel.jsx`. Estado y vínculo del pedido: `state/model.js`.
+Implementación: `data/locations.js`, `components/DemoMap.jsx`, `components/mapEngine.js`, `pages/Locales.jsx`, `pages/LocalDetalle.jsx`, `components/LocalQR.jsx` y `components/EntryPanel.jsx`. Estado y vínculo del pedido: `state/model.js`.
 
 ## Referencias
 
@@ -16,6 +16,12 @@ Consulta manual de OpenStreetMap/Nominatim el 15 de octubre de 2026, con solicit
 | guadalajara | Parque Agua Azul | -103.3481931, 20.6598678 | [relation/13589817](https://www.openstreetmap.org/relation/13589817) |
 | monterrey | Parque Fundidora | -100.2821860, 25.6771028 | [way/30987006](https://www.openstreetmap.org/way/30987006) |
 | tijuana | Parque Morelos | -116.9387316, 32.4989374 | [way/161454528](https://www.openstreetmap.org/way/161454528) |
+
+## Navegación por locales (V4.2.3)
+
+`/restaurante/locales` muestra el mapa antes de la lista, con ocho referencias y filtro de ciudad. Los marcadores cercanos se agrupan sin desplazar sus coordenadas; pulsar un grupo acerca el mapa hasta separarlos. Un marcador o Mostrar en el mapa cambia la referencia explorada, no el local del pedido. Cada local tiene su ficha en `/restaurante/locales/:pointId`, con acciones de reserva/pedido y QR. Los estilos, mapa y worker siguen diferidos.
+
+Una visita nueva usa CDMX–Chapultepec; una sesión guardada conserva su punto. La reserva futura tiene un contexto independiente del pedido activo. Cambiar de local una visita en mesa reinicia su espera y asignación conservando los platos; confirmar un pedido fija su local. Carta y precios se comparten entre todos los locales ficticios.
 
 ## Carga y recuperación
 

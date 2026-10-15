@@ -1,13 +1,14 @@
 import { useRef, useState } from "react"
 import { ArrowLeft, Minus, Plus, Trash2 } from "lucide-react"
 import Modal from "../../../components/shared/Modal"
+import PanelSurface from "./PanelSurface"
 import { money } from "../data/menu"
 import { configSummary, findProduct, MAX_QUANTITY, MODES, subtotal, unitPrice, ZONES } from "../data/order"
 import { useRestaurant } from "../state/context"
 import { canOrder, orderQuote, uniqueId } from "../state/model"
-import { POINTS, pointOrDefault, pointTime } from "../data/locations"
+import { localLabel, POINTS, pointOrDefault, pointTime } from "../data/locations"
 import DemoMap from "./DemoMap"
-export default function OrderFlow({ onClose, onMenu, onEdit, onTracking, onMode, onProfile }) {
+export default function OrderFlow({ onClose, onMenu, onEdit, onTracking, onMode, onProfile, embedded = false }) {
   const { state, dispatch, cartDispatch } = useRestaurant()
   const [step, setStep] = useState("cart")
   const [name, setName] = useState("Alex Demo")
@@ -26,15 +27,18 @@ export default function OrderFlow({ onClose, onMenu, onEdit, onTracking, onMode,
     dispatch({ type: "confirm-order", id: uniqueId("P12"), now: Date.now(), name, zoneId, address, payment })
     onTracking()
   }
-  return <Modal title="Tu pedido de ejemplo" onClose={onClose} className="restaurant-modal" radius={4}>
-    {state.order ? <><p className="r-muted">Ya tienes un pedido confirmado en esta visita.</p><button type="button" className="r-button r-full" onClick={onTracking}>Ver seguimiento y recibo</button></> : !state.cart.length ? <div className="r-empty"><h3>La mesa empieza por la carta</h3><p>Añade un plato para explorar el pedido. Puedes ajustar cantidades y quitar productos antes de confirmar.</p><button type="button" className="r-button" onClick={onMenu}>Explorar la carta</button></div> : <>
+  const Surface = embedded ? PanelSurface : Modal
+  const Heading = embedded ? "h2" : "h3"
+  return <Surface title="Tu pedido de ejemplo" onClose={onClose} className="restaurant-modal" radius={4}>
+    {state.order ? <><p className="r-muted">Ya tienes un pedido confirmado en esta visita.</p><button type="button" className="r-button r-full" onClick={onTracking}>Ver seguimiento y recibo</button></> : !state.cart.length ? <div className="r-empty"><Heading>La mesa empieza por la carta</Heading><p>Añade un plato para explorar el pedido. Puedes ajustar cantidades y quitar productos antes de confirmar.</p><button type="button" className="r-button" onClick={onMenu}>Explorar la carta</button></div> : <>
       <p className="r-progress">{step === "cart" ? "1 de 2 · Revisa tus platos" : "2 de 2 · Revisa tu entrega y pago"}</p>
       {step === "cart" ? <><ul className="r-cart-list">{state.cart.map(row => {
         const product = findProduct(row.productId)
-        return <li key={row.key}><div className="r-cart-title"><h3>{product.name}</h3><strong>{money(unitPrice(row) * row.quantity)}</strong></div><p className="r-muted">{configSummary(product, row.config).join(" · ") || "Receta original"}</p><div className="r-cart-controls"><div className="r-quantity"><button type="button" aria-label={`Reducir ${product.name}`} disabled={row.quantity <= 1} onClick={() => cartDispatch({ type: "quantity", key: row.key, quantity: row.quantity - 1 })}><Minus size={16} aria-hidden="true" /></button><output aria-label={`Cantidad de ${product.name}`}>{row.quantity}</output><button type="button" aria-label={`Aumentar ${product.name}`} disabled={row.quantity >= MAX_QUANTITY} onClick={() => cartDispatch({ type: "quantity", key: row.key, quantity: row.quantity + 1 })}><Plus size={16} aria-hidden="true" /></button></div><button type="button" className="r-text-button" aria-label={`Editar ${product.name}`} onClick={() => onEdit(row)}>Editar</button><button type="button" className="r-text-button" aria-label={`Quitar ${product.name}`} onClick={() => cartDispatch({ type: "remove", key: row.key })}><Trash2 size={16} aria-hidden="true" /> Quitar</button></div></li>
+        return <li key={row.key}><div className="r-cart-title"><Heading>{product.name}</Heading><strong>{money(unitPrice(row) * row.quantity)}</strong></div><p className="r-muted">{configSummary(product, row.config).join(" · ") || "Receta original"}</p><div className="r-cart-controls"><div className="r-quantity"><button type="button" aria-label={`Reducir ${product.name}`} disabled={row.quantity <= 1} onClick={() => cartDispatch({ type: "quantity", key: row.key, quantity: row.quantity - 1 })}><Minus size={16} aria-hidden="true" /></button><output aria-label={`Cantidad de ${product.name}`}>{row.quantity}</output><button type="button" aria-label={`Aumentar ${product.name}`} disabled={row.quantity >= MAX_QUANTITY} onClick={() => cartDispatch({ type: "quantity", key: row.key, quantity: row.quantity + 1 })}><Plus size={16} aria-hidden="true" /></button></div><button type="button" className="r-text-button" aria-label={`Editar ${product.name}`} onClick={() => onEdit(row)}>Editar</button><button type="button" className="r-text-button" aria-label={`Quitar ${product.name}`} onClick={() => cartDispatch({ type: "remove", key: row.key })}><Trash2 size={16} aria-hidden="true" /> Quitar</button></div></li>
       })}</ul><p className="r-total">Subtotal<strong>{money(subtotal(state.cart))} MXN</strong></p><button type="button" className="r-button r-full" disabled={!canOrder(state)} onClick={() => setStep("checkout")}>Continuar con el pedido</button><button type="button" className="r-text-button r-full" onClick={onMenu}>Añadir otro plato</button></> : <>
         <p className="r-checkout-mode"><strong>{MODES[mode]}</strong>{state.visit?.table ? ` · Mesa ${state.visit.table}` : ""}<button type="button" className="r-text-button" onClick={onMode}>Cambiar modalidad</button></p>
-        <label className="r-field">Punto del pedido · demostración<select aria-label="Punto del pedido · demostración" value={point.id} onChange={event => dispatch({ type: "point", pointId: event.target.value })}>{POINTS.map(item => <option key={item.id} value={item.id}>{item.name} · {item.city}</option>)}</select></label><p className="r-demo-note">Hora del punto: {pointTime(point.id)} · {point.timeZone}. Referencia geográfica, no sucursal. Al confirmar, este punto queda fijo para el pedido.</p>
+        <label className="r-field">Local del pedido · demo<select aria-label="Local del pedido · demo" value={point.id} onChange={event => dispatch({ type: "point", pointId: event.target.value })}>{POINTS.map(item => <option key={item.id} value={item.id}>{localLabel(item.id)}</option>)}</select></label><p className="r-demo-note">Hora del local simulado: {pointTime(point.id)} · {point.timeZone}. Referencia: {point.name}. Al confirmar, el local queda fijo para el pedido.</p>
+        {state.visit?.stage === "waiting" && <div className="r-wait-notice"><p>Tu mesa en este local aún está en preparación. El carrito se conserva; podrás confirmar cuando termine la espera.</p><button type="button" className="r-text-button" onClick={onTracking}>Ver mi espera</button></div>}
         <label className="r-field">Nombre de ejemplo<input value={name} maxLength={60} autoComplete="off" onChange={event => setName(event.target.value)} aria-invalid={name.trim().length < 2} aria-describedby="order-fiction" /></label>
         {mode === "delivery" && <><label className="r-field">Zona de entrega de ejemplo<select aria-label="Zona de entrega de ejemplo" value={zoneId} onChange={event => { const next = ZONES.find(item => item.id === event.target.value); setZoneId(next.id); setAddress(next.address) }}>{ZONES.map(item => <option key={item.id} value={item.id}>{item.name}</option>)}</select></label><label className="r-field">Dirección de ejemplo<input value={address} maxLength={120} autoComplete="off" onChange={event => setAddress(event.target.value)} aria-invalid={address.trim().length < 5} aria-describedby="order-fiction" /></label>
         {zone.unavailable ? <div className="r-wait-notice" role="status"><strong>Destino fuera de cobertura de ejemplo.</strong><p>Elige otra zona o cambia a Para llevar. No se puede confirmar una entrega para este escenario.</p></div> : <div className="r-delivery-summary"><div className="r-eta-grid"><p>Preparación<strong>20–30 min</strong></p><p>Recorrido · {zone.distance} km<strong>{zone.minutes}–{zone.minutes + 5} min</strong></p><p>Total orientativo<strong>{20 + zone.minutes}–{35 + zone.minutes} min</strong></p></div><small>Estimaciones ficticias. Se usa el destino preparado de la zona, no la dirección escrita; no se calcula tráfico ni ruta vial.</small></div>}
@@ -46,5 +50,5 @@ export default function OrderFlow({ onClose, onMenu, onEdit, onTracking, onMode,
         <button type="button" className="r-button r-full" disabled={!valid} onClick={submit}>Simular pedido · {money(quote.total)}</button><button type="button" className="r-text-button r-full" onClick={() => setStep("cart")}><ArrowLeft size={16} aria-hidden="true" /> Volver a los platos</button>
       </>}
     </>}
-  </Modal>
+  </Surface>
 }

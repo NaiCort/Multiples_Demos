@@ -15,6 +15,7 @@ const labels = { preparing: "En preparación", delivering: "En camino", ready: "
 export default function FloatingTimer() {
   const { state, dispatch, now } = useRestaurant()
   const location = useLocation(), navigate = useNavigate()
+  const pathname = location.pathname.replace(/\/+$/, "")
   const [view, setView] = useState(viewport)
   const [size, setSize] = useState({ width: 190, height: 170 })
   const [dragPosition, setDragPosition] = useState(null)
@@ -24,13 +25,12 @@ export default function FloatingTimer() {
   const pipRef = useRef(null), card = useRef(null), drag = useRef(null)
   const { visit, order, widget } = state
   const waiting = visit?.stage === "waiting"
-  const active = !!visit && (visit.mode === "dine" || !!order) && order?.status !== "completed"
-  const compact = widget.compact || location.pathname !== "/restaurante"
+  const active = !!visit && (visit.mode === "dine" || !!order) && order?.status !== "completed" && pathname !== "/restaurante/seguimiento"
+  const compact = widget.compact || !pathname.startsWith("/restaurante")
   const deadline = waiting ? visit.deadline : order?.deadline
   const seconds = remainingSeconds(deadline, now)
   const label = waiting ? "Espera de mesa" : order ? labels[order.status] : visit?.mode === "dine" ? `Mesa ${visit.table} lista` : "Tu visita al patio"
-  const reference = order?.id || visit?.id
-  const bottomReserve = location.pathname === "/psicologo" ? 130 : 58
+  const bottomReserve = pathname === "/psicologo" ? 130 : 58
   const top = view.top + Math.min(148, view.height * 0.28), left = view.left + 12
   const rangeX = Math.max(0, view.width - Math.min(size.width, view.width - 24) - 24)
   const rangeY = Math.max(0, view.height - (top - view.top) - size.height - bottomReserve)
@@ -38,7 +38,7 @@ export default function FloatingTimer() {
   const open = () => {
     pipRef.current?.close()
     window.focus()
-    navigate(`/restaurante?seguimiento=${encodeURIComponent(reference)}`)
+    navigate("/restaurante/seguimiento")
   }
   useEffect(() => {
     const update = () => setView(viewport())
@@ -86,7 +86,7 @@ export default function FloatingTimer() {
   const endDrag = () => { if (drag.current?.position) dispatch({ type: "widget", value: drag.current.position }); setDragPosition(null) }
   return <>
     <aside ref={card} className={`r-timer ${compact ? "r-timer-compact" : ""}`} aria-label="Seguimiento flotante de Patio 12" style={{ left: left + xy.x * rangeX, top: top + xy.y * rangeY, maxWidth: view.width - 24, maxHeight: Math.max(80, view.height - (top - view.top) - bottomReserve) }}>
-      <div className="r-timer-head"><button type="button" className="r-timer-grip" aria-label="Mover contador; tocar para elegir esquina" onPointerDown={startDrag} onPointerMove={moveDrag} onPointerUp={endDrag} onPointerCancel={endDrag} onClick={() => { if (!drag.current?.moved) setPositionsOpen(value => !value); drag.current = null }}><Grip size={17} aria-hidden="true" /></button><button type="button" className="r-timer-open" onClick={open}><span>{label}</span>{compact && <strong>{deadline ? formatClock(seconds) : visit.mode === "dine" && !order ? `#${visit.table}` : "Ver"}</strong>}</button><button type="button" className="r-timer-icon" aria-label={compact ? location.pathname !== "/restaurante" ? "Volver a mi visita" : "Ampliar contador" : "Minimizar contador"} onClick={() => { if (compact && location.pathname !== "/restaurante") open(); dispatch({ type: "widget", value: { compact: !compact } }) }}>{compact ? <Maximize2 size={16} aria-hidden="true" /> : <Minimize2 size={16} aria-hidden="true" />}</button></div>
+      <div className="r-timer-head"><button type="button" className="r-timer-grip" aria-label="Mover contador; tocar para elegir esquina" onPointerDown={startDrag} onPointerMove={moveDrag} onPointerUp={endDrag} onPointerCancel={endDrag} onClick={() => { if (!drag.current?.moved) setPositionsOpen(value => !value); drag.current = null }}><Grip size={17} aria-hidden="true" /></button><button type="button" className="r-timer-open" onClick={open}><span>{label}</span>{compact && <strong>{deadline ? formatClock(seconds) : visit.mode === "dine" && !order ? `#${visit.table}` : "Ver"}</strong>}</button><button type="button" className="r-timer-icon" aria-label={compact ? !pathname.startsWith("/restaurante") ? "Volver a mi visita" : "Ampliar contador" : "Minimizar contador"} onClick={() => { if (compact && !pathname.startsWith("/restaurante")) open(); dispatch({ type: "widget", value: { compact: !compact } }) }}>{compact ? <Maximize2 size={16} aria-hidden="true" /> : <Minimize2 size={16} aria-hidden="true" />}</button></div>
       {!compact && <><button type="button" className="r-timer-main" onClick={open}><strong>{deadline ? formatClock(seconds) : visit.mode === "dine" && !order ? `Mesa ${visit.table}` : "Ver pedido"}</strong><span>{order ? `Turno ${order.turn} · demo` : "Patio 12 · demo"} <ArrowUpRight size={12} aria-hidden="true" /></span></button><div className="r-timer-actions">{waiting && <button type="button" className="r-timer-skip" onClick={() => dispatch({ type: "skip-wait" })} aria-label="Saltar espera desde el contador">Saltar · demo</button>}<button type="button" aria-label="Elegir esquina del contador" onClick={() => setPositionsOpen(value => !value)}><Move size={16} aria-hidden="true" /></button>{"documentPictureInPicture" in window && <button type="button" aria-label="Abrir contador en ventana flotante" onClick={openPip}><PictureInPicture2 size={16} aria-hidden="true" /></button>}</div></>}
       {positionsOpen && <div className="r-timer-positions"><p>Colocar en una esquina</p>{[[0, 0, "Superior izquierda"], [1, 0, "Superior derecha"], [0, 1, "Inferior izquierda"], [1, 1, "Inferior derecha"]].map(([x, y, text]) => <button type="button" key={text} onClick={() => { dispatch({ type: "widget", value: { x, y } }); setPositionsOpen(false) }}>{text}</button>)}</div>}
       {pipError && <p className="r-timer-error" role="status">{pipError}</p>}

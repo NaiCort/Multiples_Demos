@@ -28,7 +28,7 @@ export default function App() {
             <Routes>
               <Route path="/" element={<Bienvenida />} />
               <Route path="/psicologo" element={<PsicologoApp />} />
-              <Route path="/restaurante" element={<RestauranteApp />} />
+              <Route path="/restaurante/*" element={<RestauranteApp />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </Suspense>

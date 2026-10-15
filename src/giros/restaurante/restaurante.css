@@ -372,3 +372,84 @@
 @media (max-width: 699px) { .r-point-mobile { display: grid; } .r-point-list { display: none; } .r-location-intro { font-size: 23px; } .r-location-grid { gap: 10px; } }
 @media (max-width: 639px) { .r-seal { width: 100px; height: 100px; } .r-seal strong { font-size: 44px; } .r-seal > span { font-size: 6px; } .r-seal-small { width: 65px; height: 65px; } .r-seal-small strong { font-size: 27px; } .r-seal-small > span { font-size: 4px; } .r-map-surface { height: 280px; } .r-point-detail { padding: 16px; } }
 @media (prefers-reduced-motion: reduce) { .restaurant-root *, .restaurant-modal * { animation-duration: .01ms !important; transition-duration: .01ms !important; scroll-behavior: auto !important; } }
+
+/* V4.2.3: páginas del restaurante y contexto común de local. */
+.r-page-section { width: 100%; max-width: 1360px; margin-inline: auto; padding: 64px 24px; }
+.r-page-section h1, .r-carta-page h1, .r-panel-page h1 { font-size: clamp(3rem,6vw,5.8rem); letter-spacing: -.06em; overflow-wrap: anywhere; line-height: 1.03; font-weight: 600; margin-block: 12px 24px; }
+.r-page-section .r-kicker, .r-carta-page .r-kicker { margin-bottom: 18px; }
+.r-section-intro { max-width: 650px; font-size: 17px; line-height: 1.8; color: #526155; margin-bottom: 30px; }
+.r-home-service .r-service-options { margin: 20px 0 12px; }
+.r-home-service h2 { font-size: clamp(2rem,4vw,3rem); }
+.r-active-local { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+.r-active-local > svg { flex-shrink: 0; }
+.r-active-local small { display: block; font-size: 10px; font-weight: 400; line-height: 1.4; color: #526155; }
+.r-active-local strong { font-size: 13px; }
+.r-mode-label { font-size: 12px; align-self: center; }
+.r-carta-page { padding-top: 50px; min-height: 65vh; }
+.r-carta-page .r-item-title h2 { font-size: 20px; line-height: 1.2; letter-spacing: -.025em; margin: 0; }
+.r-local-card { border: 1px solid #c5cec6; background: #fff; min-width: 0; }
+.r-local-card.is-viewed { border-color: #203b2e; box-shadow: 0 0 0 1px #203b2e; }
+.r-locals-grid { display: grid; gap: 24px; }
+.r-local-postcard { position: relative; display: grid; align-content: space-between; gap: 30px; padding: 24px; aspect-ratio: 1.9; background: #e7eddf; color: #203b2e; overflow: hidden; }
+.r-local-postcard::after { content: ""; width: 180px; height: 180px; border: 1px solid #203b2e33; border-radius: 50%; position: absolute; right: -38px; top: -40px; box-shadow: 0 0 0 22px #203b2e08,0 0 0 44px #203b2e08; pointer-events: none; }
+.r-local-postcard > span { font-size: 10px; letter-spacing: .08em; line-height: 1.5; position: relative; z-index: 1; }
+.r-local-postcard strong { font-family: "Patio Bitter",Georgia,serif; font-size: clamp(28px,3vw,43px); font-weight: 500; letter-spacing: -.05em; position: relative; z-index: 1; }
+.r-local-postcard > svg { position: absolute; top: 22px; right: 24px; }
+.r-local-color-1 { background: #f1d77a; }
+.r-local-color-2 { background: #e8d8c7; }
+.r-local-color-3 { background: #d9e4e3; }
+.r-local-card-body { padding: 22px; }
+.r-local-card-body > p { font-size: 13px; color: #526155; }
+.r-local-card-body > .r-text-button { justify-content: flex-start; margin-right: 18px; font-size: 12px; }
+.r-local-card-top { display: flex; align-items: baseline; justify-content: space-between; flex-wrap: wrap; gap: 8px; margin-bottom: 15px; }
+.r-local-card-top h3 { font-size: 21px; letter-spacing: -.03em; }
+.r-local-card-top .r-menu-tag { margin-top: 0; }
+.r-local-actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 16px; }
+.r-local-actions > button { flex: 1; min-width: 90px; min-height: 44px; padding: 9px 12px; font-size: 12px; }
+.r-locals-tools { display: flex; align-items: flex-end; gap: 16px; flex-wrap: wrap; }
+.r-locals-tools .r-field { width: min(100%,360px); margin: 0; }
+.r-locals-tools .r-secondary-button { min-height: 48px; }
+.r-locals-map { scroll-margin-top: 148px; }
+.r-overview-map .r-map-surface { height: clamp(300px,48vw,520px); }
+.r-map-canvas .r-local-marker { width: 44px; height: 44px; border-width: 3px; }
+.r-map-canvas .r-local-marker.is-selected { background: #edd068; color: #203b2e; z-index: 2; }
+.r-map-canvas .r-local-cluster { width: 48px; height: 48px; border: 4px double #fff; background: #203b2e; color: white; cursor: pointer; }
+.r-map-canvas .r-local-cluster.is-selected { background: #edd068; color: #203b2e; }
+.r-map-selection { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 14px; padding: 20px; border: 1px solid #a7b6a9; background: #edf2ec; }
+.r-map-selection p { font-size: 14px; }
+.r-map-selection span { display: block; font-size: 12px; color: #526155; margin-top: 6px; }
+.r-locals-list-head { margin-top: 65px; }
+.r-locals-list-head h2 { font-size: clamp(2rem,4vw,3rem); }
+.r-local-detail-head { display: grid; gap: 30px; margin: 24px 0 55px; }
+.r-local-visit-card { padding: 28px; background: #edf2ec; border-top: 4px solid #203b2e; }
+.r-local-visit-card h2 { font-size: 34px; margin-bottom: 22px; }
+.r-local-visit-card > p { font-size: 14px; }
+.r-local-visit-card .r-inline-actions { margin-top: 20px; }
+.r-local-information { display: grid; gap: 45px; border-top: 1px solid #a7b6a9; padding-top: 35px; }
+.r-local-information h2 { font-size: 26px; letter-spacing: -.03em; }
+.r-local-facts { margin: 22px 0; font-size: 13px; }
+.r-local-facts > div { display: grid; gap: 7px; padding: 15px 0; border-bottom: 1px solid #c5cec6; }
+.r-local-facts dt { font-weight: 600; }
+.r-local-facts dd { color: #526155; }
+.r-about-intro { display: grid; align-items: center; gap: 35px; }
+.r-about-intro img { width: 100%; aspect-ratio: 4/3; object-fit: cover; }
+.r-about-values { border-block: 1px solid #c5cec6; }
+.r-about-values h2 { max-width: 780px; }
+.r-about-columns { display: grid; gap: 30px; margin: 35px 0; }
+.r-about-columns article { padding-top: 20px; border-top: 1px solid #a7b6a9; }
+.r-about-columns article > span:not(.r-team-avatar) { font-size: 12px; color: #9c3b26; }
+.r-about-columns h3 { font-size: 27px; margin: 16px 0; letter-spacing: -.035em; }
+.r-about-columns p { color: #526155; font-size: 14px; line-height: 1.8; }
+.r-about-columns strong { display: block; font-size: 12px; font-weight: 500; margin-bottom: 15px; }
+.r-team-avatar { display: grid; place-items: center; width: 72px; height: 72px; border-radius: 50%; background: #edd068; color: #203b2e; font-family: "Patio Bitter",Georgia,serif; font-size: 25px; }
+.r-panel-page { max-width: 850px; padding: 45px 24px 70px; margin-inline: auto; min-height: 65vh; }
+.r-panel-page h1 { font-size: clamp(2.5rem,5.5vw,4.5rem); margin-top: 25px; }
+.r-panel-body { max-width: 640px; }
+.r-panel-body h2, .r-panel-body h3 { font-size: 25px; letter-spacing: -.03em; }
+.r-panel-body .r-table-ready :is(h2,h3) { font-size: 48px; }
+.r-panel-body :where(button,input,select,summary):focus-visible { outline: 3px solid #1260bc; outline-offset: 3px; box-shadow: 0 0 0 5px #fff; }
+.r-panel-body .r-button { margin-block: 10px; }
+.r-footer-links { display: flex; flex-wrap: wrap; gap: 10px 24px; }
+@media (min-width: 640px) { .r-page-section { padding: 65px 40px; } .r-locals-grid { grid-template-columns: repeat(2,minmax(0,1fr)); } .r-home-service .r-service-options { grid-template-columns: repeat(3,minmax(0,1fr)); } .r-home-service .r-service-card { align-items: flex-start; flex-direction: column; padding: 22px; } .r-home-service .r-service-card > svg:last-child { align-self: flex-end; } .r-about-columns { grid-template-columns: repeat(3,minmax(0,1fr)); } .r-panel-page { padding-inline: 40px; } }
+@media (min-width: 1000px) { .r-page-section { padding: 80px 64px; } .r-locals-grid { grid-template-columns: repeat(3,minmax(0,1fr)); } .r-local-detail-head { grid-template-columns: 1.3fr 1fr; gap: 60px; align-items: start; } .r-local-information, .r-about-intro { grid-template-columns: 1fr 1fr; gap: 65px; } }
+@media (max-width: 639px) { .r-service-bar { padding-inline: 16px; gap: 6px; } .r-service-bar > div { column-gap: 15px; } .r-active-local { gap: 8px; width: 100%; justify-content: flex-start; } .r-active-local > .r-text-button { margin-left: auto; } .r-mode-label { flex-basis: auto; } .r-service-bar .r-text-button { font-size: 11px; } .r-home-service .r-section-head { margin-bottom: 18px; } .r-local-information, .r-local-detail-head { gap: 25px; } .r-local-visit-card { padding: 22px; } .r-carta-page .r-item-title h2 { font-size: 18px; } .r-panel-page h1 { overflow-wrap: anywhere; } }

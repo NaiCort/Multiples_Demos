@@ -2,10 +2,10 @@ import { useEffect, useRef, useState } from "react"
 import { Check } from "lucide-react"
 import Modal from "../../../components/shared/Modal"
 import { reservationTimes, upcomingDates } from "../data/reservation"
-import { pointOrDefault } from "../data/locations"
+import { DEFAULT_POINT, localLabel, pointOrDefault } from "../data/locations"
 import PatioSeal from "./PatioSeal"
 
-export default function TableReservation({ onClose, pointId = "xalapa" }) {
+export default function TableReservation({ onClose, pointId = DEFAULT_POINT, onChangeLocal }) {
   const point = pointOrDefault(pointId)
   const [dates] = useState(() => upcomingDates(new Date(), point.timeZone))
   const [date, setDate] = useState("")
@@ -25,7 +25,8 @@ export default function TableReservation({ onClose, pointId = "xalapa" }) {
     timer.current = setTimeout(() => setStep("done"), 800)
   }
   return <Modal title="Reservar una mesa de ejemplo" onClose={onClose} className="restaurant-modal" fontFamily="'Patio Sans', sans-serif" radius={4}>
-    <p className="r-demo-note">Referencia: {point.name}, {point.city}. Horarios en {point.timeZone}. No es una sucursal ni una reserva real.</p>
+    <p className="r-demo-note">Local simulado: {localLabel(point.id)}. Referencia: {point.name}. Horarios en {point.timeZone}. No es una sucursal ni una reserva real.</p>
+    {step === 1 && onChangeLocal && <button type="button" className="r-text-button" onClick={onChangeLocal}>Cambiar local de la reserva</button>}
     {step === "done" ? <div className="r-result"><span className="r-result-icon"><Check size={28} aria-hidden="true" /></span>
       <PatioSeal small /><h3 ref={heading} tabIndex={-1}>Reserva simulada completada</h3><p><strong>{party} personas · {dateLabel} · {time}</strong></p><p>A nombre de {name.trim()}.</p>
       <p className="r-demo-note">No se reservó una mesa ni se transmitieron datos. Las fechas y la disponibilidad sirven para probar el recorrido.</p>
