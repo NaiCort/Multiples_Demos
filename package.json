@@ -1,7 +1,7 @@
 {
   "name": "multiples-demos",
   "private": true,
-  "version": "4.2.4",
+  "version": "4.2.5",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -13,7 +13,8 @@
     "test:browser:restaurante": "node scripts/verify-restaurante.mjs",
     "test:browser:restaurante:v422": "node scripts/verify-restaurante-v422.mjs",
     "test:browser:restaurante:v423": "node scripts/verify-restaurante-v423.mjs",
-    "test:browser:restaurante:v424": "node scripts/verify-restaurante-v424.mjs"
+    "test:browser:restaurante:v424": "node scripts/verify-restaurante-v424.mjs",
+    "test:browser:restaurante:v425": "node scripts/verify-restaurante-v425.mjs"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.3.2",

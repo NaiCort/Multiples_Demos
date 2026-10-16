@@ -12,7 +12,7 @@ export function createDemoMap(container, { point, route, outside, points = null,
     locale: { "NavigationControl.ZoomIn": "Acercar", "NavigationControl.ZoomOut": "Alejar", "NavigationControl.ResetBearing": "Orientar al norte", "AttributionControl.ToggleAttribution": "Mostrar atribución", "CooperativeGesturesHandler.WindowsHelpText": "Usa Ctrl y la rueda para acercar el mapa", "CooperativeGesturesHandler.MacHelpText": "Usa ⌘ y la rueda para acercar el mapa", "CooperativeGesturesHandler.MobileHelpText": "Usa dos dedos para mover el mapa" },
   })
   map.addControl(new NavigationControl({ showCompass: false }), "top-right")
-  map.getCanvas().setAttribute("aria-label", points ? "Mapa de locales simulados en México. Acerca los grupos para ver cada local." : `Mapa de referencia: ${point.name}. Controles de acercar y alejar disponibles.`)
+  map.getCanvas().setAttribute("aria-label", points ? "Mapa de referencias de locales simulados. Acerca los grupos para ver cada local." : `Mapa de referencia: ${point.name}. Controles de acercar y alejar disponibles.`)
   const marker = (className, label, coordinates) => {
     const element = document.createElement("span")
     element.className = className

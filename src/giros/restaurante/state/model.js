@@ -1,5 +1,6 @@
 import { cartReducer, findProduct, MODES, subtotal, ZONES } from "../data/order"
 import { DEFAULT_POINT, LEGACY_POINT, findPoint, pointOrDefault } from "../data/locations"
+import { availableAt } from "../data/menu"
 export const STORAGE_KEY = "patio12-demo-v1"
 export const SESSION_TTL = 6 * 60 * 60 * 1000
 export const WAIT_MS = 60_000
@@ -53,6 +54,7 @@ export function restaurantReducer(state, action) {
   if (action.type === "acknowledge") return { ...state, visit: state.visit ? { ...state.visit, acknowledged: true } : null }
   if (action.type === "cart") {
     if (action.action.type === "add" && !canOrder(state)) return state
+    if (["add", "edit"].includes(action.action.type) && !availableAt(findProduct(action.action.productId), state.pointId)) return state
     if (state.order) return state
     return { ...state, cart: cartReducer(state.cart, action.action) }
   }
@@ -60,6 +62,7 @@ export function restaurantReducer(state, action) {
   if (action.type === "widget") return { ...state, widget: { ...state.widget, ...action.value } }
   if (action.type === "confirm-order") {
     if (!canOrder(state) || !state.cart.length || !/^P12-[A-Z0-9-]+$/.test(action.id)) return state
+    if (state.cart.some(row => !availableAt(findProduct(row.productId), state.visit.pointId || state.pointId))) return state
     const mode = state.visit.mode
     const zone = ZONES.find(zone => zone.id === action.zoneId) || ZONES[0]
     if (mode === "delivery" && (zone.unavailable || typeof action.address !== "string" || action.address.trim().length < 5)) return state

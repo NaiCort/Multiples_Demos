@@ -13,7 +13,7 @@ async function checkout(page) {
 await suite("restaurante-v423", async ({ run, base, output }) => {
   for (const width of [320, 390, 768, 1440]) await run(`Locales, mapa encima de fichas, ocho rutas y selección · ${width}px`, { viewport: { width, height: 900 } }, async ({ page, mapRequests }) => {
     await page.goto(`${base}/restaurante/locales`); await page.locator(".r-local-card").first().waitFor()
-    assert.equal(await page.locator(".r-local-card").count(), 8)
+    assert.equal(await page.locator(".r-local-card").count(), 16)
     assert(await page.evaluate(() => !!(document.querySelector(".r-locals-map").compareDocumentPosition(document.querySelector(".r-locals-grid")) & Node.DOCUMENT_POSITION_FOLLOWING)))
     await audit(page); await bounds(page); await page.screenshot({ path: path.join(output, `locales-${width}.png`) })
     await page.getByLabel("Filtrar locales por ciudad", { exact: true }).selectOption("Ciudad de México")
@@ -27,7 +27,7 @@ await suite("restaurante-v423", async ({ run, base, output }) => {
     assert.equal(mapRequests.length, 0, "El mapa debe cargarse bajo petición")
     await button(page, "Usar este local en mi visita").click(); await page.waitForFunction(() => JSON.parse(localStorage.getItem("patio12-demo-v1"))?.pointId === "tijuana")
     await button(page, "Pedir en este local").click(); await button(dialog(page), "Para llevar").click(); await page.locator(".r-menu-item").first().waitFor()
-    assert.equal((await saved(page)).visit.pointId, "tijuana"); assert.equal(await page.locator(".r-menu-item").count(), 12)
+    assert.equal((await saved(page)).visit.pointId, "tijuana"); assert.equal(await page.locator(".r-menu-item").count(), 28)
   })
   for (const table of [1, 25]) await run(`QR generado y acceso a mesa ${table}`, { viewport: { width: 390, height: 844 } }, async ({ page }) => {
     await page.goto(`${base}/restaurante/locales/puebla`); await page.locator(".r-qr-section summary").click()
@@ -76,11 +76,11 @@ await suite("restaurante-v423", async ({ run, base, output }) => {
   })
   await run("Mapa general real con estilo mínimo, filtro y selección sin cambiar pedido", { viewport: { width: 1440, height: 950 } }, async ({ page, context, mapRequests }) => {
     await mockMap(context); await page.goto(`${base}/restaurante/locales`); await button(page, "Mostrar mapa interactivo").click()
-    await page.locator(".r-map-surface.is-ready").waitFor({ timeout: 20_000 }); assert.equal(await page.locator(".r-local-marker").count(), 8)
+    await page.locator(".r-map-surface.is-ready").waitFor({ timeout: 20_000 }); assert.equal(await page.locator(".r-local-marker").count(), 16)
     assert(await page.locator(".r-local-cluster").count() > 0, "Agrupar referencias superpuestas")
     await audit(page)
     assert(await page.locator(".r-map-canvas canvas").evaluate(el => el.getBoundingClientRect().height >= 300))
-    await button(page, "Mostrar Tijuana · Morelos en el mapa").click()
+    await page.locator('.r-local-card[data-local="tijuana"]').getByRole("button", { name: "Mostrar en el mapa", exact: true }).click()
     await page.locator(".r-map-selection").getByText("En el mapa: Tijuana · Morelos", { exact: true }).waitFor()
     assert((await page.locator(".r-service-bar").innerText()).includes("CDMX · Chapultepec"))
     await page.getByLabel("Filtrar locales por ciudad", { exact: true }).selectOption("Ciudad de México")
@@ -121,11 +121,11 @@ await suite("restaurante-v423", async ({ run, base, output }) => {
     await page.locator('.r-local-card[data-local="merida"]').getByRole("button", { name: "Pedir aquí", exact: true }).click(); await button(dialog(page), "Para llevar").click()
     await page.locator(".r-menu-item").first().waitFor(); assert.equal((await saved(page)).visit.pointId, "merida")
   })
-  await run("Proveedor cartográfico público y ocho marcadores", { viewport: { width: 1440, height: 950 } }, async ({ page }) => {
+  await run("Proveedor cartográfico público y dieciséis marcadores", { viewport: { width: 1440, height: 950 } }, async ({ page }) => {
     await page.goto(`${base}/restaurante/locales`); await button(page, "Mostrar mapa interactivo").click()
     await page.waitForFunction(() => !!document.querySelector(".r-map-surface.is-ready") || !![...document.querySelectorAll("button")].find(el => el.textContent === "Reintentar mapa"), null, { timeout: 20_000 })
     const live = await page.locator(".r-map-surface.is-ready").count() > 0
-    if (live) { assert.equal(await page.locator(".r-local-marker").count(), 8); assert(await page.locator(".r-map-canvas canvas").evaluate(el => el.getBoundingClientRect().height >= 300)) }
+    if (live) { assert.equal(await page.locator(".r-local-marker").count(), 16); assert(await page.locator(".r-map-canvas canvas").evaluate(el => el.getBoundingClientRect().height >= 300)) }
     if (process.env.DEMO_REQUIRE_LIVE_MAP === "1") assert(live, "No cargó el proveedor externo")
     await page.screenshot({ path: path.join(output, "mapa-publico.png") }); await audit(page)
     return { cartography: live ? "Proveedor público cargó" : "Proveedor no disponible; lista manual disponible" }

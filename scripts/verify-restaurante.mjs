@@ -18,7 +18,7 @@ await suite("restaurante", async ({ run, base, output }) => {
       await audit(page)
       await button(page, "Explorar la carta mientras espero").click()
       await page.locator(".r-menu-item").first().waitFor()
-      assert.equal(await page.locator(".r-menu-item").count(), 12)
+      assert.equal(await page.locator(".r-menu-item").count(), 28)
       await page.locator(".r-menu-list").getByRole("button", { name: "Elegir Pasta de la casa", exact: true }).click()
       assert(await button(dialog(page), "Añadir al pedido · $195").isDisabled())
       await audit(page); await close(page)

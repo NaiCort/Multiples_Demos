@@ -49,9 +49,9 @@ describe("Configuración por receta y combos", () => {
   })
 })
 describe("Puntos, QR y cobertura", () => {
-  it("ofrece ocho referencias distintas, rutas deterministas y cobertura cerrada", () => {
-    expect(POINTS).toHaveLength(8)
-    expect(new Set(POINTS.map(point => point.id)).size).toBe(8)
+  it("ofrece referencias distintas en dos países, rutas deterministas y cobertura cerrada", () => {
+    expect(POINTS).toHaveLength(16)
+    expect(new Set(POINTS.map(point => point.id)).size).toBe(POINTS.length)
     POINTS.forEach(point => {
       expect(point.coordinates[0]).toBeLessThan(-86); expect(point.coordinates[1]).toBeGreaterThan(14)
       const route = exampleRoute(point.id, ZONES[1])
@@ -140,7 +140,7 @@ describe("Integración de V4.2.2", () => {
     Object.defineProperty(navigator, "geolocation", { configurable: true, value: { getCurrentPosition } })
     await render(app()); await click(button("Para llevar")); await click(document.querySelector('.r-desktop-nav a[href="/restaurante/locales"]'))
     expect(getCurrentPosition).not.toHaveBeenCalled()
-    expect(document.querySelectorAll(".r-local-card")).toHaveLength(8)
+    expect(document.querySelectorAll(".r-local-card")).toHaveLength(POINTS.length)
     await click(button("Usar mi ubicación")); expect(getCurrentPosition).toHaveBeenCalledOnce()
     expect(document.body.textContent).toContain("Ubicación no autorizada")
     expect(button("Mostrar mapa interactivo")).toBeTruthy()

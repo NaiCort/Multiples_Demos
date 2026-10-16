@@ -1,5 +1,8 @@
 // Recetas, porciones y cifras ficticias: no son una ficha dietética validada.
-export const CATEGORIES = ["Todo", "Entradas", "Platos", "Postres", "Bebidas"]
+import { EXTRA_MENU } from "./menuExtra"
+import { pointOrDefault } from "./locations"
+export const CATEGORIES = ["Todo", "Desayunos", "Antojos", "Entradas", "Platos fuertes", "Carnes y parrilla", "Ensaladas", "Especialidades de la casa", "Sabores de la región", "Postres", "Bebidas", "Vinos, cervezas y cocteles"]
+export const categoryFromParam = value => value === "Platos" ? "Platos fuertes" : CATEGORIES.includes(value) ? value : "Todo"
 export const DIETS = [["all", "Todas las opciones"], ["vegetarian", "Vegetariano"], ["vegan", "Vegano"], ["meat", "Con carne"]]
 const nutrient = (kcal, protein, carbs, fat, fiber = 0, sodium = 0) => ({ kcal, protein, carbs, fat, fiber, sodium })
 const ingredient = (id, name, portion, nutrients, adjustable = false, animal = "plant", allergens = []) => ({ id, name, portion, nutrients, adjustable, animal, allergens })
@@ -14,7 +17,7 @@ const photo = (id, label = "Presentación ilustrativa") => ({ src: `/restaurante
 const extra = (id, name, price, nutrients, animal = "plant", allergens = [], image = null) => ({ id, name, price, nutrients, animal, allergens, image })
 const avocado = extra("aguacate", "Aguacate", 25, nutrient(80, 1, 4, 7, 3), "plant", [], "aguacate")
 const chicken = extra("pollo", "Pollo a la plancha", 45, nutrient(110, 21, 0, 3, 0, 70), "meat", [], "pollo")
-export const MENU = [
+const CORE_MENU = [
   { id: "ensalada", name: "Ensalada del patio", category: "Entradas", price: 125, description: "Hojas verdes, jitomate, pepino, zanahoria, betabel y rábano con vinagreta de limón. Crujiente, fresca y a tu gusto.", portion: "Una porción · 310 g de ejemplo", photos: [photo("ensalada", "Vista general de la ensalada"), photo("ensalada-2", "Vista cercana de la misma ensalada")], ingredients: [greens, tomato, ingredient("pepino", "Pepino", "70 g", nutrient(12, 1, 2, 0, 1), true), ingredient("zanahoria", "Zanahoria", "30 g", nutrient(12, 0, 3, 0, 1), true), ingredient("betabel", "Betabel", "20 g", nutrient(9, 0, 2, 0, 1), true), ingredient("rabano", "Rábano", "20 g", nutrient(3, 0, 1, 0, 1), true), ingredient("vinagreta", "Vinagreta de limón", "30 g", nutrient(90, 0, 3, 9, 0, 150), true, "plant", ["Mostaza"])], extras: [avocado, chicken], swaps: [{ id: "aderezo", ingredientId: "vinagreta", name: "Aderezo", options: [{ id: "limon", name: "Limón y aceite de oliva", price: 0, nutrients: nutrient(65, 0, 1, 7), animal: "plant", allergens: [] }, { id: "yogur", name: "Aderezo de yogur", price: 10, nutrients: nutrient(50, 3, 2, 3), animal: "dairy", allergens: ["Leche"] }] }] },
   { id: "queso", name: "Queso al horno", category: "Entradas", price: 145, description: "Queso al horno con jitomates, champiñones, espinaca y hierbas. Con pan de la casa para compartir al centro.", portion: "Una porción · 380 g de ejemplo", photos: [photo("queso", "Queso horneado con verduras y hierbas")], ingredients: [tomato, ingredient("queso-base", "Queso al horno", "140 g", nutrient(430, 25, 4, 35, 0, 450), false, "dairy", ["Leche"]), ingredient("champinones", "Champiñones", "60 g", nutrient(15, 2, 2, 0, 1), true), ingredient("espinaca", "Espinaca", "30 g", nutrient(7, 1, 1, 0, 1), true), bread, ingredient("aceite", "Aceite de oliva", "10 g", nutrient(90, 0, 0, 10))], extras: [extra("queso", "Queso extra", 20, cheese.nutrients, "dairy", ["Leche"])] },
   { id: "sopa", name: "Sopa de jitomate", category: "Entradas", price: 95, description: "Jitomate rostizado con albahaca, un toque de crema y pan. La crema y el pan pueden ir aparte.", portion: "Un tazón · 300 ml de ejemplo", photos: [photo("sopa")], ingredients: [ingredient("sopa", "Base de jitomate y albahaca", "260 ml", nutrient(90, 3, 15, 2, 3, 350)), cream, bread], extras: [] },
@@ -39,6 +42,9 @@ export const MENU = [
   if (product.id === "pollo") return { ...product, swaps: [{ id: "guarnicion", ingredientId: "arroz", name: "Guarnición", options: [{ id: "verduras", name: "Más verduras en lugar de arroz", price: 0, nutrients: nutrient(55, 2, 8, 2, 3), animal: "plant", allergens: [] }] }] }
   return product
 })
+export const MENU = [...CORE_MENU.map(product => ({ ...product, category: ({ ensalada: "Ensaladas", tacos: "Antojos", hamburguesa: "Especialidades de la casa" })[product.id] || (product.category === "Platos" ? "Platos fuertes" : product.category) })), ...EXTRA_MENU]
+export const availableAt = (product, pointId) => !!product && (!product.pointIds || product.pointIds.includes(pointOrDefault(pointId).id))
+export const menuForPoint = pointId => MENU.filter(product => availableAt(product, pointId))
 export const FEATURED = ["pasta", "hamburguesa", "ensalada"].map(id => MENU.find(item => item.id === id))
 export const money = value => new Intl.NumberFormat("es-MX", { style: "currency", currency: "MXN", maximumFractionDigits: 0 }).format(value)
 export const normalizeSearch = value => value.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim()

@@ -1,13 +1,13 @@
-# Multiples_Demos · V4.2.4
+# Multiples_Demos · V4.2.5
 
 Portafolio de demos interactivas de **Ian Habid Aldana Martínez**.
 
 - Repositorio: https://github.com/NaiCort/Multiples_Demos
 - Despliegue habitual: https://multiples-demos.vercel.app/
-- Base: V4.2.3 publicada por Ian, commit `672a7739f0c11a947a96b0b11a93c6f9eb077e2c`.
-- Fecha de esta candidata: 15 de octubre de 2026. Pendiente de revisión de Ian y publicación.
+- Base: V4.2.4 publicada por Ian, commit `0f84a9d6fb0d999255488129152f3bdf52ca5d43`.
+- Fecha de esta candidata: 16 de octubre de 2026. Pendiente de revisión de Ian y publicación.
 
-V4.2.4 pule **Patio 12**, la primera identidad del giro Restaurante: fotografías coherentes, galerías con desplazamiento breve, transiciones de páginas y filtros, y confirmación visible al añadir o editar el pedido. Conserva las páginas, carta configurable, combos, mapa, QR y seguimiento de V4.2.3. La portada sigue como directorio temporal y Psicólogo conserva sus cuatro temas aprobados. Las demás identidades de Restaurante y la gestión de empleados siguen pendientes; Café, Gimnasio, Taller, Despacho y Revista continúan como “Próximamente”.
+V4.2.5 amplía **Patio 12** con navegación lateral en Carta y Locales. Incluye 43 productos definidos: 27 comunes y una especialidad diferente por cada uno de los 16 locales, para un total de 28 opciones visibles por local. El directorio reúne México y Estados Unidos, organiza las fichas por país y estado y filtra el mapa con la misma selección. Se conservan fotos completas, galerías, personalizaciones, carrito, temporizadores y recorridos anteriores. La portada sigue como directorio temporal; Psicólogo conserva sus cuatro temas aprobados. Las otras identidades y giros mantienen su planificación previa.
 
 ## Desarrollo
 
@@ -32,20 +32,20 @@ npm audit
 | Ruta | Función |
 |---|---|
 | `/restaurante` | Inicio, presentación, tres destacados, modalidades y ejemplos de locales |
-| `/restaurante/carta` | Los doce productos, categorías, filtros, búsqueda y personalización |
-| `/restaurante/locales` | Mapa general bajo demanda, filtro de ciudad y ocho fichas debajo |
+| `/restaurante/carta` | 28 opciones por local, categorías laterales, especialidades regionales, búsqueda y personalización |
+| `/restaurante/locales` | 16 fichas debajo del mapa bajo demanda; navegación por país, estado y ciudad |
 | `/restaurante/locales/:pointId` | Ficha propia, reserva, pedido, mapa y QR de cada local |
 | `/restaurante/conocenos` | Concepto, valores y equipo ficticio identificado como ejemplo |
 | `/restaurante/pedido` | Carrito, edición y confirmación de pedido |
 | `/restaurante/seguimiento` | Espera de mesa, etapas, recibo y cierre de la misma visita |
 
-No se bloquea Inicio con una ventana automática. Se elige modalidad en Inicio o al personalizar el primer producto. Los filtros de Carta usan parámetros `categoria`, `preferencia` y `buscar`; el regreso desde el carrito conserva la última URL de Carta. Las rutas admiten acceso directo, recarga y navegación atrás/adelante. Una ruta inexistente ofrece recuperación sin borrar la sesión. El antiguo enlace `?seguimiento=...` continúa hacia la página de seguimiento; `punto` y `mesa` siguen validados.
+No se bloquea Inicio con una ventana automática. Se elige modalidad en Inicio o al personalizar el primer producto. Los filtros de Locales usan `pais`, `estado` y `ciudad`; explorar una zona no cambia el local activo. Los filtros de Carta usan parámetros `categoria`, `preferencia` y `buscar`; el regreso desde el carrito conserva la última URL de Carta. Las rutas admiten acceso directo, recarga y navegación atrás/adelante. Una ruta inexistente ofrece recuperación sin borrar la sesión. El antiguo enlace `?seguimiento=...` continúa hacia la página de seguimiento; `punto` y `mesa` siguen validados.
 
 ## Recorridos de Patio 12
 
 - **Modalidad:** comer aquí, para llevar o a domicilio desde Inicio o el selector de la barra. Se permite explorar como invitado y cambiar modalidad antes de confirmar un pedido.
 - **Comer aquí:** espera de 60 segundos, exploración y configuración durante la espera, botón para saltarla y mesa ficticia del 1 al 25. La mesa se asigna una vez y habilita añadir platos. La reserva futura mantiene su recorrido independiente.
-- **Carta:** doce productos con fotografía, nombre y descripción a su lado; categorías, búsqueda sin acentos y filtros de receta base vegetariana, vegana o con carne. Ensalada y hamburguesa tienen dos fotografías de una misma presentación, controles y deslizamiento táctil. Pasta conserva su toma con pesto; se retira la segunda imagen que mostraba otra receta.
+- **Carta:** desayunos, antojos, entradas, platos fuertes, carnes y parrilla, ensaladas, especialidades de la casa, sabores de la región, postres, bebidas y vinos/cervezas/cocteles. Columna de categorías a la izquierda en escritorio y selector compacto en pantallas pequeñas. Búsqueda sin acentos y preferencias de receta base vegetariana, vegana o con carne. Los resultados se agrupan por categoría. Los doce productos anteriores conservan sus precios, identificadores y personalizaciones; ensalada y hamburguesa mantienen sus dos tomas coherentes. Hay 31 fotografías nuevas con atribución y licencia individual.
 - **Configuración:** cantidades normales, reducidas, aparte o sin el ingrediente; sustituciones, extras ilustrados y cantidad. Se añaden porciones en sopa, pasta y tacos; proteína/guarnición donde la receta lo admite; tamaños de bebidas y temperatura de café. Los cuatro platos principales admiten combos de entrada pequeña y bebida, con suplementos visibles. La receta base conserva los ingredientes que definen el plato. Precio, nutrientes y alérgenos incluyen también los cambios de porción y los componentes del combo; las cifras se señalan expresamente como ficticias.
 - **Pedido:** carrito editable, máximo nueve unidades de cada combinación y recibo con los cambios exactos. Se identifica la mesa o turno. El envío usa tres zonas ficticias con distancia, tiempo orientativo y tarifa, más un escenario fuera de cobertura que impide confirmar. La dirección escrita no se geocodifica.
 - **Seguimiento:** 30 segundos de preparación y 10–30 segundos de ruta acelerados, avance automático, saltos de prueba, recogida/entrega y cierre. En producción estos estados dependerían de la cocina y del reparto.
@@ -57,7 +57,9 @@ No se bloquea Inicio con una ventana automática. Se elige modalidad en Inicio o
 
 ## Mapa y accesos de demostración
 
-Ocho referencias geográficas en Xalapa, CDMX (dos), Puebla, Mérida, Guadalajara, Monterrey y Tijuana. No son sucursales. El mapa usa MapLibre GL JS y cartografía pública de OpenFreeMap, con atribución a OpenMapTiles/OpenStreetMap. El motor, worker, estilos y teselas se solicitan al pulsar **Mostrar mapa interactivo**. La selección manual sigue funcionando sin WebGL o ante un fallo del proveedor. En Locales, el mapa general precede a las ocho fichas y sus marcadores permiten explorar cada referencia. Los puntos cercanos se agrupan al alejar el mapa; pulsar el grupo acerca la vista para separarlos. El filtro de ciudad reduce tanto las fichas como los marcadores. Cada ficha tiene su propia página, mapa y generador QR.
+Dieciséis referencias geográficas: las ocho previas en Xalapa, CDMX (dos), Puebla, Mérida, Guadalajara, Monterrey y Tijuana; cuatro nuevas en Oaxaca de Juárez, San Cristóbal de las Casas, Santiago de Querétaro y Guanajuato; y cuatro en Estados Unidos, Austin y San Antonio (Texas), Los Angeles y San Francisco (California). No son sucursales. Véanse [referencias nuevas](docs/LOCALES_V4.2.5.md).
+
+El mapa usa MapLibre GL JS y cartografía pública de OpenFreeMap, con atribución a OpenMapTiles/OpenStreetMap. Se carga al pulsar **Mostrar mapa interactivo**. La selección manual sigue funcionando ante fallos del proveedor o de WebGL. En Locales el mapa precede a la lista, agrupada por país y estado; la columna lateral permite filtrar y lleva a la lista debajo del mapa. País, estado y ciudad filtran los mismos marcadores y fichas. Los puntos cercanos se agrupan al alejar; pulsar el grupo acerca la vista. Cada ficha mantiene su página, mapa y generador QR.
 
 Los destinos, trazos y cobertura de 5 km son ilustrativos y preparados. No hay tráfico, geocodificación de domicilios ni GPS de reparto. La flecha avanza según el estado y las fechas del mismo pedido. Se separan preparación, recorrido y total orientativo; el reloj usa segundos acelerados para la demo. El punto queda fijo al confirmar aunque después se explore otra ciudad.
 
@@ -69,13 +71,13 @@ Reservas, horas y recibos usan el huso del punto, incluido `America/Tijuana`. Lo
 
 ## Estado local y límites
 
-**Selección inicial: CDMX · Chapultepec**, para todas las modalidades. Explorar un local o mover el mapa no cambia el local del pedido. Se elige explícitamente desde la barra, una ficha o la confirmación del pedido. Cambiar de local antes de confirmar conserva los platos; si se estaba comiendo aquí, reinicia la espera y asignación de mesa en el nuevo local. Un pedido confirmado conserva su local hasta terminar. Una reserva futura puede elegir otro local de manera independiente. La carta, precios e ingredientes son comunes en los ocho escenarios; no se simula inventario por sucursal.
+**Selección inicial: CDMX · Chapultepec**, para todas las modalidades. Explorar un local o mover el mapa no cambia el local del pedido. Se elige explícitamente desde la barra, una ficha o la confirmación del pedido. Cambiar de local antes de confirmar conserva los platos; si se estaba comiendo aquí, reinicia la espera y asignación de mesa en el nuevo local. Un pedido confirmado conserva su local hasta terminar. Una reserva futura puede elegir otro local de manera independiente. La carta común conserva precios e ingredientes; «Sabores de la región» ofrece una receta propia por local. Si el carrito conserva una especialidad de otro local, el usuario puede quitarla o regresar al local correspondiente antes de confirmar. No se elimina automáticamente ni se permite confirmar esa combinación. La comprobación también protege el estado. Los precios de ejemplo siguen en MXN en ambos países, sin conversión ni inventario por sucursal.
 
 El punto elegido, visita activa, carrito, pedido, perfil de muestra y posición se guardan en `localStorage` bajo `patio12-demo-v1`. Se migra de esquema 1 a 2 conservando la sesión V4.2.1; los registros del esquema 1 sin punto y los recibos históricos sin punto se asocian a Xalapa. Una sesión válida con local elegido lo conserva; cambiar el valor inicial a CDMX no traslada pedidos existentes. Los contadores usan fechas de finalización, por lo que recargar o regresar actualiza el tiempo transcurrido. La visita caduca **seis horas después de comenzar**. Al completar un pedido de invitado, su recibo deja de persistirse; con el perfil de muestra se conserva en el historial. “Reiniciar datos de la demo”, en Mi perfil, borra el estado del restaurante. Si el almacenamiento está bloqueado se ofrece el mismo recorrido en memoria con un aviso.
 
 No hay cuentas autenticadas, servidor de pedidos, sincronización entre dispositivos, gestión real de mesas o cocina, pagos, correos ni facturación. No existe seguimiento móvil externo mediante Live Activities, notificaciones o servicios en segundo plano. Una implementación real requiere esos servicios y confirmación de disponibilidad por parte del negocio. El prototipo nunca debe usarse como ficha nutricional o de alérgenos de un restaurante.
 
-Las imágenes y fuentes del restaurante se sirven localmente. Las fotos son referencias de banco, sin afirmar que pertenezcan a un restaurante real. Las dos galerías usan tomas del mismo plato. La ensalada y el queso incorporan en su receta de ejemplo las verduras visibles; se conservan sus precios y los identificadores anteriores de configuración. Ninguna foto cambia al quitar ingredientes: no es una representación dinámica de cada personalización. La portada y Psicólogo conservan sus proveedores externos y sus preferencias independientes. Véanse [recursos](docs/RECURSOS_RESTAURANTE.md), [mapa](docs/MAPA_RESTAURANTE.md) y [estado de V4.2.4](docs/ESTADO_V4.2.4.md).
+Las imágenes y fuentes del restaurante se sirven localmente. Las fotos son referencias de banco, sin afirmar que pertenezcan a un restaurante real. Las dos galerías usan tomas del mismo plato. La ensalada y el queso incorporan en su receta de ejemplo las verduras visibles; se conservan sus precios y los identificadores anteriores de configuración. Ninguna foto cambia al quitar ingredientes: no es una representación dinámica de cada personalización. La portada y Psicólogo conservan sus proveedores externos y sus preferencias independientes. Véanse [recursos](docs/RECURSOS_RESTAURANTE.md), [mapa](docs/MAPA_RESTAURANTE.md) y [estado de V4.2.5](docs/ESTADO_V4.2.5.md).
 
 
 ## Respuesta visual de V4.2.4
@@ -92,6 +94,7 @@ Con Edge instalado en Windows, después del build:
 DEMO_START_PREVIEW=1 DEMO_BROWSER_CHANNEL=msedge npm run test:browser:restaurante
 DEMO_START_PREVIEW=1 DEMO_BROWSER_CHANNEL=msedge npm run test:browser:restaurante:v423
 DEMO_START_PREVIEW=1 DEMO_BROWSER_CHANNEL=msedge npm run test:browser:restaurante:v424
+DEMO_START_PREVIEW=1 DEMO_BROWSER_CHANNEL=msedge npm run test:browser:restaurante:v425
 ```
 
 El script inicia y cierra su propia vista previa de producción. También admite Chrome con `DEMO_BROWSER_CHANNEL=chrome` o un Chromium instalado con `npx playwright install chromium`, omitiendo la variable de canal.
@@ -102,7 +105,7 @@ Para Psicólogo, deja `npm run dev` en otra terminal y ejecuta:
 DEMO_BROWSER_CHANNEL=msedge npm run test:browser
 ```
 
-Los scripts admiten `DEMO_BASE_URL`, `DEMO_BROWSER_EXECUTABLE` y `DEMO_TEST_OUTPUT`. Los scripts admiten además `DEMO_TEST_FIXTURES`, que permite usar copias exactas de recursos externos en entornos de prueba sin acceso a sus proveedores. Las capturas y resultados se guardan en `test-results/`, fuera de Git. Véase [validación](docs/VALIDACION_V4.2.4.md) para resultados y límites.
+Los scripts admiten `DEMO_BASE_URL`, `DEMO_BROWSER_EXECUTABLE` y `DEMO_TEST_OUTPUT`. Los scripts admiten además `DEMO_TEST_FIXTURES`, que permite usar copias exactas de recursos externos en entornos de prueba sin acceso a sus proveedores. Las capturas y resultados se guardan en `test-results/`, fuera de Git. Véase [validación](docs/VALIDACION_V4.2.5.md) para resultados y límites.
 
 ## Estructura
 

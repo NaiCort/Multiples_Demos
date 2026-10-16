@@ -3,7 +3,7 @@ import { describe, expect, it, vi } from "vitest"
 import RestauranteApp from "../src/giros/restaurante/RestauranteApp"
 import RestaurantProvider from "../src/giros/restaurante/state/RestaurantProvider"
 import TableReservation from "../src/giros/restaurante/components/TableReservation"
-import { MENU } from "../src/giros/restaurante/data/menu"
+import { MENU, menuForPoint } from "../src/giros/restaurante/data/menu"
 import { allergens, cartReducer, dietaryTag, findProduct, lineKey, nutrition, subtotal } from "../src/giros/restaurante/data/order"
 import { canOrder, createVisit, initialState, orderQuote, remainingSeconds, restaurantReducer, restoreState, serializeState, STORAGE_KEY } from "../src/giros/restaurante/state/model"
 import { reservationTimes, upcomingDates } from "../src/giros/restaurante/data/reservation"
@@ -21,8 +21,8 @@ const confirm = (state, suffix = "A", now = NOW) => restaurantReducer(state, { t
 const app = () => <MemoryRouter initialEntries={["/restaurante"]}><RestaurantProvider><Routes><Route path="/restaurante/*" element={<RestauranteApp />} /></Routes></RestaurantProvider></MemoryRouter>
 
 describe("Carta y configuraciones", () => {
-  it("ofrece fotografías e ingredientes en los doce productos, sin valores nutricionales negativos", () => {
-    expect(MENU).toHaveLength(12)
+  it("ofrece fotografías e ingredientes en toda la carta, sin valores nutricionales negativos", () => {
+    expect(menuForPoint("chapultepec")).toHaveLength(28)
     MENU.forEach(product => { expect(product.photos.length).toBeGreaterThan(0); expect(product.ingredients.length).toBeGreaterThan(0); expect(Object.values(nutrition(product)).every(value => value >= 0)).toBe(true) })
   })
   it("limita cantidades, limpia extras inválidos y conserva el carrito anterior", () => {
@@ -129,12 +129,12 @@ describe("Integración de restaurante", () => {
   it("elige modalidad, filtra y personaliza sin acentos, y recupera resultados vacíos", async () => {
     await render(app())
     await click(button("Para llevar"))
-    expect(document.querySelectorAll(".r-menu-item")).toHaveLength(12)
+    expect(document.querySelectorAll(".r-menu-item")).toHaveLength(menuForPoint("chapultepec").length)
     await click(button("Bebidas")); await enter(document.querySelector('input[type="search"]'), "cafe")
     expect(document.querySelectorAll(".r-menu-item")).toHaveLength(1)
     await enter(document.querySelector('input[type="search"]'), "xxxxxxxx")
-    await click(button("Ver toda la carta")); expect(document.querySelectorAll(".r-menu-item")).toHaveLength(12)
-    await enter(document.querySelector('.r-diet-filter select'), "meat"); expect(document.querySelectorAll(".r-menu-item")).toHaveLength(2)
+    await click(button("Ver toda la carta")); expect(document.querySelectorAll(".r-menu-item")).toHaveLength(menuForPoint("chapultepec").length)
+    await enter(document.querySelector('.r-diet-filter select'), "meat"); expect(document.querySelectorAll(".r-menu-item")).toHaveLength(menuForPoint("chapultepec").filter(item => dietaryTag(item) === "meat").length)
     await enter(document.querySelector('.r-diet-filter select'), "all")
     await click(button("Elegir Pasta de la casa", document.querySelector(".r-menu-list")))
     await enter(document.querySelector('select[aria-label="Cantidad de Pesto de albahaca"]'), "none")

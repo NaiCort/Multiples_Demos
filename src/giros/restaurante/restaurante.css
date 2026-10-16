@@ -472,3 +472,92 @@
 @media (prefers-reduced-motion: reduce) {
   .r-page-content, .r-menu-results, .r-gallery-image, .r-cart-updated, .r-notice-card { animation: none !important; transform: none !important; }
 }
+
+/* V4.2.5 · navegación lateral de carta y directorio por país/estado. */
+.r-browse-layout { display: grid; gap: 28px; align-items: start; }
+.r-browse-content { min-width: 0; scroll-margin-top: 160px; }
+.r-browse-sidebar { min-width: 0; border-block: 1px solid #a7b6a9; padding-block: 20px; }
+.r-sidebar-desktop { display: none; }
+.r-sidebar-mobile { display: grid; }
+.r-sidebar-mobile.r-field { margin: 0; }
+.r-sidebar-note { font-size: 12px; line-height: 1.7; color: #526155; margin-top: 16px; }
+.r-sidebar-title { color: #9c3b26; font-size: 10px; letter-spacing: .14em; margin-bottom: 10px; }
+.r-browse-sidebar h2 { font-size: 23px; letter-spacing: -.035em; margin-bottom: 20px; }
+.r-carta-local { display: flex; align-items: center; flex-wrap: wrap; gap: 12px; border-top: 1px solid #a7b6a9; padding: 18px 0 24px; margin-bottom: 16px; }
+.r-carta-local > svg { flex-shrink: 0; }
+.r-carta-local > p { font-size: 14px; flex: 1; min-width: 160px; }
+.r-carta-local > p span { display: block; font-size: 12px; color: #526155; margin-top: 4px; }
+.r-carta-local .r-text-button { font-size: 12px; text-align: left; }
+.r-carta-content .r-menu-tools { padding-top: 0; border-top: 0; gap: 14px; align-items: end; }
+.r-carta-content .r-search { flex: 2; min-width: 180px; }
+.r-carta-content .r-diet-filter { flex: 1; min-width: 160px; }
+.r-carta-content .r-menu-count { margin: 18px 0 0; }
+.r-carta-content .r-menu-list { display: block; }
+.r-menu-group { padding-top: 34px; }
+.r-menu-group + .r-menu-group { margin-top: 20px; }
+.r-menu-group-head { display: flex; align-items: baseline; flex-wrap: wrap; gap: 10px 18px; justify-content: space-between; border-bottom: 1px solid #a7b6a9; padding-bottom: 14px; margin-bottom: 8px; }
+.r-menu-group-head h2 { font-size: clamp(25px,3.2vw,35px); line-height: 1.2; letter-spacing: -.04em; max-width: 100%; overflow-wrap: anywhere; }
+.r-menu-group-head > span { font-size: 11px; color: #526155; }
+.r-region-intro { font-size: 13px; line-height: 1.8; color: #526155; max-width: 620px; margin-top: 16px; }
+.r-dish-grid { display: grid; gap: 0 28px; }
+.r-carta-content .r-menu-item { padding-block: 24px; grid-template-columns: minmax(0,.8fr) minmax(0,1.2fr); gap: 16px; }
+.r-carta-content .r-item-title h3 { font-size: 19px; max-width: none; line-height: 1.25; margin: 0; letter-spacing: -.025em; }
+.r-carta-content .r-item-title strong { white-space: nowrap; }
+.r-carta-content .r-menu-item p { max-width: none; }
+.r-carta-content .r-item-copy { display: flex; flex-direction: column; align-items: flex-start; height: 100%; }
+.r-carta-content .r-item-copy > .r-text-button { margin-top: 12px; padding-top: 5px; min-height: 44px; }
+.r-region-tag { background: #f1e7c8; color: #634815; }
+.r-geo-mobile { grid-template-columns: repeat(2,minmax(0,1fr)); gap: 14px; }
+.r-geo-mobile .r-field { min-width: 0; margin: 0; }
+.r-geo-mobile select { width: 100%; }
+.r-geo-nav { display: grid; gap: 18px; }
+.r-geo-nav button, .r-carta-sidebar .r-category-list button { display: flex; align-items: center; gap: 9px; justify-content: space-between; min-height: 44px; width: 100%; padding: 10px 12px; text-align: left; font-size: 13px; line-height: 1.4; border-radius: 3px; }
+.r-geo-nav button > span:first-of-type, .r-category-list button > span:first-child { flex: 1; }
+.r-geo-nav button > span:last-child, .r-category-count { font-size: 11px; flex: 0 0 auto; }
+.r-geo-nav .r-country-button { font-weight: 600; font-size: 15px; border-bottom: 1px solid #c5cec6; border-radius: 0; }
+.r-geo-nav ul { list-style: none; margin: 6px 0 0; padding: 0; }
+.r-country-choices { display: grid; gap: 4px; }
+.r-sidebar-subheading { font-size: 11px; letter-spacing: .03em; color: #526155; padding: 5px 12px 10px; }
+.r-geo-nav li button { padding-left: 22px; }
+.r-geo-nav button[aria-pressed="true"] { background: #203b2e; color: white; }
+.r-geo-nav button:hover:not([aria-pressed="true"]) { background: #e8ede6; }
+.r-carta-sidebar .r-category-list { flex-direction: column; flex-wrap: nowrap; gap: 2px; }
+.r-carta-sidebar .r-category-list button:hover:not([aria-pressed="true"]) { background: #e8ede6; }
+.r-locals-directory { scroll-margin-top: 160px; }
+.r-country-group { margin-block: 35px 50px; }
+.r-directory-country { font-size: 12px; text-transform: uppercase; letter-spacing: .14em; color: #9c3b26; border-top: 2px solid #203b2e; padding-top: 18px; margin-bottom: 30px; font-weight: 600; }
+.r-state-group { margin-top: 35px; }
+.r-state-group > h3 { font-size: 27px; line-height: 1.3; letter-spacing: -.035em; display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-bottom: 14px; }
+.r-state-group > h3 > span { font: 11px/1.5 "Patio Sans",sans-serif; letter-spacing: 0; white-space: nowrap; color: #526155; }
+.r-locals-directory-list { grid-template-columns: 1fr; gap: 0; }
+.r-directory-card { border: 0; border-top: 1px solid #c5cec6; background: transparent; }
+.r-directory-card.is-viewed { box-shadow: none; border-color: #203b2e; background: #eef1e9; }
+.r-directory-card .r-local-card-body { padding: 24px 16px; }
+.r-directory-card .r-local-card-top h4 { font-size: 23px; line-height: 1.3; letter-spacing: -.03em; }
+.r-directory-card .r-local-actions { margin-top: 14px; }
+.r-directory-card .r-local-actions > button { flex: 0 1 auto; padding-inline: 22px; }
+.r-regional-warning { margin-block: 16px; }
+.r-regional-origin { font-size: 12px; line-height: 1.7; color: #8a3826; margin-bottom: 10px; }
+.restaurant-root button:disabled { cursor: not-allowed; }
+@media (min-width: 640px) {
+  .r-carta-content .r-menu-item { grid-template-columns: minmax(0,.65fr) minmax(0,1.35fr); }
+  .r-directory-card .r-local-card-body { display: grid; grid-template-columns: minmax(0,1fr) auto; column-gap: 20px; }
+  .r-directory-card .r-local-card-top, .r-directory-card .r-local-card-body > p { grid-column: 1; }
+  .r-directory-card .r-local-card-body > .r-text-button { justify-self: start; grid-column: 1; }
+  .r-directory-card .r-local-actions { grid-column: 2; grid-row: 1 / span 5; align-self: center; flex-direction: column; margin-top: 0; }
+}
+@media (min-width: 1000px) {
+  .r-browse-layout { grid-template-columns: 215px minmax(0,1fr); gap: 44px; }
+  .r-browse-sidebar { position: sticky; top: 150px; max-height: calc(100dvh - 170px); overflow-y: auto; overscroll-behavior: contain; scrollbar-gutter: stable; border-block: 0; border-right: 1px solid #c5cec6; padding: 0 18px 16px 0; }
+  .r-sidebar-desktop { display: block; }
+  .r-sidebar-mobile { display: none; }
+  .r-dish-grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
+  .r-carta-content .r-menu-item { grid-template-columns: minmax(0,1fr); gap: 20px; }
+  .r-carta-content .r-gallery-frame { aspect-ratio: 1; }
+  .r-carta-content .r-item-copy > .r-text-button { margin-top: auto; padding-top: 14px; }
+  .r-carta-content .r-item-copy > .r-menu-tag { margin-bottom: 10px; }
+}
+@media (max-width: 380px) {
+  .r-carta-content .r-menu-item { grid-template-columns: minmax(0,1fr); gap: 16px; }
+  .r-geo-mobile { grid-template-columns: 1fr; }
+}

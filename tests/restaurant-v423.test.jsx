@@ -1,8 +1,9 @@
+import { menuForPoint } from "../src/giros/restaurante/data/menu"
 import { MemoryRouter, Route, Routes, useLocation } from "react-router-dom"
 import { describe, expect, it, vi } from "vitest"
 import RestauranteApp from "../src/giros/restaurante/RestauranteApp"
 import RestaurantProvider from "../src/giros/restaurante/state/RestaurantProvider"
-import { DEFAULT_POINT, localLabel } from "../src/giros/restaurante/data/locations"
+import { DEFAULT_POINT, POINTS, localLabel } from "../src/giros/restaurante/data/locations"
 import { createVisit, initialState, restaurantReducer, restoreState, serializeState, STORAGE_KEY, WAIT_MS } from "../src/giros/restaurante/state/model"
 import { button, click, enter, render } from "./helpers"
 
@@ -51,7 +52,7 @@ describe("Páginas de restaurante", () => {
     expect(document.querySelectorAll(".r-featured-item")).toHaveLength(3)
     expect(button("Comer aquí")).toBeTruthy(); expect(button("A domicilio")).toBeTruthy()
     await click(nav("/carta"))
-    expect(document.querySelectorAll(".r-menu-item")).toHaveLength(12)
+    expect(document.querySelectorAll(".r-menu-item")).toHaveLength(menuForPoint("chapultepec").length)
     expect(document.querySelector("dialog")).toBeNull()
     await click(button("Elegir Pasta de la casa", document.querySelector(".r-menu-list")))
     expect(document.querySelector("dialog").textContent).toContain("Cómo quieres comer")
@@ -75,7 +76,7 @@ describe("Páginas de restaurante", () => {
   })
   it("visitar una ficha o filtrar CDMX no cambia el local del pedido", async () => {
     await render(app("/restaurante/locales"))
-    expect(document.querySelectorAll(".r-local-card")).toHaveLength(8)
+    expect(document.querySelectorAll(".r-local-card")).toHaveLength(POINTS.length)
     await enter(document.querySelector('select[aria-label="Filtrar locales por ciudad"]'), "Ciudad de México")
     expect(document.querySelectorAll(".r-local-card")).toHaveLength(2)
     await click(document.querySelector('a[href="/restaurante/locales/alameda"]'))
@@ -83,7 +84,7 @@ describe("Páginas de restaurante", () => {
     expect(stored().pointId).toBe("chapultepec")
     await click(button("Pedir en este local")); await click(button("A domicilio", document.querySelector("dialog")))
     expect(stored().visit).toMatchObject({ pointId: "alameda", mode: "delivery" })
-    expect(document.querySelectorAll(".r-menu-item")).toHaveLength(12)
+    expect(document.querySelectorAll(".r-menu-item")).toHaveLength(menuForPoint("chapultepec").length)
   })
   it("una reserva futura puede elegir otro local sin modificar la visita actual", async () => {
     vi.useFakeTimers(); vi.setSystemTime(NOW)
@@ -110,7 +111,7 @@ describe("Páginas de restaurante", () => {
   })
   it("admite barras finales en las rutas sin perder título ni foco principal", async () => {
     await render(app("/restaurante/carta/"))
-    expect(document.querySelectorAll(".r-menu-item")).toHaveLength(12)
+    expect(document.querySelectorAll(".r-menu-item")).toHaveLength(menuForPoint("chapultepec").length)
     expect(document.title).toContain("La carta — Patio 12")
     expect(document.activeElement.tagName).toBe("H1")
   })
@@ -122,6 +123,6 @@ describe("Páginas de restaurante", () => {
     expect(document.querySelectorAll("h1")).toHaveLength(1)
     expect(stored().cart).toHaveLength(1)
     await click(document.querySelector('a[href="/restaurante/locales"]'))
-    expect(document.querySelectorAll(".r-local-card")).toHaveLength(8)
+    expect(document.querySelectorAll(".r-local-card")).toHaveLength(POINTS.length)
   })
 })

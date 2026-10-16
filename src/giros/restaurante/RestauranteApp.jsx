@@ -10,7 +10,8 @@ import WhatsAppPreview from "../../components/shared/WhatsAppPreview"
 import useFavicon from "../../hooks/useFavicon"
 import usePageMetadata from "../../hooks/usePageMetadata"
 import { findProduct, MODES } from "./data/order"
-import { findPoint, localLabel, parseEntry } from "./data/locations"
+import { availableAt, menuForPoint } from "./data/menu"
+import { DEFAULT_POINT, POINTS, findPoint, localLabel, parseEntry } from "./data/locations"
 import { canOrder, createVisit } from "./state/model"
 import { useRestaurant } from "./state/context"
 import Inicio from "./pages/Inicio"
@@ -31,8 +32,8 @@ import "./restaurante.css"
 const LINKS = [["/restaurante", "Inicio"], ["/restaurante/carta", "La carta"], ["/restaurante/locales", "Locales"], ["/restaurante/conocenos", "Conócenos"]]
 function RestaurantGuide() {
   return <div className="space-y-4 text-sm leading-relaxed text-slate-300">
-    <p>Patio 12 es un restaurante ficticio. Inicio presenta la marca; La carta reúne los doce productos; Locales muestra el mapa y las ocho fichas; Conócenos presenta el concepto y un equipo de ejemplo.</p>
-    <ul className="list-disc pl-5 space-y-3"><li>Una visita nueva comienza en CDMX–Chapultepec. Puedes cambiar el local simulado; el carrito se conserva. Los parques son referencias geográficas, nunca establecimientos reales.</li><li>Elige comer aquí, para llevar o a domicilio desde Inicio. También puedes explorar la carta antes de elegir. El QR de mesa representa a alguien ya sentado y evita la espera normal.</li><li>Personaliza platos, bebidas y combos. Ingredientes, nutrientes, alérgenos, precios y horarios son ficticios.</li><li>Pedido y Seguimiento tienen sus propias páginas. El mismo pedido, contador y perfil se conservan al navegar o recargar; la visita caduca a las seis horas.</li><li>El mapa y la ubicación son opcionales. Los QR contienen únicamente punto y mesa; no comparten pedidos entre dispositivos.</li></ul>
+    <p>Patio 12 es un restaurante ficticio. Inicio presenta la marca; La carta reúne {menuForPoint(DEFAULT_POINT).length} opciones por local, organizadas por categorías; Locales muestra el mapa y {POINTS.length} fichas en México y Estados Unidos; Conócenos presenta el concepto y un equipo de ejemplo.</p>
+    <ul className="list-disc pl-5 space-y-3"><li>Una visita nueva comienza en CDMX–Chapultepec. Puedes cambiar el local simulado; el carrito se conserva. «Sabores de la región» ofrece una receta diferente en cada local. Si llevas una especialidad de otro local, debes quitarla o volver a su local antes de confirmar. Los parques son referencias geográficas, nunca establecimientos reales.</li><li>Elige comer aquí, para llevar o a domicilio desde Inicio. También puedes explorar la carta antes de elegir. El QR de mesa representa a alguien ya sentado y evita la espera normal.</li><li>Personaliza platos, bebidas y combos. Ingredientes, nutrientes, alérgenos, precios y horarios son ficticios. Los precios de ejemplo son MXN incluso en los locales de Estados Unidos.</li><li>Pedido y Seguimiento tienen sus propias páginas. El mismo pedido, contador y perfil se conservan al navegar o recargar; la visita caduca a las seis horas.</li><li>El mapa y la ubicación son opcionales. Los QR contienen únicamente punto y mesa; no comparten pedidos entre dispositivos.</li></ul>
     <p>Las otras identidades del giro Restaurante se desarrollarán después. “Contactar” y “Hablemos” abren los canales reales de Ian para consultar un proyecto.</p>
   </div>
 }
@@ -96,6 +97,7 @@ export default function RestauranteApp() {
     else notify(`Local seleccionado: ${localLabel(id)}.`)
   }
   const add = action => {
+    if (!availableAt(findProduct(action.productId), state.pointId)) { notify("Esta especialidad pertenece a otro local. Revisa el local de tu carta."); return }
     cartDispatch(action); setCartFeedback(value => value + 1); notify(`${product.name}: ${editing ? "cambios guardados" : "añadido al pedido"}.`, "success"); close()
     requestAnimationFrame(() => cartButton.current?.focus({ preventScroll: true }))
   }
@@ -117,22 +119,22 @@ export default function RestauranteApp() {
       <div key={pathname} className="r-page-content">
       <Routes>
         <Route index element={legacyTracking ? <Navigate to="/restaurante/seguimiento" replace /> : <Inicio onChoose={choose} onMode={startMode} onReserve={reserve} onLocalOrder={id => localAction(id, "order")} onLocalReserve={reserve} />} />
-        <Route path="carta" element={<Carta onChoose={choose} />} />
+        <Route path="carta" element={<Carta onChoose={choose} onChangeLocal={() => setPanel("local")} />} />
         <Route path="locales" element={<Locales onLocalOrder={id => localAction(id, "order")} onLocalReserve={reserve} />} />
         <Route path="locales/:pointId" element={<LocalDetalle onLocalOrder={id => localAction(id, "order")} onLocalReserve={reserve} onSelectLocal={id => localAction(id)} />} />
         <Route path="conocenos" element={<Conocenos />} />
-        <Route path="pedido" element={<OrderFlow embedded onMenu={goToMenu} onTracking={follow} onMode={() => setPanel("mode")} onProfile={() => setPanel("profile")} onEdit={row => choose(findProduct(row.productId), row)} />} />
+        <Route path="pedido" element={<OrderFlow embedded onMenu={goToMenu} onTracking={follow} onMode={() => setPanel("mode")} onProfile={() => setPanel("profile")} onChangeLocal={() => setPanel("local")} onEdit={row => choose(findProduct(row.productId), row)} />} />
         <Route path="seguimiento" element={<TrackingPanel embedded onMenu={goToMenu} onProfile={() => setPanel("profile")} />} />
         <Route path="*" element={<section className="r-page-section"><h1 tabIndex={-1}>Esta página no está<br />en el patio.</h1><p className="r-section-intro">Puedes volver a Inicio o seguir explorando la carta. Tu visita se conserva.</p><Link className="r-button" to="/restaurante">Volver a Inicio</Link></section>} />
       </Routes>
       </div>
       {!isTransaction && <ComercialCTA giro="restaurante" accentColor="#edd068" backgroundColor="#203b2e" textColor="#ffffff" fontFamily="Patio Sans, sans-serif" headingFontFamily="Patio Bitter, serif" radius={4} />}
-      <footer className="r-footer"><Link to="/restaurante">patio <strong>12</strong></Link><p>Restaurante, locales y equipo ficticios · Prototipo de Ian Aldana Martínez</p><div className="r-footer-links"><button type="button" className="r-text-button" onClick={() => setPanel("whatsapp")}>WhatsApp · demo</button><button type="button" className="r-text-button" onClick={() => setPanel("privacy")}>Privacidad de la demo</button></div></footer>
+      <footer className="r-footer"><Link to="/restaurante">patio <strong>12</strong></Link><p>Restaurante, locales y equipo ficticios · Prototipo de Ian Aldana Martínez</p><div className="r-footer-links"><a className="r-text-button" href="/restaurante/creditos-fotos.html">Créditos de las fotos</a><button type="button" className="r-text-button" onClick={() => setPanel("whatsapp")}>WhatsApp · demo</button><button type="button" className="r-text-button" onClick={() => setPanel("privacy")}>Privacidad de la demo</button></div></footer>
     </main>
     <div className="r-announcement" role="status" aria-live="polite" aria-atomic="true">{notice && <div key={notice.id} className={`r-notice-card r-notice-${notice.kind}`}>{notice.kind === "success" && <CheckCircle2 size={22} aria-hidden="true" />}<span>{notice.message}</span><button type="button" aria-label="Ocultar aviso del pedido" onClick={() => setNotice(null)}><X size={16} aria-hidden="true" /></button></div>}</div>
     <WaterMark />
     {menuOpen && <Modal title="Menú del restaurante" onClose={() => setMenuOpen(false)} className="restaurant-modal" radius={4}><div className="r-mobile-links">{navLinks()}<button type="button" className="r-button" onClick={() => { setMenuOpen(false); reserve() }}>Reservar mesa</button></div></Modal>}
-    {panel === "product" && <ItemPicker key={editing?.key || product.id} product={product} cart={cart} editing={editing} allowed={canOrder(state)} blockedReason={order ? "Tu pedido ya está confirmado. Termina su recorrido antes de añadir otro plato." : null} onWait={follow} onAdd={add} onClose={close} />}
+    {panel === "product" && <ItemPicker key={editing?.key || product.id} product={product} cart={cart} editing={editing} allowed={canOrder(state) && availableAt(product, state.pointId)} blockedReason={order ? "Tu pedido ya está confirmado. Termina su recorrido antes de añadir otro plato." : !availableAt(product, state.pointId) ? "Esta especialidad pertenece a otro local. Puedes revisar el carrito para quitarla o volver a su local." : null} onWait={!availableAt(product, state.pointId) ? () => { close(); navigate("/restaurante/pedido") } : follow} onAdd={add} onClose={close} />}
     {panel === "mode" && <ServiceChoice onClose={afterMode} onReservation={() => reserve()} />}
     {panel === "profile" && <ProfilePanel onClose={close} onReset={() => { dispatch({ type: "reset" }); close(); setNotice(null); navigate("/restaurante") }} />}
     {panel === "reservation" && <TableReservation key={reservationPointId} pointId={reservationPointId} onClose={close} onChangeLocal={() => { setLocalIntent({ id: reservationPointId, intent: "reserve" }); setPanel("local") }} />}

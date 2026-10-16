@@ -3,7 +3,7 @@ import { describe, expect, it } from "vitest"
 import PhotoGallery from "../src/giros/restaurante/components/PhotoGallery"
 import RestauranteApp from "../src/giros/restaurante/RestauranteApp"
 import RestaurantProvider from "../src/giros/restaurante/state/RestaurantProvider"
-import { MENU } from "../src/giros/restaurante/data/menu"
+import { MENU, menuForPoint } from "../src/giros/restaurante/data/menu"
 import { createVisit, initialState, restaurantReducer, restoreState, serializeState, STORAGE_KEY } from "../src/giros/restaurante/state/model"
 import { button, click, enter, render } from "./helpers"
 
@@ -58,19 +58,19 @@ describe("Galería y respuesta visual de V4.2.4", () => {
     await render(app())
     const search = document.querySelector('input[type="search"]')
     search.focus()
-    await enter(search, "ensalada")
+    await enter(search, "ensalada del patio")
     expect(document.querySelectorAll(".r-menu-item")).toHaveLength(1)
     expect(document.activeElement).toBe(search)
     await click(button(`Foto 2 de ${salad.name}`))
     const image = document.querySelector(".r-menu-item img")
-    await enter(search, "ensalada ")
+    await enter(search, "ensalada del patio ")
     expect(document.querySelector(".r-menu-item img")).toBe(image)
     await enter(search, "no existe este platillo")
     expect(document.querySelectorAll(".r-menu-item")).toHaveLength(0)
     expect(document.activeElement).toBe(search)
     await click(button("Ver toda la carta"))
     expect(document.activeElement).toBe(search)
-    expect(document.querySelectorAll(".r-menu-item")).toHaveLength(12)
+    expect(document.querySelectorAll(".r-menu-item")).toHaveLength(menuForPoint("chapultepec").length)
   })
   it("añadir el mismo plato dos veces confirma cada acción y conserva el pedido entre páginas", async () => {
     await render(app())

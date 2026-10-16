@@ -63,3 +63,12 @@ La receta ficticia de ensalada añade zanahoria, betabel y rábano; el queso añ
 `pasta.webp` conserva su origen y licencia de Unsplash. Se retira `pasta-2.webp` porque mostraba otra receta; la galería no anuncia una segunda toma que no existe. Los demás archivos conservan su procedencia anterior. El registro V4.2.1 es histórico: sus huellas describen aquella entrega, no los seis archivos sustituidos ahora.
 
 Pexels permite su uso en un sitio o aplicación; no se atribuye respaldo de los autores, de las personas o de las marcas visibles. Las fotografías forman parte del prototipo y no se ofrecen como una biblioteca de imágenes ni como material de un restaurante real. Para un cliente se usarán fotos autorizadas de sus propias recetas y porciones.
+
+
+## Carta ampliada de V4.2.5
+
+Se incorporan 31 fotografías procedentes de Wikimedia Commons, verificadas individualmente. El registro [fotos-origen-v4.2.5.json](../public/restaurante/fotos-origen-v4.2.5.json) contiene autor, título de origen, ficha, licencia y enlace de licencia, dimensiones, fecha y SHA-256. No se asume que todas las fotos de Commons tengan una misma licencia: cada archivo conserva la licencia indicada en su ficha. Solo se utilizan licencias que permiten este uso, sin restricciones NC o ND.
+
+Los créditos se publican en `/restaurante/creditos-fotos.html`, enlazado desde el pie de página del restaurante. Identifican también los cambios técnicos: reducción proporcional de tamaño y conversión a WebP. No se recorta ni se retoca el contenido. Se conserva la licencia correspondiente de las fotografías CC BY-SA; no se afirma propiedad exclusiva sobre ellas ni que su licencia se aplique al código de la colección.
+
+Las fotografías ilustran platos base; no acreditan recetas, ingredientes, alérgenos, autenticidad regional ni porciones nutricionales. Algunas presentan marcas o establecimientos en su procedencia; no se atribuye una relación comercial con Patio 12. Para un cliente real, sustituir por material autorizado del negocio y validar los datos de su carta.

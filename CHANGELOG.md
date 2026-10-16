@@ -1,3 +1,14 @@
+# V4.2.5 · 16 de octubre de 2026
+
+- Añadir navegación lateral de categorías a Carta y de países/estados a Locales, con selectores para móvil.
+- Ampliar carta a 43 productos definidos: 27 comunes y 16 regionales; 28 visibles por local. Conservar precios e identificadores anteriores.
+- Añadir una especialidad diferente por local, búsquedas y preferencias combinables, grupos y conteos. Mantener compatibilidad con `categoria=Platos`.
+- Incorporar Oaxaca, Chiapas, Querétaro y Guanajuato; Austin/San Antonio en Texas y Los Angeles/San Francisco en California. Conservar CDMX–Chapultepec como selección inicial.
+- Sincronizar filtros de país, estado y ciudad entre mapa/lista, con URL, recarga e historial. Mantener separados exploración y local del pedido.
+- Conservar carrito al cambiar de local y bloquear confirmación de especialidades de otro local, con recuperación explícita y comprobación en el estado.
+- Añadir 31 fotografías optimizadas con procedencia, licencia y créditos públicos; conservar las galerías anteriores.
+- Ampliar comprobaciones de región, directorio, pedidos, QR, mapa, accesibilidad y tamaños; incluir actualización incremental desde la V4.2.4 publicada.
+
 # Historial de cambios
 
 ## V4.2.4 · 2026-10-15
