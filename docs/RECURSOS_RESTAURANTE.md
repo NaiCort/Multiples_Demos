@@ -17,7 +17,7 @@ Para un cliente, sustituir imágenes y textos de muestra por materiales autoriza
 
 ## Fotografías añadidas en V4.2.1
 
-Cada producto tiene una fotografía local; ensalada, pasta y hamburguesa tienen dos vistas de referencia. Los extras incluyen imágenes orientativas. Se conserva el encuadre completo con `object-fit: contain`, sin estirar las fotografías. Las recetas, ingredientes y cifras nutricionales son ejemplos ficticios independientes de las fotografías.
+En la entrega V4.2.1, cada producto recibió una fotografía local; ensalada, pasta y hamburguesa tenían dos vistas de referencia. La revisión vigente se describe al final de este documento. Los extras incluyen imágenes orientativas. Se conserva el encuadre completo con `object-fit: contain`, sin estirar las fotografías. Las recetas, ingredientes y cifras nutricionales son ejemplos ficticios independientes de las fotografías.
 
 El registro [fotos-origen-v4.2.1.json](../public/restaurante/fotos-origen-v4.2.1.json) conserva la URL de descarga, la página y autor cuando fueron identificados, las dimensiones y la huella del archivo. Las imágenes nuevas se descargaron el 8 de octubre de 2026 bajo la [licencia de Unsplash](https://unsplash.com/license).
 
@@ -46,3 +46,20 @@ Para producción se necesitan fotos de la misma receta y de sus variantes, adem�
 MapLibre GL JS 6.14.0 (BSD-3-Clause) y qrcode 1.5.4 (MIT), instalados mediante npm. Se conservan los textos íntegros de ambas licencias en `public/restaurante/licencias/`; se publican junto con el sitio. No se añadieron fotografías nuevas para esta entrega.
 
 OpenFreeMap sirve la cartografía pública del mapa bajo demanda. Se conservan sus atribuciones a OpenMapTiles y OpenStreetMap, tanto dentro del mapa como en texto accesible. Las referencias de coordenadas y el carácter ficticio de rutas/cobertura se explican en [Mapa de Restaurante](MAPA_RESTAURANTE.md). No se redistribuye una base de datos de teselas con el proyecto.
+
+## Revisión fotográfica de V4.2.4
+
+El registro [fotos-origen-v4.2.4.json](../public/restaurante/fotos-origen-v4.2.4.json) contiene los seis archivos actuales que sustituyen fotos de versiones anteriores: URL, ficha pública, autor, licencia, fecha, dimensiones y SHA-256. Descargados el 15 de octubre de 2026 bajo la [licencia de Pexels](https://www.pexels.com/license/). Se verificaron fichas publicadas y aprobadas; no se incluyen archivos rechazados o sin ficha pública vigente. No se generaron fotografías con IA.
+
+| Archivos actuales | Autor | Criterio |
+|---|---|---|
+| `ensalada.webp`, `ensalada-2.webp` | Kevser Köroğlu | Dos tomas de la misma ensalada y plato |
+| `hamburguesa.webp`, `hamburguesa-2.webp` | Jhonny Salas Brochero | Plato y vista cercana de la misma hamburguesa |
+| `queso.webp` | Anca | Queso horneado con verduras, sin confundirlo con otra entrada |
+| `cafe.webp` | Pratikxox | Café negro servido desde una jarra |
+
+La receta ficticia de ensalada añade zanahoria, betabel y rábano; el queso añade champiñones y espinaca. Se conservan sus precios, ingredientes previos e identificadores de configuración. La información nutricional se sigue calculando a partir de cantidades ficticias, no de las fotografías. Las fotos ilustran la preparación base y no se transforman al retirar o añadir ingredientes. Se retira la imagen del plato de queso como extra: no representaba una porción aislada de queso.
+
+`pasta.webp` conserva su origen y licencia de Unsplash. Se retira `pasta-2.webp` porque mostraba otra receta; la galería no anuncia una segunda toma que no existe. Los demás archivos conservan su procedencia anterior. El registro V4.2.1 es histórico: sus huellas describen aquella entrega, no los seis archivos sustituidos ahora.
+
+Pexels permite su uso en un sitio o aplicación; no se atribuye respaldo de los autores, de las personas o de las marcas visibles. Las fotografías forman parte del prototipo y no se ofrecen como una biblioteca de imágenes ni como material de un restaurante real. Para un cliente se usarán fotos autorizadas de sus propias recetas y porciones.

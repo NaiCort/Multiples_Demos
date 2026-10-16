@@ -1,0 +1,86 @@
+[
+  {
+    "file": "ensalada.webp",
+    "image": "https://images.pexels.com/photos/34287150/pexels-photo-34287150.jpeg?auto=compress&w=1000&fm=webp",
+    "page": "https://www.pexels.com/photo/colorful-fresh-vegetable-salad-in-pink-bowl-34287150/",
+    "author": "Kevser Köroğlu",
+    "description": "A vibrant salad with fresh veggies in a pink bowl on wooden surface.",
+    "license": "https://www.pexels.com/license/",
+    "downloaded": "2026-10-15",
+    "dimensions": [
+      1000,
+      1333
+    ],
+    "sha256": "4510e9003dccc3a7c2a985d0a2a7823fca9e15834f7b0326661c7efe440c8427"
+  },
+  {
+    "file": "ensalada-2.webp",
+    "image": "https://images.pexels.com/photos/34287152/pexels-photo-34287152.jpeg?auto=compress&w=1000&fm=webp",
+    "page": "https://www.pexels.com/photo/vibrant-fresh-salad-with-lettuce-and-veggies-34287152/",
+    "author": "Kevser Köroğlu",
+    "description": "Colorful salad with fresh greens, carrots, beets, and radishes in a bowl.",
+    "license": "https://www.pexels.com/license/",
+    "downloaded": "2026-10-15",
+    "dimensions": [
+      1000,
+      1333
+    ],
+    "sha256": "5125ca12285dc8972f5cd68b6b02b02fd8e1e13636ce73918f42e33cb63fcca2"
+  },
+  {
+    "file": "hamburguesa.webp",
+    "image": "https://images.pexels.com/photos/10322496/pexels-photo-10322496.jpeg?auto=compress&w=1000&fm=webp",
+    "page": "https://www.pexels.com/photo/burger-with-lettuce-and-fries-on-white-plate-10322496/",
+    "author": "Jhonny Salas Brochero",
+    "description": "Delicious cheeseburger with fries, perfect for fast food lovers.",
+    "license": "https://www.pexels.com/license/",
+    "downloaded": "2026-10-15",
+    "dimensions": [
+      1000,
+      1500
+    ],
+    "sha256": "968ab3188efb0392875fb35c168b68f42dd0cc80a22a61507833daa284a95f4e"
+  },
+  {
+    "file": "hamburguesa-2.webp",
+    "image": "https://images.pexels.com/photos/10322494/pexels-photo-10322494.jpeg?auto=compress&w=1000&fm=webp",
+    "page": "https://www.pexels.com/photo/burger-with-lettuce-and-cheese-10322494/",
+    "author": "Jhonny Salas Brochero",
+    "description": "Delicious cheeseburger with lettuce, cheese, and ketchup on a bun.",
+    "license": "https://www.pexels.com/license/",
+    "downloaded": "2026-10-15",
+    "dimensions": [
+      1000,
+      1500
+    ],
+    "sha256": "1b99d8e783f8487e339aa000671293a5ecda7d92bed2ac24baf50e4b021c7559"
+  },
+  {
+    "file": "queso.webp",
+    "image": "https://images.pexels.com/photos/7912902/pexels-photo-7912902.jpeg?auto=compress&w=1000&fm=webp",
+    "page": "https://www.pexels.com/photo/compost-of-vegetables-mushrooms-and-toast-7912902/",
+    "author": "Anca",
+    "description": "Delicious baked feta with tomatoes, mushrooms, and spinach, seasoned with herbs.",
+    "license": "https://www.pexels.com/license/",
+    "downloaded": "2026-10-15",
+    "dimensions": [
+      1000,
+      1333
+    ],
+    "sha256": "e0b94bfeee97314ce65fa85b319c39e5db234e16b984cf75267a44eeedb82db3"
+  },
+  {
+    "file": "cafe.webp",
+    "image": "https://images.pexels.com/photos/3936163/pexels-photo-3936163.jpeg?auto=compress&w=1000&fm=webp",
+    "page": "https://www.pexels.com/photo/person-pouring-coffee-3936163/",
+    "author": "Pratikxox",
+    "description": "Steaming hot coffee being poured from a glass pot into a black mug, perfect morning drink.",
+    "license": "https://www.pexels.com/license/",
+    "downloaded": "2026-10-15",
+    "dimensions": [
+      1000,
+      1779
+    ],
+    "sha256": "34fa5b28bb842e65572dc5cab1a9a74eb22af671278d9877225074bf1cc9512c"
+  }
+]

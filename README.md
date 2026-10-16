@@ -1,13 +1,13 @@
-# Multiples_Demos · V4.2.3
+# Multiples_Demos · V4.2.4
 
 Portafolio de demos interactivas de **Ian Habid Aldana Martínez**.
 
 - Repositorio: https://github.com/NaiCort/Multiples_Demos
 - Despliegue habitual: https://multiples-demos.vercel.app/
-- Base: V4.2.2 publicada por Ian, commit `72a4c56da2a240fd572a2fc0a84bbb51645a8560`.
+- Base: V4.2.3 publicada por Ian, commit `672a7739f0c11a947a96b0b11a93c6f9eb077e2c`.
 - Fecha de esta candidata: 15 de octubre de 2026. Pendiente de revisión de Ian y publicación.
 
-V4.2.3 organiza **Patio 12**, la primera identidad del giro Restaurante, en páginas con navegación propia y local compartido. Conserva la carta configurable, combos, mapa, QR y seguimiento de V4.2.2. La portada sigue como directorio temporal y Psicólogo conserva sus cuatro temas aprobados. Las demás identidades de Restaurante y la gestión de empleados siguen pendientes; Café, Gimnasio, Taller, Despacho y Revista continúan como “Próximamente”.
+V4.2.4 pule **Patio 12**, la primera identidad del giro Restaurante: fotografías coherentes, galerías con desplazamiento breve, transiciones de páginas y filtros, y confirmación visible al añadir o editar el pedido. Conserva las páginas, carta configurable, combos, mapa, QR y seguimiento de V4.2.3. La portada sigue como directorio temporal y Psicólogo conserva sus cuatro temas aprobados. Las demás identidades de Restaurante y la gestión de empleados siguen pendientes; Café, Gimnasio, Taller, Despacho y Revista continúan como “Próximamente”.
 
 ## Desarrollo
 
@@ -45,7 +45,7 @@ No se bloquea Inicio con una ventana automática. Se elige modalidad en Inicio o
 
 - **Modalidad:** comer aquí, para llevar o a domicilio desde Inicio o el selector de la barra. Se permite explorar como invitado y cambiar modalidad antes de confirmar un pedido.
 - **Comer aquí:** espera de 60 segundos, exploración y configuración durante la espera, botón para saltarla y mesa ficticia del 1 al 25. La mesa se asigna una vez y habilita añadir platos. La reserva futura mantiene su recorrido independiente.
-- **Carta:** doce productos con fotografía, nombre y descripción a su lado; categorías, búsqueda sin acentos y filtros de receta base vegetariana, vegana o con carne. Ensalada, pasta y hamburguesa tienen dos fotografías, controles y deslizamiento táctil.
+- **Carta:** doce productos con fotografía, nombre y descripción a su lado; categorías, búsqueda sin acentos y filtros de receta base vegetariana, vegana o con carne. Ensalada y hamburguesa tienen dos fotografías de una misma presentación, controles y deslizamiento táctil. Pasta conserva su toma con pesto; se retira la segunda imagen que mostraba otra receta.
 - **Configuración:** cantidades normales, reducidas, aparte o sin el ingrediente; sustituciones, extras ilustrados y cantidad. Se añaden porciones en sopa, pasta y tacos; proteína/guarnición donde la receta lo admite; tamaños de bebidas y temperatura de café. Los cuatro platos principales admiten combos de entrada pequeña y bebida, con suplementos visibles. La receta base conserva los ingredientes que definen el plato. Precio, nutrientes y alérgenos incluyen también los cambios de porción y los componentes del combo; las cifras se señalan expresamente como ficticias.
 - **Pedido:** carrito editable, máximo nueve unidades de cada combinación y recibo con los cambios exactos. Se identifica la mesa o turno. El envío usa tres zonas ficticias con distancia, tiempo orientativo y tarifa, más un escenario fuera de cobertura que impide confirmar. La dirección escrita no se geocodifica.
 - **Seguimiento:** 30 segundos de preparación y 10–30 segundos de ruta acelerados, avance automático, saltos de prueba, recogida/entrega y cierre. En producción estos estados dependerían de la cocina y del reparto.
@@ -75,7 +75,14 @@ El punto elegido, visita activa, carrito, pedido, perfil de muestra y posición 
 
 No hay cuentas autenticadas, servidor de pedidos, sincronización entre dispositivos, gestión real de mesas o cocina, pagos, correos ni facturación. No existe seguimiento móvil externo mediante Live Activities, notificaciones o servicios en segundo plano. Una implementación real requiere esos servicios y confirmación de disponibilidad por parte del negocio. El prototipo nunca debe usarse como ficha nutricional o de alérgenos de un restaurante.
 
-Las imágenes y fuentes del restaurante se sirven localmente. Las fotos son referencias y las distintas vistas no representan necesariamente la misma receta real. La portada y Psicólogo conservan sus proveedores externos y sus preferencias independientes. Véanse [recursos](docs/RECURSOS_RESTAURANTE.md), [mapa](docs/MAPA_RESTAURANTE.md) y [estado de V4.2.3](docs/ESTADO_V4.2.3.md).
+Las imágenes y fuentes del restaurante se sirven localmente. Las fotos son referencias de banco, sin afirmar que pertenezcan a un restaurante real. Las dos galerías usan tomas del mismo plato. La ensalada y el queso incorporan en su receta de ejemplo las verduras visibles; se conservan sus precios y los identificadores anteriores de configuración. Ninguna foto cambia al quitar ingredientes: no es una representación dinámica de cada personalización. La portada y Psicólogo conservan sus proveedores externos y sus preferencias independientes. Véanse [recursos](docs/RECURSOS_RESTAURANTE.md), [mapa](docs/MAPA_RESTAURANTE.md) y [estado de V4.2.4](docs/ESTADO_V4.2.4.md).
+
+
+## Respuesta visual de V4.2.4
+
+Las entradas de página conservan el texto plenamente opaco y duran 200 ms; los resultados filtrados, 160 ms; las fotografías y avisos, 180 ms; el indicador del carrito, 320 ms. No hay autoplay ni animaciones continuas nuevas. Las entradas anteriores se retiran inmediatamente: nunca coexisten páginas ocultas con botones enfocables. Cambiar parámetros de búsqueda no remonta la página ni el buscador; actualizar el contador tampoco reinicia las galerías.
+
+`prefers-reduced-motion` desactiva estas animaciones, incluso si se cambia durante una visita. La confirmación escrita y el número de productos siguen visibles. El foco va al título al cambiar de página, al carrito tras añadir un producto y al buscador al recuperar una búsqueda vacía. Las fotografías conservan el marco cuadrado de la carta o 4:3 del producto, con `object-fit: contain`. Las segundas vistas se precargan cuando su galería se aproxima a la pantalla.
 
 ## Comprobación opcional en navegador
 
@@ -84,6 +91,7 @@ Con Edge instalado en Windows, después del build:
 ```bash
 DEMO_START_PREVIEW=1 DEMO_BROWSER_CHANNEL=msedge npm run test:browser:restaurante
 DEMO_START_PREVIEW=1 DEMO_BROWSER_CHANNEL=msedge npm run test:browser:restaurante:v423
+DEMO_START_PREVIEW=1 DEMO_BROWSER_CHANNEL=msedge npm run test:browser:restaurante:v424
 ```
 
 El script inicia y cierra su propia vista previa de producción. También admite Chrome con `DEMO_BROWSER_CHANNEL=chrome` o un Chromium instalado con `npx playwright install chromium`, omitiendo la variable de canal.
@@ -94,7 +102,7 @@ Para Psicólogo, deja `npm run dev` en otra terminal y ejecuta:
 DEMO_BROWSER_CHANNEL=msedge npm run test:browser
 ```
 
-Los scripts admiten `DEMO_BASE_URL`, `DEMO_BROWSER_EXECUTABLE` y `DEMO_TEST_OUTPUT`. Los scripts admiten además `DEMO_TEST_FIXTURES`, que permite usar copias exactas de recursos externos en entornos de prueba sin acceso a sus proveedores. Las capturas y resultados se guardan en `test-results/`, fuera de Git. Véase [validación](docs/VALIDACION_V4.2.3.md) para resultados y límites.
+Los scripts admiten `DEMO_BASE_URL`, `DEMO_BROWSER_EXECUTABLE` y `DEMO_TEST_OUTPUT`. Los scripts admiten además `DEMO_TEST_FIXTURES`, que permite usar copias exactas de recursos externos en entornos de prueba sin acceso a sus proveedores. Las capturas y resultados se guardan en `test-results/`, fuera de Git. Véase [validación](docs/VALIDACION_V4.2.4.md) para resultados y límites.
 
 ## Estructura
 
@@ -115,7 +123,7 @@ El proveedor del restaurante vive por encima de las rutas para conservar su visi
 
 ## Actualización y publicación
 
-El ZIP incluye la fuente completa directamente en su carpeta raíz y un actualizador incremental desde el commit base indicado. Requiere un árbol limpio, conserva el historial y crea `actualizacion/v4.2.3`. No hace commits ni publica. Consulta `LEEME_PRIMERO.md` dentro del ZIP.
+El ZIP incluye la fuente completa directamente en su carpeta raíz y un actualizador incremental desde el commit base indicado. Requiere un árbol limpio, conserva el historial y crea `actualizacion/v4.2.4`. No hace commits ni publica. Consulta `LEEME_PRIMERO.md` dentro del ZIP.
 
 Se conserva `vercel.json`. Revisa localmente antes de hacer merge y push a la rama de producción. La portada comercial, el configurador de paquetes y el CV siguen para después de terminar las demos. La aplicación continúa como SPA; no se han añadido tarjetas sociales prerenderizadas por ruta.
 

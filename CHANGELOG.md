@@ -1,5 +1,16 @@
 # Historial de cambios
 
+## V4.2.4 · 2026-10-15
+
+Base: V4.2.3 publicada (`672a7739f0c11a947a96b0b11a93c6f9eb077e2c`). Candidata para revisión; no publica ni cierra otras identidades de Restaurante.
+
+- Sustituir seis fotografías por recursos locales de Pexels con autor, ficha pública, licencia y huella registrados. Ensalada y hamburguesa muestran dos tomas de una misma presentación. Retirar la segunda pasta que mostraba otra receta; conservar la toma con pesto.
+- Mostrar queso realmente horneado y café negro. Ajustar la lista de verduras de ensalada y queso para acompañar las fotos; mantener sus precios e identificadores previos. Retirar la imagen de plato completo usada incorrectamente como extra de queso.
+- Añadir transiciones breves de entrada de páginas, resultados de filtros y fotografías con dirección según el control o deslizamiento. Precargar las segundas vistas al aproximarse a la pantalla. Mantener marcos y encuadres completos.
+- Confirmar añadir/editar mediante aviso con icono, texto y un pulso único del contador del carrito. Anunciar también acciones repetidas, conservar el foco de los controles y devolverlo al buscador tras recuperar resultados vacíos.
+- Respetar movimiento reducido, incluso al activarlo durante la visita. Mantener visita, filtros, local, carrito, reserva y fechas de los temporizadores al navegar.
+- Ampliar comprobaciones de teclado, tacto, fotografías, persistencia y movimiento reducido. Mantener portada temporal, Psicólogo y funcionalidades simuladas.
+
 ## V4.2.3 · 2026-10-15
 
 Base: V4.2.2 publicada (`72a4c56da2a240fd572a2fc0a84bbb51645a8560`). Candidata para revisión de Ian, sin publicación automática.

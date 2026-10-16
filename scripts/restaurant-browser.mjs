@@ -11,6 +11,7 @@ export const button = (scope, name) => scope.getByRole("button", { name, exact: 
 export const close = async page => { await page.keyboard.press("Escape"); await dialog(page).waitFor({ state: "detached" }) }
 export const saved = page => page.evaluate(() => JSON.parse(localStorage.getItem("patio12-demo-v1")))
 export async function audit(page) {
+  await page.waitForFunction(() => [...document.querySelectorAll(".r-page-content, .r-menu-results, .r-gallery-image, .r-cart-count, .r-notice-card")].every(el => el.getAnimations().every(animation => animation.playState !== "running")))
   await page.waitForFunction(() => [...document.querySelectorAll('[style*="opacity"]')].every(el => { const opacity = Number(getComputedStyle(el).opacity); return opacity === 0 || opacity >= .999 }))
   await page.addScriptTag({ path: require.resolve("axe-core/axe.min.js") })
   const violations = await page.evaluate(async () => (await window.axe.run(document, { runOnly: { type: "tag", values: ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"] } })).violations.map(item => ({ id: item.id, nodes: item.nodes.map(node => ({ target: node.target, summary: node.failureSummary })) })))
@@ -25,8 +26,10 @@ export async function bounds(page) {
 }
 export async function nav(page, name) {
   const desktop = page.locator(".r-desktop-nav")
+  const href = await desktop.getByRole("link", { name, exact: true, includeHidden: true }).getAttribute("href")
   if (await desktop.isVisible()) await desktop.getByRole("link", { name, exact: true }).click()
   else { await button(page, "Abrir menú").click(); await dialog(page).getByRole("link", { name, exact: true }).click() }
+  await page.waitForFunction(to => location.pathname === to && document.querySelector('.r-desktop-nav a[aria-current="page"]')?.getAttribute("href") === to, href)
   await page.locator("main h1").waitFor()
 }
 export async function decodeImages(page) {
