@@ -81,9 +81,9 @@ impeccable, web-design-guidelines y web-quality-skills.
 ## Café en curso
 
 Publicado en `/cafe`: Inicio (V4.3.0), Carta y pedido para recoger (V4.3.1), Origen y
-café en grano (V4.3.2). La Bienvenida se habilita para Café solo al cerrar V4.3.4.
+café en grano (V4.3.2), Prepara en casa (V4.3.3). La Bienvenida se habilita para Café solo al cerrar V4.3.4.
 Pendiente: fotografías de la carta (requieren clave de la API de Unsplash o permitir
-Wikimedia Commons). Siguiente: V4.3.3, Prepara en casa con temporizador.
+Wikimedia Commons). Siguiente: V4.3.4, Visítanos con cata, pasada final y alta en la Bienvenida.
 
 ## Pendientes para la fase de ajustes (V4.8)
 
