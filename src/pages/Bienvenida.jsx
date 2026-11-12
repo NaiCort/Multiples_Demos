@@ -39,13 +39,48 @@ function getGreeting() {
 }
 
 const GIROS = [
-  { path: "/psicologo", name: "Psicólogo", desc: "Consultas, citas y un primer acercamiento sin fricción.", available: true },
-  { path: "/restaurante", name: "Restaurante", desc: "Patio 12: carta, pedido y reserva de mesa simulados.", available: true },
-  { path: null, name: "Café", desc: "Calidez, ritmo pausado, y motivo suficiente para quedarse un rato.", available: false },
-  { path: null, name: "Gimnasio", desc: "Energía, comunidad, y una razón real para inscribirse.", available: false },
-  { path: null, name: "Taller mecánico", desc: "Confianza técnica, mostrada, no solo prometida.", available: false },
-  { path: null, name: "Despacho contable", desc: "Orden, claridad, y cifras que inspiran confianza.", available: false },
-  { path: null, name: "Revista digital", desc: "Una identidad editorial completa, no solo un blog.", available: false },
+  {
+    path: "/psicologo",
+    name: "Psicólogo",
+    desc: "Consultas, citas y un primer acercamiento sin fricción.",
+    available: true,
+  },
+  {
+    path: "/restaurante",
+    name: "Restaurante",
+    desc: "Patio 12: carta, pedido y reserva de mesa simulados.",
+    available: true,
+  },
+  {
+    path: null,
+    name: "Café",
+    desc: "Calidez, ritmo pausado, y motivo suficiente para quedarse un rato.",
+    available: false,
+  },
+  {
+    path: null,
+    name: "Gimnasio",
+    desc: "Energía, comunidad, y una razón real para inscribirse.",
+    available: false,
+  },
+  {
+    path: null,
+    name: "Taller mecánico",
+    desc: "Confianza técnica, mostrada, no solo prometida.",
+    available: false,
+  },
+  {
+    path: null,
+    name: "Despacho contable",
+    desc: "Orden, claridad, y cifras que inspiran confianza.",
+    available: false,
+  },
+  {
+    path: null,
+    name: "Revista digital",
+    desc: "Una identidad editorial completa, no solo un blog.",
+    available: false,
+  },
 ]
 
 function AmbientBackground() {
@@ -54,15 +89,35 @@ function AmbientBackground() {
     <div className="fixed inset-0 overflow-hidden pointer-events-none" aria-hidden="true">
       <motion.div
         className="absolute rounded-full"
-        style={{ width: 560, height: 560, top: "-10%", left: "-8%", background: "radial-gradient(circle, rgba(201,162,39,0.14) 0%, transparent 70%)" }}
+        style={{
+          width: 560,
+          height: 560,
+          top: "-10%",
+          left: "-8%",
+          background: "radial-gradient(circle, rgba(201,162,39,0.14) 0%, transparent 70%)",
+        }}
         animate={{ x: [0, 40, 0], y: [0, 30, 0] }}
-        transition={reduced ? { duration: 0, delay: 0, repeat: 0 } : { repeat: Infinity, duration: 26, ease: "easeInOut" }}
+        transition={
+          reduced
+            ? { duration: 0, delay: 0, repeat: 0 }
+            : { repeat: Infinity, duration: 26, ease: "easeInOut" }
+        }
       />
       <motion.div
         className="absolute rounded-full"
-        style={{ width: 480, height: 480, bottom: "-12%", right: "-6%", background: "radial-gradient(circle, rgba(201,162,39,0.09) 0%, transparent 70%)" }}
+        style={{
+          width: 480,
+          height: 480,
+          bottom: "-12%",
+          right: "-6%",
+          background: "radial-gradient(circle, rgba(201,162,39,0.09) 0%, transparent 70%)",
+        }}
         animate={{ x: [0, -30, 0], y: [0, -24, 0] }}
-        transition={reduced ? { duration: 0, delay: 0, repeat: 0 } : { repeat: Infinity, duration: 32, ease: "easeInOut", delay: 2 }}
+        transition={
+          reduced
+            ? { duration: 0, delay: 0, repeat: 0 }
+            : { repeat: Infinity, duration: 32, ease: "easeInOut", delay: 2 }
+        }
       />
     </div>
   )
@@ -73,7 +128,10 @@ export default function Bienvenida() {
   useFonts()
   useFavicon("/favicon.svg")
   useRouteFocus()
-  usePageMetadata("Ian Aldana Martínez — Portafolio de demos interactivas", "Catálogo de prototipos interactivos por tipo de negocio, hechos por Ian Aldana Martínez.")
+  usePageMetadata(
+    "Ian Aldana Martínez — Portafolio de demos interactivas",
+    "Catálogo de prototipos interactivos por tipo de negocio, hechos por Ian Aldana Martínez.",
+  )
   const [greeting] = useState(getGreeting)
 
   const C = {
@@ -87,10 +145,16 @@ export default function Bienvenida() {
 
   return (
     <div className="relative min-h-screen overflow-hidden" style={{ backgroundColor: C.bg }}>
-      <a className="skip-link" href="#contenido">Saltar al contenido</a>
+      <a className="skip-link" href="#contenido">
+        Saltar al contenido
+      </a>
       <AmbientBackground />
 
-      <main id="contenido" tabIndex={-1} className="relative z-10 max-w-2xl mx-auto px-6 py-20 sm:py-28">
+      <main
+        id="contenido"
+        tabIndex={-1}
+        className="relative z-10 max-w-2xl mx-auto px-6 py-20 sm:py-28"
+      >
         <motion.p
           initial={reduced ? false : { opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -104,8 +168,15 @@ export default function Bienvenida() {
         <motion.h1
           initial={reduced ? false : { opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={reduced ? { duration: 0, delay: 0, repeat: 0 } : { duration: 0.7, delay: 0.1 }}
-          style={{ fontFamily: "Newsreader, serif", color: C.text, fontSize: "clamp(2.2rem, 5vw, 3.2rem)", lineHeight: 1.15 }}
+          transition={
+            reduced ? { duration: 0, delay: 0, repeat: 0 } : { duration: 0.7, delay: 0.1 }
+          }
+          style={{
+            fontFamily: "Newsreader, serif",
+            color: C.text,
+            fontSize: "clamp(2.2rem, 5vw, 3.2rem)",
+            lineHeight: 1.15,
+          }}
           className="mb-4"
         >
           {greeting}. Soy <em style={{ fontStyle: "italic", color: C.gold }}>Ian</em>.
@@ -114,12 +185,19 @@ export default function Bienvenida() {
         <motion.p
           initial={reduced ? false : { opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={reduced ? { duration: 0, delay: 0, repeat: 0 } : { duration: 0.6, delay: 0.2 }}
-          style={{ fontFamily: "IBM Plex Sans, sans-serif", color: C.muted, fontSize: 15, lineHeight: 1.7 }}
+          transition={
+            reduced ? { duration: 0, delay: 0, repeat: 0 } : { duration: 0.6, delay: 0.2 }
+          }
+          style={{
+            fontFamily: "IBM Plex Sans, sans-serif",
+            color: C.muted,
+            fontSize: 15,
+            lineHeight: 1.7,
+          }}
           className="mb-16 max-w-md"
         >
-          Este es un catálogo de prototipos interactivos de alta fidelidad, cada uno
-          pensado para un tipo de negocio distinto. Elige un giro para ver la demo completa.
+          Este es un catálogo de prototipos interactivos de alta fidelidad, cada uno pensado para un
+          tipo de negocio distinto. Elige un giro para ver la demo completa.
         </motion.p>
 
         <div style={{ borderTop: `1px solid ${C.line}` }}>
@@ -129,7 +207,10 @@ export default function Bienvenida() {
                 <div className="flex items-center gap-5 flex-1 min-w-0">
                   <span
                     className="text-xs shrink-0"
-                    style={{ fontFamily: "IBM Plex Mono, monospace", color: giro.available ? C.gold : C.muted }}
+                    style={{
+                      fontFamily: "IBM Plex Mono, monospace",
+                      color: giro.available ? C.gold : C.muted,
+                    }}
                   >
                     {String(i + 1).padStart(2, "0")}
                   </span>
@@ -145,7 +226,12 @@ export default function Bienvenida() {
                     </p>
                     <p
                       className="mt-0.5 truncate sm:whitespace-normal"
-                      style={{ fontFamily: "IBM Plex Sans, sans-serif", color: C.muted, fontSize: 12.5, opacity: 1 }}
+                      style={{
+                        fontFamily: "IBM Plex Sans, sans-serif",
+                        color: C.muted,
+                        fontSize: 12.5,
+                        opacity: 1,
+                      }}
                     >
                       {giro.desc}
                     </p>
@@ -154,7 +240,10 @@ export default function Bienvenida() {
                 <div className="flex items-center gap-2 shrink-0 ml-4">
                   {giro.available ? (
                     <>
-                      <span className="hidden sm:inline text-xs" style={{ fontFamily: "IBM Plex Mono, monospace", color: C.gold }}>
+                      <span
+                        className="hidden sm:inline text-xs"
+                        style={{ fontFamily: "IBM Plex Mono, monospace", color: C.gold }}
+                      >
                         Disponible
                       </span>
                       <ArrowUpRight size={16} style={{ color: C.gold }} />
@@ -162,7 +251,12 @@ export default function Bienvenida() {
                   ) : (
                     <span
                       className="text-[10px] uppercase px-2 py-1"
-                      style={{ fontFamily: "IBM Plex Mono, monospace", color: C.muted, border: `1px solid ${C.line}`, letterSpacing: "0.08em" }}
+                      style={{
+                        fontFamily: "IBM Plex Mono, monospace",
+                        color: C.muted,
+                        border: `1px solid ${C.line}`,
+                        letterSpacing: "0.08em",
+                      }}
                     >
                       Próximamente
                     </span>
@@ -178,7 +272,11 @@ export default function Bienvenida() {
                 key={giro.name}
                 initial={reduced ? false : { opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={reduced ? { duration: 0, delay: 0, repeat: 0 } : { duration: 0.5, delay: 0.3 + i * 0.06 }}
+                transition={
+                  reduced
+                    ? { duration: 0, delay: 0, repeat: 0 }
+                    : { duration: 0.5, delay: 0.3 + i * 0.06 }
+                }
               >
                 {giro.available ? (
                   <Link
@@ -189,7 +287,10 @@ export default function Bienvenida() {
                     {RowInner}
                   </Link>
                 ) : (
-                  <div className="flex items-center justify-between py-5 cursor-default" style={rowStyle}>
+                  <div
+                    className="flex items-center justify-between py-5 cursor-default"
+                    style={rowStyle}
+                  >
                     {RowInner}
                   </div>
                 )}
@@ -201,7 +302,9 @@ export default function Bienvenida() {
         <motion.p
           initial={reduced ? false : { opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={reduced ? { duration: 0, delay: 0, repeat: 0 } : { duration: 0.6, delay: 0.9 }}
+          transition={
+            reduced ? { duration: 0, delay: 0, repeat: 0 } : { duration: 0.6, delay: 0.9 }
+          }
           className="mt-10 text-xs"
           style={{ fontFamily: "IBM Plex Mono, monospace", color: C.muted }}
         >

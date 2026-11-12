@@ -47,7 +47,7 @@ describe("Reserva simulada", () => {
     await click(button("Online"))
     await click(button("Miércoles 4:00 pm"))
     await click(button("Confirmar reserva"))
-    const timeoutIndex = scheduled.mock.calls.findIndex(call => call[1] === 800)
+    const timeoutIndex = scheduled.mock.calls.findIndex((call) => call[1] === 800)
     expect(timeoutIndex).toBeGreaterThanOrEqual(0)
     const reservationTimer = scheduled.mock.results[timeoutIndex].value
     await view.rerender(<ReservationFlow {...props} isOpen={false} />)

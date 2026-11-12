@@ -13,7 +13,10 @@ function readNavigation(ids) {
 }
 function subscribe(callback) {
   let frame
-  const update = () => { cancelAnimationFrame(frame); frame = requestAnimationFrame(callback) }
+  const update = () => {
+    cancelAnimationFrame(frame)
+    frame = requestAnimationFrame(callback)
+  }
   window.addEventListener("scroll", update, { passive: true })
   window.addEventListener("resize", update)
   return () => {
@@ -23,11 +26,15 @@ function subscribe(callback) {
   }
 }
 export default function useDemoNavigation(ids = IDS) {
-  const snapshot = useSyncExternalStore(subscribe, () => readNavigation(ids), () => "false:inicio")
+  const snapshot = useSyncExternalStore(
+    subscribe,
+    () => readNavigation(ids),
+    () => "false:inicio",
+  )
   const [menuOpen, setMenuOpen] = useState(false)
   const navigationFrame = useRef(null)
   useEffect(() => () => cancelAnimationFrame(navigationFrame.current), [])
-  const navigateToSection = event => {
+  const navigateToSection = (event) => {
     const target = document.getElementById(event.currentTarget.hash.slice(1))
     setMenuOpen(false)
     if (!target) return
@@ -43,7 +50,9 @@ export default function useDemoNavigation(ids = IDS) {
   }
   useEffect(() => {
     const desktop = window.matchMedia("(min-width: 1280px)")
-    const closeOnDesktop = event => { if (event.matches) setMenuOpen(false) }
+    const closeOnDesktop = (event) => {
+      if (event.matches) setMenuOpen(false)
+    }
     desktop.addEventListener("change", closeOnDesktop)
     return () => desktop.removeEventListener("change", closeOnDesktop)
   }, [])

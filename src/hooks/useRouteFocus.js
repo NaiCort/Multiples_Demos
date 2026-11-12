@@ -8,7 +8,9 @@ export default function useRouteFocus() {
       try {
         const target = document.getElementById(decodeURIComponent(window.location.hash.slice(1)))
         target?.scrollIntoView({ behavior: "instant" })
-      } catch { /* Un fragmento mal formado no debe impedir explorar la página. */ }
+      } catch {
+        /* Un fragmento mal formado no debe impedir explorar la página. */
+      }
     }
   }, [])
 }

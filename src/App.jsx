@@ -11,30 +11,38 @@ const PsicologoApp = lazy(() => import("./giros/psicologo/PsicologoApp"))
 const RestauranteApp = lazy(() => import("./giros/restaurante/RestauranteApp"))
 
 function RouteLoading() {
-  return <div className="route-message" role="status">Cargando demo…</div>
+  return (
+    <div className="route-message" role="status">
+      Cargando demo…
+    </div>
+  )
 }
 function RoutePosition() {
   const { pathname } = useLocation()
-  useEffect(() => { window.scrollTo({ top: 0, left: 0, behavior: "instant" }) }, [pathname])
+  useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: "instant" })
+  }, [pathname])
   return null
 }
 export default function App() {
-  return <BrowserRouter>
-    <MotionConfig reducedMotion="user">
-      <RestaurantProvider>
-        <RoutePosition />
-        <RouteErrorBoundary>
-          <Suspense fallback={<RouteLoading />}>
-            <Routes>
-              <Route path="/" element={<Bienvenida />} />
-              <Route path="/psicologo" element={<PsicologoApp />} />
-              <Route path="/restaurante/*" element={<RestauranteApp />} />
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </Suspense>
-        </RouteErrorBoundary>
-        <FloatingTimer />
-      </RestaurantProvider>
-    </MotionConfig>
-  </BrowserRouter>
+  return (
+    <BrowserRouter>
+      <MotionConfig reducedMotion="user">
+        <RestaurantProvider>
+          <RoutePosition />
+          <RouteErrorBoundary>
+            <Suspense fallback={<RouteLoading />}>
+              <Routes>
+                <Route path="/" element={<Bienvenida />} />
+                <Route path="/psicologo" element={<PsicologoApp />} />
+                <Route path="/restaurante/*" element={<RestauranteApp />} />
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </Suspense>
+          </RouteErrorBoundary>
+          <FloatingTimer />
+        </RestaurantProvider>
+      </MotionConfig>
+    </BrowserRouter>
+  )
 }

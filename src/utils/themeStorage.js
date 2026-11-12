@@ -10,5 +10,9 @@ export function readTheme() {
 }
 export function saveTheme(theme) {
   if (!THEME_NAMES.includes(theme)) return
-  try { window.localStorage.setItem(THEME_STORAGE_KEY, theme) } catch { /* La preferencia es opcional. */ }
+  try {
+    window.localStorage.setItem(THEME_STORAGE_KEY, theme)
+  } catch {
+    /* La preferencia es opcional. */
+  }
 }

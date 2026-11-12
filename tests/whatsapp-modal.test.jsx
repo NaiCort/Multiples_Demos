@@ -12,7 +12,7 @@ describe("Conversación y diálogos", () => {
     const props = { onClose: () => {} }
     const view = await render(<WhatsAppPreview {...props} isOpen />)
     await click(button("Hola, tengo algunas dudas antes de agendar"))
-    const timeoutIndex = scheduled.mock.calls.findIndex(call => call[1] === 750)
+    const timeoutIndex = scheduled.mock.calls.findIndex((call) => call[1] === 750)
     expect(timeoutIndex).toBeGreaterThanOrEqual(0)
     const messageTimer = scheduled.mock.results[timeoutIndex].value
     await view.rerender(<WhatsAppPreview {...props} isOpen={false} />)
@@ -31,15 +31,30 @@ describe("Conversación y diálogos", () => {
   it("tiene nombre accesible, admite Escape y restaura foco y desplazamiento", async () => {
     function Example() {
       const [open, setOpen] = useState(false)
-      return <><button onClick={() => setOpen(true)}>Abrir prueba</button>{open && <Modal title="Ventana de prueba" onClose={() => setOpen(false)}><p>Contenido</p></Modal>}</>
+      return (
+        <>
+          <button onClick={() => setOpen(true)}>Abrir prueba</button>
+          {open && (
+            <Modal title="Ventana de prueba" onClose={() => setOpen(false)}>
+              <p>Contenido</p>
+            </Modal>
+          )}
+        </>
+      )
     }
-    await render(<StrictMode><Example /></StrictMode>)
+    await render(
+      <StrictMode>
+        <Example />
+      </StrictMode>,
+    )
     const opener = button("Abrir prueba")
     opener.focus()
     await click(opener)
     const dialog = document.querySelector("dialog")
     expect(dialog.open).toBe(true)
-    expect(document.getElementById(dialog.getAttribute("aria-labelledby")).textContent).toBe("Ventana de prueba")
+    expect(document.getElementById(dialog.getAttribute("aria-labelledby")).textContent).toBe(
+      "Ventana de prueba",
+    )
     expect(dialog.contains(document.activeElement)).toBe(true)
     expect(document.body.style.overflow).toBe("hidden")
     await act(async () => dialog.dispatchEvent(new Event("cancel", { cancelable: true })))
