@@ -1,5 +1,6 @@
-import { useEffect, useState } from "react"
-import { Link, NavLink, Navigate, Route, Routes, useLocation } from "react-router-dom"
+import { useEffect, useReducer, useState } from "react"
+import { Link, NavLink, Navigate, Route, Routes, useLocation, useNavigate } from "react-router-dom"
+import { ShoppingBag } from "lucide-react"
 import DemoBanner from "../../components/shared/DemoBanner"
 import ComercialCTA from "../../components/shared/ComercialCTA"
 import WhatsAppPreview from "../../components/shared/WhatsAppPreview"
@@ -7,9 +8,25 @@ import WaterMark from "../../components/WaterMark"
 import useFavicon from "../../hooks/useFavicon"
 import usePageMetadata from "../../hooks/usePageMetadata"
 import Inicio from "./pages/Inicio"
+import Carta from "./pages/Carta"
+import Pedido from "./pages/Pedido"
+import ItemPanel from "./components/ItemPanel"
+import { findItem } from "./data/carta"
+import { cartCount, load, reducer, save } from "./state/pedido"
 import "./cafe.css"
 
-const PAGES = [["/cafe", "Inicio"]]
+const PAGES = [
+  ["/cafe", "Inicio"],
+  ["/cafe/carta", "La carta"],
+]
+const TITLES = Object.fromEntries([...PAGES, ["/cafe/pedido", "Tu pedido"]])
+const storage = () => {
+  try {
+    return window.localStorage
+  } catch {
+    return null
+  }
+}
 
 function CafeGuide() {
   return (
@@ -28,6 +45,11 @@ function CafeGuide() {
           Las curvas de nivel son ilustrativas: muestran una línea cada 50 metros hasta la altitud
           del lote, no el terreno real de una finca.
         </li>
+        <li>
+          La carta permite armar un pedido para recoger: leche, shots, azúcar y lote del filtrado.
+          El pedido no se cobra ni se envía; pasa por la barra en un minuto para mostrar el
+          seguimiento, y se conserva en este navegador al recargar.
+        </li>
         <li>WhatsApp abre una conversación simulada; no se envía ningún mensaje.</li>
       </ul>
       <p>“Contactar” y “Hablemos” abren los canales reales de Ian para consultar un proyecto.</p>
@@ -38,10 +60,43 @@ function CafeGuide() {
 export default function CafeApp() {
   useFavicon("/favicons/cafe.svg")
   const { pathname } = useLocation()
+  const navigate = useNavigate()
   const [whatsapp, setWhatsapp] = useState(false)
-  const page = PAGES.find(([to]) => to === pathname.replace(/\/+$/, ""))
+  const [state, dispatch] = useReducer(reducer, undefined, () => load(storage()))
+  const [choosing, setChoosing] = useState(null)
+  const [notice, setNotice] = useState(null)
+  useEffect(() => {
+    save(storage(), state)
+  }, [state])
+  useEffect(() => {
+    if (!notice) return undefined
+    const timer = setTimeout(() => setNotice(null), 6000)
+    return () => clearTimeout(timer)
+  }, [notice])
+  const active = state.order && state.order.status !== "recogido"
+  const count = cartCount(state.cart)
+  const choose = (item) => {
+    if (active) {
+      setNotice({
+        id: Date.now(),
+        text: "Ya tienes un pedido en la barra. Recógelo antes de empezar otro.",
+      })
+      return
+    }
+    setChoosing(item)
+  }
+  const add = (line) => {
+    dispatch({ type: "add", ...line })
+    setChoosing(null)
+    setNotice({
+      id: Date.now(),
+      text: `${findItem(line.itemId).nombre} agregado a tu pedido.`,
+      link: true,
+    })
+  }
+  const title = TITLES[pathname.replace(/\/+$/, "")]
   usePageMetadata(
-    `${page ? page[1] : "Página no encontrada"} — Ladera, café de altura · Demo de Ian Aldana Martínez`,
+    `${title || "Página no encontrada"} — Ladera, café de altura · Demo de Ian Aldana Martínez`,
     "Café de especialidad ficticio en Xalapa: lotes de altura con productor, proceso y precio publicados. Portafolio de Ian Aldana Martínez.",
   )
   useEffect(() => {
@@ -68,11 +123,23 @@ export default function CafeApp() {
               {label}
             </NavLink>
           ))}
+          <button
+            type="button"
+            className="l-cart"
+            aria-label={active ? "Ver el estado de tu pedido" : `Ver pedido, ${count} productos`}
+            onClick={() => navigate("/cafe/pedido")}
+          >
+            <ShoppingBag size={18} aria-hidden="true" />
+            <span className="l-cart-label">{active ? "En barra" : "Pedido"}</span>
+            {!active && <span className="l-cart-count l-num">{count}</span>}
+          </button>
         </nav>
       </header>
       <main id="contenido" tabIndex={-1}>
         <Routes>
           <Route index element={<Inicio onWhatsApp={() => setWhatsapp(true)} />} />
+          <Route path="carta" element={<Carta onChoose={choose} />} />
+          <Route path="pedido" element={<Pedido state={state} dispatch={dispatch} />} />
           <Route path="*" element={<Navigate to="/cafe" replace />} />
         </Routes>
       </main>
@@ -88,6 +155,22 @@ export default function CafeApp() {
       <footer className="l-footer">
         <p>Ladera · café de altura. Negocio ficticio creado para una demostración de portafolio.</p>
       </footer>
+      <div className="l-toast-region" role="status" aria-live="polite">
+        {notice && (
+          <div key={notice.id} className="l-toast">
+            <span>{notice.text}</span>
+            {notice.link && pathname !== "/cafe/pedido" && (
+              <Link to="/cafe/pedido" onClick={() => setNotice(null)}>
+                Ver pedido
+              </Link>
+            )}
+            <button type="button" onClick={() => setNotice(null)}>
+              Cerrar aviso
+            </button>
+          </div>
+        )}
+      </div>
+      {choosing && <ItemPanel item={choosing} onAdd={add} onClose={() => setChoosing(null)} />}
       <WaterMark />
       <WhatsAppPreview
         isOpen={whatsapp}
