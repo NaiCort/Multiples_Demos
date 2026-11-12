@@ -32,6 +32,7 @@ function Lines({ lines, onQuantity, onRemove }) {
                 <button
                   type="button"
                   aria-label={`Quitar un ${item.nombre}`}
+                  disabled={row.cantidad <= 1}
                   onClick={() => onQuantity(row.id, row.cantidad - 1)}
                 >
                   <Minus size={16} aria-hidden="true" />
@@ -168,6 +169,7 @@ export default function Pedido({ state, dispatch }) {
   const [hora, setHora] = useState(slots[0]?.texto || "")
   const [error, setError] = useState(false)
   const [sending, setSending] = useState(false)
+  const [removed, setRemoved] = useState(null)
   const timer = useRef(null)
   const nameRef = useRef(null)
   useEffect(() => () => clearTimeout(timer.current), [])
@@ -197,6 +199,22 @@ export default function Pedido({ state, dispatch }) {
       <h1 id="l-pedido-titulo" tabIndex={-1}>
         {order ? "Tu pedido" : "Pedido para recoger"}
       </h1>
+      <div aria-live="polite">
+        {removed && !order && (
+          <p className="l-undo">
+            Quitaste {findItem(removed.row.itemId)?.nombre} del pedido.{" "}
+            <button
+              type="button"
+              onClick={() => {
+                dispatch({ type: "restore", ...removed })
+                setRemoved(null)
+              }}
+            >
+              Deshacer
+            </button>
+          </p>
+        )}
+      </div>
       {order ? (
         <Seguimiento
           order={order}
@@ -215,7 +233,11 @@ export default function Pedido({ state, dispatch }) {
           <Lines
             lines={cart}
             onQuantity={(id, cantidad) => dispatch({ type: "quantity", id, cantidad })}
-            onRemove={(id) => dispatch({ type: "remove", id })}
+            onRemove={(id) => {
+              const index = cart.findIndex((row) => row.id === id)
+              setRemoved({ row: cart[index], index })
+              dispatch({ type: "remove", id })
+            }}
           />
           <p className="l-total">
             Total <span className="l-num">{pesos(cartTotal(cart))}</span>
@@ -225,6 +247,7 @@ export default function Pedido({ state, dispatch }) {
               <label htmlFor="l-nombre">Nombre para el vaso</label>
               <input
                 id="l-nombre"
+                name="nombre-vaso"
                 ref={nameRef}
                 value={nombre}
                 maxLength={24}
@@ -245,7 +268,12 @@ export default function Pedido({ state, dispatch }) {
             <div className="l-field">
               <label htmlFor="l-hora">Hora para recoger</label>
               {slots.length > 0 ? (
-                <select id="l-hora" value={hora} onChange={(event) => setHora(event.target.value)}>
+                <select
+                  id="l-hora"
+                  name="hora"
+                  value={hora}
+                  onChange={(event) => setHora(event.target.value)}
+                >
                   {slots.map((slot) => (
                     <option key={slot.id} value={slot.texto}>
                       {slot.pronto ? `Lo antes posible (${slot.texto.toLowerCase()})` : slot.texto}

@@ -1,3 +1,11 @@
+# V4.3.4 · 12 de noviembre de 2026 · cierre de Café
+
+- Añadir Visítanos: horario, tarjeta de visitas con sellos por pedido recogido y reserva simulada de la cata de los sábados.
+- Habilitar Café (Ladera) en la Bienvenida.
+- Pasada final: deshacer al quitar líneas del pedido, confirmación al cancelar la cata, nombres en los campos y `touch-action`.
+- Añadir pruebas de navegador de Ladera (`npm run test:browser:cafe`) y cinco pruebas unitarias. Medir Core Web Vitals de laboratorio.
+- Cerrar Ladera sin fotografías de producto; quedan como mejora opcional para V4.8.
+
 # V4.3.3 · 12 de noviembre de 2026
 
 - Añadir Prepara en casa: recetas de gotero V60, Chemex, prensa francesa y moka, escaladas por tazas, con un temporizador real que marca cada vertido.

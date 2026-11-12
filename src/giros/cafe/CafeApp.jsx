@@ -12,6 +12,7 @@ import Carta from "./pages/Carta"
 import Pedido from "./pages/Pedido"
 import Origen from "./pages/Origen"
 import Prepara from "./pages/Prepara"
+import Visitanos from "./pages/Visitanos"
 import ItemPanel from "./components/ItemPanel"
 import { findItem } from "./data/carta"
 import { cartCount, load, reducer, save } from "./state/pedido"
@@ -22,10 +23,12 @@ const PAGES = [
   ["/cafe/carta", "La carta"],
   ["/cafe/origen", "Origen"],
   ["/cafe/prepara", "En casa"],
+  ["/cafe/visitanos", "Visítanos"],
 ]
 const TITLES = Object.fromEntries([
   ...PAGES.slice(0, 3),
   ["/cafe/prepara", "Prepara en casa"],
+  ["/cafe/visitanos", "Visítanos"],
   ["/cafe/pedido", "Tu pedido"],
 ])
 const storage = () => {
@@ -61,6 +64,10 @@ function CafeGuide() {
         <li>
           Prepara en casa tiene un temporizador real: cuenta el tiempo y marca cada vertido de la
           receta elegida. Las recetas son orientativas.
+        </li>
+        <li>
+          Visítanos incluye una tarjeta de visitas (cada pedido recogido suma un sello) y la reserva
+          de una cata los sábados. Ambas son simuladas y se guardan en este navegador.
         </li>
         <li>WhatsApp abre una conversación simulada; no se envía ningún mensaje.</li>
       </ul>
@@ -160,6 +167,22 @@ export default function CafeApp() {
           <Route path="pedido" element={<Pedido state={state} dispatch={dispatch} />} />
           <Route path="origen" element={<Origen onChoose={choose} />} />
           <Route path="prepara" element={<Prepara onChoose={choose} />} />
+          <Route
+            path="visitanos"
+            element={
+              <Visitanos
+                visitas={state.visitas || 0}
+                onWhatsApp={() => setWhatsapp(true)}
+                onCanjear={() => {
+                  dispatch({ type: "canjear" })
+                  setNotice({
+                    id: Date.now(),
+                    text: "Bebida de cortesía canjeada. Es una simulación: no hay bebida real.",
+                  })
+                }}
+              />
+            }
+          />
           <Route path="*" element={<Navigate to="/cafe" replace />} />
         </Routes>
       </main>

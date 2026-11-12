@@ -44,7 +44,9 @@ export function describeConfig(item, config = {}) {
 const sameLine = (a, b) =>
   a.itemId === b.itemId && JSON.stringify(a.config) === JSON.stringify(b.config)
 
-export const initialState = { cart: [], order: null, nextLine: 1 }
+export const initialState = { cart: [], order: null, nextLine: 1, visitas: 0 }
+// Tarjeta de visitas simulada: cada pedido recogido suma un sello; con 8, una bebida de cortesía.
+export const SELLOS = 8
 
 export function reducer(state, action) {
   switch (action.type) {
@@ -80,6 +82,13 @@ export function reducer(state, action) {
       }
     case "remove":
       return { ...state, cart: state.cart.filter((row) => row.id !== action.id) }
+    case "restore": {
+      if (state.order && state.order.status !== "recogido") return state
+      if (state.cart.some((row) => row.id === action.row.id)) return state
+      const cart = [...state.cart]
+      cart.splice(Math.min(action.index, cart.length), 0, action.row)
+      return { ...state, cart }
+    }
     case "confirm": {
       if (state.cart.length === 0 || !action.nombre?.trim() || !action.hora) return state
       return {
@@ -97,9 +106,16 @@ export function reducer(state, action) {
       }
     }
     case "pickup":
-      return state.order ? { ...state, order: { ...state.order, status: "recogido" } } : state
+      if (!state.order || state.order.status === "recogido") return state
+      return {
+        ...state,
+        order: { ...state.order, status: "recogido" },
+        visitas: Math.min(SELLOS, (state.visitas || 0) + 1),
+      }
     case "reset":
-      return initialState
+      return { ...initialState, visitas: state.visitas || 0 }
+    case "canjear":
+      return (state.visitas || 0) >= SELLOS ? { ...state, visitas: 0 } : state
     default:
       return state
   }

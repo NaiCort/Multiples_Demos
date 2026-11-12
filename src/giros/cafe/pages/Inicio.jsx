@@ -89,10 +89,15 @@ export default function Inicio({ onWhatsApp }) {
             {LOCAL.zona}, {LOCAL.referencia}. El parque es solo una referencia: el local no existe.
           </p>
           <p>{LOCAL.tueste}</p>
-          <button type="button" className="l-button l-button-line l-visit-ask" onClick={onWhatsApp}>
-            <MessageCircle size={17} aria-hidden="true" />
-            Escribir por WhatsApp
-          </button>
+          <div className="l-actions">
+            <Link className="l-button l-button-ink" to="/cafe/visitanos#cata">
+              Apartar lugar en la cata
+            </Link>
+            <button type="button" className="l-button l-button-line" onClick={onWhatsApp}>
+              <MessageCircle size={17} aria-hidden="true" />
+              Escribir por WhatsApp
+            </button>
+          </div>
         </div>
         <table className="l-hours">
           <caption>Horario de ejemplo</caption>
