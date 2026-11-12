@@ -8,8 +8,12 @@ export function buildWhatsAppUrl(message) {
   return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`
 }
 
-export const EMAIL_URL = "mailto:ian.martinez2610@gmail.com?subject=" +
+export const EMAIL_URL =
+  "mailto:ian.martinez2610@gmail.com?subject=" +
   encodeURIComponent("Interesado en un sitio como tu demo") +
-  "&body=" + encodeURIComponent("Hola Ian,\n\nVi tu demo y me gustaría platicar sobre un proyecto similar para mi negocio.\n\n")
+  "&body=" +
+  encodeURIComponent(
+    "Hola Ian,\n\nVi tu demo y me gustaría platicar sobre un proyecto similar para mi negocio.\n\n",
+  )
 
 export const LINKEDIN_URL = "https://www.linkedin.com/in/ian-almarti/"

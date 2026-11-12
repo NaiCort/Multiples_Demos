@@ -1,168 +1,369 @@
 import assert from "node:assert/strict"
 import path from "node:path"
-import { suite, audit, bounds, nav, button, close, dialog, saved, decodeImages } from "./restaurant-browser.mjs"
+import {
+  suite,
+  audit,
+  bounds,
+  nav,
+  button,
+  close,
+  dialog,
+  saved,
+  decodeImages,
+} from "./restaurant-browser.mjs"
 
 await suite("restaurante", async ({ run, base, output }) => {
-  for (const [width, height, motion] of [[320, 740, "reduce"], [390, 844, "reduce"], [768, 900, "reduce"], [1024, 900, "reduce"], [1440, 950, "reduce"], [390, 740, "no-preference"]]) {
-    await run(`Páginas, espera, plato, carrito, retorno y cierre · ${width}px · ${motion}`, { viewport: { width, height }, reducedMotion: motion, ...(width < 640 ? { isMobile: true, hasTouch: true } : {}) }, async ({ page, mapRequests }) => {
-      await page.goto(`${base}/restaurante`)
-      assert.equal(await dialog(page).count(), 0)
-      assert((await page.locator(".r-service-bar").innerText()).includes("CDMX · Chapultepec"))
-      assert.equal(await page.locator(".r-featured-item").count(), 3)
-      await audit(page); await bounds(page)
-      await page.screenshot({ path: path.join(output, `inicio-${width}-${motion}.png`) })
-      await button(page, "Comer aquí").click()
-      await page.getByRole("heading", { name: "Estamos preparando tu mesa.", exact: true }).waitFor()
-      assert.equal(new URL(page.url()).pathname, "/restaurante/seguimiento")
-      assert.equal(await page.locator(".r-timer").count(), 0)
-      await audit(page)
-      await button(page, "Explorar la carta mientras espero").click()
+  for (const [width, height, motion] of [
+    [320, 740, "reduce"],
+    [390, 844, "reduce"],
+    [768, 900, "reduce"],
+    [1024, 900, "reduce"],
+    [1440, 950, "reduce"],
+    [390, 740, "no-preference"],
+  ]) {
+    await run(
+      `Páginas, espera, plato, carrito, retorno y cierre · ${width}px · ${motion}`,
+      {
+        viewport: { width, height },
+        reducedMotion: motion,
+        ...(width < 640 ? { isMobile: true, hasTouch: true } : {}),
+      },
+      async ({ page, mapRequests }) => {
+        await page.goto(`${base}/restaurante`)
+        assert.equal(await dialog(page).count(), 0)
+        assert((await page.locator(".r-service-bar").innerText()).includes("CDMX · Chapultepec"))
+        assert.equal(await page.locator(".r-featured-item").count(), 3)
+        await audit(page)
+        await bounds(page)
+        await page.screenshot({ path: path.join(output, `inicio-${width}-${motion}.png`) })
+        await button(page, "Comer aquí").click()
+        await page
+          .getByRole("heading", { name: "Estamos preparando tu mesa.", exact: true })
+          .waitFor()
+        assert.equal(new URL(page.url()).pathname, "/restaurante/seguimiento")
+        assert.equal(await page.locator(".r-timer").count(), 0)
+        await audit(page)
+        await button(page, "Explorar la carta mientras espero").click()
+        await page.locator(".r-menu-item").first().waitFor()
+        assert.equal(await page.locator(".r-menu-item").count(), 28)
+        await page
+          .locator(".r-menu-list")
+          .getByRole("button", { name: "Elegir Pasta de la casa", exact: true })
+          .click()
+        assert(await button(dialog(page), "Añadir al pedido · $195").isDisabled())
+        await audit(page)
+        await close(page)
+        await button(page.locator(".r-timer"), "Saltar espera desde el contador").click()
+        const table = (await saved(page)).visit.table
+        assert(table >= 1 && table <= 25)
+        await button(page, "Entendido").click()
+        await decodeImages(page)
+        await audit(page)
+        await bounds(page)
+        await page.locator("#carta").scrollIntoViewIfNeeded()
+        await page.screenshot({ path: path.join(output, `carta-${width}-${motion}.png`) })
+        await button(page.locator(".r-timer"), "Elegir esquina del contador").click()
+        await button(page.locator(".r-timer"), "Superior izquierda").click()
+        await button(page.locator(".r-timer"), "Minimizar contador").click()
+        await bounds(page)
+        await nav(page, "Conócenos")
+        await audit(page)
+        assert((await page.locator(".r-service-bar").innerText()).includes(`Mesa ${table}`))
+        await page.getByRole("link", { name: "Volver al portafolio de demos", exact: true }).click()
+        await page.locator(".r-timer-compact").waitFor()
+        await page.reload()
+        await page.locator(".r-timer-compact").waitFor()
+        await page.locator(".r-timer-open").click()
+        await page.getByRole("heading", { name: `Mesa ${table}`, exact: true }).waitFor()
+        assert.equal(new URL(page.url()).pathname, "/restaurante/seguimiento")
+        assert.equal((await saved(page)).visit.table, table)
+        await button(page, "Elegir mi comida").click()
+        await button(page.locator(".r-menu-list"), "Elegir Ensalada del patio").click()
+        await button(dialog(page), "Foto siguiente de Ensalada del patio").click()
+        assert(
+          (await dialog(page).locator(".r-gallery-frame img").getAttribute("src")).includes(
+            "ensalada-2",
+          ),
+        )
+        await dialog(page)
+          .getByLabel("Cantidad de Vinagreta de limón", { exact: true })
+          .selectOption("none")
+        await dialog(page).getByRole("checkbox", { name: "Pollo a la plancha" }).check()
+        await dialog(page).getByText("Con carne", { exact: true }).waitFor()
+        await audit(page)
+        await page.screenshot({ path: path.join(output, `producto-${width}-${motion}.png`) })
+        await button(dialog(page), "Añadir al pedido · $170").click()
+        await button(page, "Ver pedido, 1 productos").click()
+        assert.equal(new URL(page.url()).pathname, "/restaurante/pedido")
+        assert(
+          (await page.locator(".r-panel-body").innerText()).includes(
+            "Sin este ingrediente: Vinagreta de limón",
+          ),
+        )
+        await button(page, "Editar Ensalada del patio").click()
+        await dialog(page).getByRole("checkbox", { name: "Pollo a la plancha" }).uncheck()
+        await button(dialog(page), "Guardar cambios · $125").click()
+        await button(page, "Continuar con el pedido").click()
+        await audit(page)
+        await bounds(page)
+        await button(page, "Simular pedido · $125").click()
+        await page.getByRole("heading", { name: "En preparación", exact: true }).waitFor()
+        await audit(page)
+        await button(page, "Avanzar simulación").click()
+        await button(page, "Terminar visita de ejemplo").click()
+        await page.getByRole("heading", { name: "Visita finalizada", exact: true }).waitFor()
+        assert.equal(await page.locator(".r-timer").count(), 0)
+        assert.equal(mapRequests.length, 0)
+      },
+    )
+  }
+  await run(
+    "Filtros en URL, historial atrás/adelante y edición sin perder búsqueda",
+    {},
+    async ({ page }) => {
+      await page.goto(`${base}/restaurante/carta?categoria=Bebidas&buscar=cafe`)
       await page.locator(".r-menu-item").first().waitFor()
-      assert.equal(await page.locator(".r-menu-item").count(), 28)
-      await page.locator(".r-menu-list").getByRole("button", { name: "Elegir Pasta de la casa", exact: true }).click()
-      assert(await button(dialog(page), "Añadir al pedido · $195").isDisabled())
-      await audit(page); await close(page)
-      await button(page.locator(".r-timer"), "Saltar espera desde el contador").click()
-      const table = (await saved(page)).visit.table
-      assert(table >= 1 && table <= 25)
-      await button(page, "Entendido").click()
-      await decodeImages(page); await audit(page); await bounds(page)
-      await page.locator("#carta").scrollIntoViewIfNeeded()
-      await page.screenshot({ path: path.join(output, `carta-${width}-${motion}.png`) })
+      assert.equal(await page.locator(".r-menu-item").count(), 1)
+      await button(page.locator(".r-menu-list"), "Elegir Café americano").click()
+      await button(dialog(page), "Para llevar").click()
+      await button(dialog(page), "Añadir al pedido · $45").click()
+      await button(page, "Ver pedido, 1 productos").click()
+      await button(page, "Editar Café americano").click()
+      await button(dialog(page), "Guardar cambios · $45").click()
+      await button(page, "Añadir otro plato").click()
+      assert.equal(new URL(page.url()).search, "?categoria=Bebidas&buscar=cafe")
+      await nav(page, "Conócenos")
+      await page.goBack()
+      await page.locator(".r-menu-item").waitFor()
+      assert.equal(
+        await page.getByRole("searchbox", { name: "Buscar en la carta", exact: true }).inputValue(),
+        "cafe",
+      )
+      await page.goForward()
+      await page.locator(".r-team").waitFor()
+      await audit(page)
+    },
+  )
+  await run(
+    "Bebida y combo con suplementos, edición y recibo",
+    { viewport: { width: 390, height: 844 } },
+    async ({ page }) => {
+      await page.goto(`${base}/restaurante`)
+      await button(page, "Para llevar").click()
+      await button(page.locator(".r-menu-list"), "Elegir Hamburguesa Patio").click()
+      await dialog(page).getByLabel("Proteína", { exact: true }).selectOption("doble")
+      await dialog(page)
+        .getByRole("checkbox", { name: /Añadir entrada pequeña/ })
+        .check()
+      await dialog(page)
+        .getByRole("radio", { name: /Ensalada pequeña/ })
+        .check()
+      await dialog(page)
+        .getByRole("radio", { name: /Limonada · 250 ml/ })
+        .check()
+      await audit(page)
+      await button(dialog(page), "Añadir al pedido · $355").click()
+      await button(page.locator(".r-menu-list"), "Elegir Café americano").click()
+      await dialog(page)
+        .getByRole("radio", { name: /Grande · 360 ml/ })
+        .check()
+      await dialog(page)
+        .getByRole("radio", { name: /Con hielo/ })
+        .check()
+      await dialog(page)
+        .getByLabel("Cantidad de Azúcar aparte", { exact: true })
+        .selectOption("none")
+      await button(dialog(page), "Añadir al pedido · $57").click()
+      await button(page, "Ver pedido, 2 productos").click()
+      assert(
+        (await page.locator(".r-panel-body").innerText()).includes(
+          "Combo: Ensalada pequeña + Limonada",
+        ),
+      )
+      await button(page, "Editar Café americano").click()
+      assert(
+        await dialog(page)
+          .getByRole("radio", { name: /Con hielo/ })
+          .isChecked(),
+      )
+      await button(dialog(page), "Guardar cambios · $57").click()
+      await button(page, "Continuar con el pedido").click()
+      await button(page, "Simular pedido · $412").click()
+      await page.getByText("Ver recibo y configuración", { exact: true }).click()
+      assert((await page.locator(".r-receipt-content").innerText()).includes("Doble res"))
+      await audit(page)
+    },
+  )
+  await run(
+    "Entrega, cobertura, beneficio, recarga, recibo y perfil",
+    { viewport: { width: 390, height: 844 } },
+    async ({ page }) => {
+      await page.goto(`${base}/restaurante`)
+      await button(page, "A domicilio").click()
+      await button(page, "Mi perfil · demo").click()
+      await dialog(page).getByRole("checkbox", { name: "Usar perfil de ejemplo" }).check()
+      await close(page)
+      await button(page.locator(".r-menu-list"), "Elegir Hamburguesa Patio").click()
+      await button(dialog(page), "Añadir al pedido · $215").click()
+      await button(page, "Ver pedido, 1 productos").click()
+      await button(page, "Continuar con el pedido").click()
+      await page.getByLabel("Local del pedido · demo", { exact: true }).selectOption("tijuana")
+      await page.getByLabel("Zona de entrega de ejemplo", { exact: true }).selectOption("fuera")
+      assert(await page.locator(".r-panel-body .r-button.r-full").last().isDisabled())
+      await page.getByLabel("Zona de entrega de ejemplo", { exact: true }).selectOption("centro")
+      await page.getByRole("radio", { name: /^Pago digital · simulado/ }).check()
+      await page.getByRole("textbox", { name: "Dirección de ejemplo", exact: true }).fill("")
+      assert(await button(page, "Simular pedido · $239").isDisabled())
+      await page
+        .getByRole("textbox", { name: "Dirección de ejemplo", exact: true })
+        .fill("Avenida ficticia 25")
+      await audit(page)
+      await page.screenshot({ path: path.join(output, "entrega.png") })
+      await button(page, "Simular pedido · $239").click()
+      const reference = (await saved(page)).order.id
+      await page.reload()
+      await page.getByRole("heading", { name: "En preparación", exact: true }).waitFor()
+      assert.equal((await saved(page)).order.id, reference)
+      assert.equal((await saved(page)).order.pointId, "tijuana")
+      await button(page, "Avanzar simulación").click()
+      await page.getByRole("heading", { name: "En camino", exact: true }).waitFor()
+      await button(page, "Avanzar simulación").click()
+      await button(page, "Finalizar entrega de ejemplo").click()
+      await button(page, "Perfil y recibos de ejemplo").click()
+      assert((await dialog(page).innerText()).includes("4 visitas de ejemplo"))
+      await dialog(page)
+        .getByRole("button", { name: new RegExp(reference) })
+        .click()
+      await button(dialog(page), "Vista del correo de ejemplo").click()
+      assert((await dialog(page).innerText()).includes("alex@example.invalid"))
+      await audit(page)
+    },
+  )
+  await run(
+    "Minuto real, arrastre, miniatura, límites y retorno al seguimiento",
+    { viewport: { width: 1440, height: 900 } },
+    async ({ page }) => {
+      await page.clock.install()
+      await page.goto(`${base}/restaurante`)
+      await button(page, "Comer aquí").click()
+      await button(page, "Explorar la carta mientras espero").click()
+      await page.clock.fastForward(60_100)
+      assert((await page.locator(".r-timer-main").innerText()).includes("Mesa"))
       await button(page.locator(".r-timer"), "Elegir esquina del contador").click()
       await button(page.locator(".r-timer"), "Superior izquierda").click()
-      await button(page.locator(".r-timer"), "Minimizar contador").click(); await bounds(page)
-      await nav(page, "Conócenos"); await audit(page)
-      assert((await page.locator(".r-service-bar").innerText()).includes(`Mesa ${table}`))
-      await page.getByRole("link", { name: "Volver al portafolio de demos", exact: true }).click()
-      await page.locator(".r-timer-compact").waitFor(); await page.reload(); await page.locator(".r-timer-compact").waitFor()
+      await page.clock.runFor(100)
+      await page.waitForFunction(() => {
+        const rect = document.querySelector(".r-timer").getBoundingClientRect()
+        return rect.left < 24 && rect.top < 200 && !document.querySelector(".r-timer-positions")
+      })
+      await page.evaluate(() => document.fonts.ready)
+      const handle = await page.locator(".r-timer-grip").boundingBox()
+      assert(
+        await page.evaluate(
+          ({ x, y }) => !!document.elementFromPoint(x + 10, y + 10)?.closest(".r-timer-grip"),
+          handle,
+        ),
+        "El arrastre debe comenzar sobre el asa visible",
+      )
+      await page.mouse.move(handle.x + 10, handle.y + 10)
+      await page.mouse.down()
+      await page.mouse.move(handle.x + 210, handle.y + 110, { steps: 8 })
+      await page.mouse.up()
+      await page.waitForFunction(() => {
+        const widget = JSON.parse(localStorage.getItem("patio12-demo-v1"))?.widget
+        return widget?.x > 0 && widget?.y > 0
+      })
+      const moved = (await saved(page)).widget
+      assert(moved.x > 0 && moved.y > 0)
+      await bounds(page)
+      await page.setViewportSize({ width: 320, height: 640 })
+      await bounds(page)
+      await page.reload()
+      await page.locator(".r-timer").waitFor()
+      await bounds(page)
       await page.locator(".r-timer-open").click()
-      await page.getByRole("heading", { name: `Mesa ${table}`, exact: true }).waitFor()
       assert.equal(new URL(page.url()).pathname, "/restaurante/seguimiento")
-      assert.equal((await saved(page)).visit.table, table)
+    },
+  )
+  await run(
+    "Reserva independiente, disponibilidad y foco del diálogo",
+    { viewport: { width: 390, height: 844 } },
+    async ({ page }) => {
+      await page.goto(`${base}/restaurante`)
+      await button(page, "Para llevar").click()
+      await nav(page, "Locales")
+      await page
+        .locator('.r-local-card[data-local="merida"]')
+        .getByRole("link", { name: "Conocer este local", exact: true })
+        .click()
+      await button(page, "Reservar aquí").click()
+      assert((await dialog(page).innerText()).includes("Mérida · Centro"))
+      await button(dialog(page), "Cambiar local de la reserva").click()
+      await dialog(page).getByLabel("Local simulado", { exact: true }).selectOption("tijuana")
+      await button(dialog(page), "Usar este local").click()
+      assert((await dialog(page).innerText()).includes("Tijuana · Morelos"))
+      assert.equal((await saved(page)).visit.pointId, "chapultepec")
+      for (let i = 0; i < 12; i++) {
+        await page.keyboard.press(i % 2 ? "Shift+Tab" : "Tab")
+        assert(await page.evaluate(() => !!document.activeElement.closest("dialog")))
+      }
+      await dialog(page).getByLabel("Fecha de ejemplo", { exact: true }).selectOption({ index: 1 })
+      await button(dialog(page), "Ver horarios").click()
+      await button(dialog(page), "14:30 Disponible").click()
+      await button(dialog(page), "Cambiar fecha o personas").click()
+      await dialog(page).getByLabel("Personas", { exact: true }).selectOption("6")
+      await button(dialog(page), "Ver horarios").click()
+      assert(await button(dialog(page), "Simular reserva").isDisabled())
+      await button(dialog(page), "13:00 Disponible").click()
+      await audit(page)
+      await button(dialog(page), "Simular reserva").click()
+      await page
+        .getByRole("heading", { name: "Reserva simulada completada", exact: true })
+        .waitFor()
+      await button(dialog(page), "Finalizar").click()
+      assert.equal((await saved(page)).visit.pointId, "chapultepec")
+    },
+  )
+  await run(
+    "Galería táctil, almacenamiento bloqueado y ventana flotante denegada",
+    { viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true },
+    async ({ page, context }) => {
+      await page.addInitScript(() => {
+        Object.defineProperty(window, "documentPictureInPicture", {
+          configurable: true,
+          value: { requestWindow: () => Promise.reject(new Error("denegado")) },
+        })
+        Storage.prototype.setItem = () => {
+          throw new Error("blocked")
+        }
+        Storage.prototype.getItem = () => {
+          throw new Error("blocked")
+        }
+      })
+      await page.goto(`${base}/restaurante`)
+      await button(page, "Comer aquí").click()
+      await button(page, "Saltar espera de demostración").click()
       await button(page, "Elegir mi comida").click()
+      await button(page.locator(".r-timer"), "Abrir contador en ventana flotante").click()
+      await page
+        .getByText("No se pudo abrir. El seguimiento sigue disponible aquí.", { exact: true })
+        .waitFor()
       await button(page.locator(".r-menu-list"), "Elegir Ensalada del patio").click()
-      await button(dialog(page), "Foto siguiente de Ensalada del patio").click()
-      assert((await dialog(page).locator(".r-gallery-frame img").getAttribute("src")).includes("ensalada-2"))
-      await dialog(page).getByLabel("Cantidad de Vinagreta de limón", { exact: true }).selectOption("none")
-      await dialog(page).getByRole("checkbox", { name: "Pollo a la plancha" }).check()
-      await dialog(page).getByText("Con carne", { exact: true }).waitFor()
-      await audit(page); await page.screenshot({ path: path.join(output, `producto-${width}-${motion}.png`) })
-      await button(dialog(page), "Añadir al pedido · $170").click()
-      await button(page, "Ver pedido, 1 productos").click()
-      assert.equal(new URL(page.url()).pathname, "/restaurante/pedido")
-      assert((await page.locator(".r-panel-body").innerText()).includes("Sin este ingrediente: Vinagreta de limón"))
-      await button(page, "Editar Ensalada del patio").click()
-      await dialog(page).getByRole("checkbox", { name: "Pollo a la plancha" }).uncheck()
-      await button(dialog(page), "Guardar cambios · $125").click()
-      await button(page, "Continuar con el pedido").click()
-      await audit(page); await bounds(page)
-      await button(page, "Simular pedido · $125").click()
-      await page.getByRole("heading", { name: "En preparación", exact: true }).waitFor(); await audit(page)
-      await button(page, "Avanzar simulación").click(); await button(page, "Terminar visita de ejemplo").click()
-      await page.getByRole("heading", { name: "Visita finalizada", exact: true }).waitFor()
-      assert.equal(await page.locator(".r-timer").count(), 0); assert.equal(mapRequests.length, 0)
-    })
-  }
-  await run("Filtros en URL, historial atrás/adelante y edición sin perder búsqueda", {}, async ({ page }) => {
-    await page.goto(`${base}/restaurante/carta?categoria=Bebidas&buscar=cafe`)
-    await page.locator(".r-menu-item").first().waitFor()
-    assert.equal(await page.locator(".r-menu-item").count(), 1)
-    await button(page.locator(".r-menu-list"), "Elegir Café americano").click()
-    await button(dialog(page), "Para llevar").click()
-    await button(dialog(page), "Añadir al pedido · $45").click()
-    await button(page, "Ver pedido, 1 productos").click()
-    await button(page, "Editar Café americano").click(); await button(dialog(page), "Guardar cambios · $45").click()
-    await button(page, "Añadir otro plato").click()
-    assert.equal(new URL(page.url()).search, "?categoria=Bebidas&buscar=cafe")
-    await nav(page, "Conócenos"); await page.goBack(); await page.locator(".r-menu-item").waitFor()
-    assert.equal(await page.getByRole("searchbox", { name: "Buscar en la carta", exact: true }).inputValue(), "cafe")
-    await page.goForward(); await page.locator(".r-team").waitFor(); await audit(page)
-  })
-  await run("Bebida y combo con suplementos, edición y recibo", { viewport: { width: 390, height: 844 } }, async ({ page }) => {
-    await page.goto(`${base}/restaurante`); await button(page, "Para llevar").click()
-    await button(page.locator(".r-menu-list"), "Elegir Hamburguesa Patio").click()
-    await dialog(page).getByLabel("Proteína", { exact: true }).selectOption("doble")
-    await dialog(page).getByRole("checkbox", { name: /Añadir entrada pequeña/ }).check()
-    await dialog(page).getByRole("radio", { name: /Ensalada pequeña/ }).check(); await dialog(page).getByRole("radio", { name: /Limonada · 250 ml/ }).check()
-    await audit(page); await button(dialog(page), "Añadir al pedido · $355").click()
-    await button(page.locator(".r-menu-list"), "Elegir Café americano").click()
-    await dialog(page).getByRole("radio", { name: /Grande · 360 ml/ }).check(); await dialog(page).getByRole("radio", { name: /Con hielo/ }).check()
-    await dialog(page).getByLabel("Cantidad de Azúcar aparte", { exact: true }).selectOption("none")
-    await button(dialog(page), "Añadir al pedido · $57").click(); await button(page, "Ver pedido, 2 productos").click()
-    assert((await page.locator(".r-panel-body").innerText()).includes("Combo: Ensalada pequeña + Limonada"))
-    await button(page, "Editar Café americano").click(); assert(await dialog(page).getByRole("radio", { name: /Con hielo/ }).isChecked())
-    await button(dialog(page), "Guardar cambios · $57").click(); await button(page, "Continuar con el pedido").click()
-    await button(page, "Simular pedido · $412").click(); await page.getByText("Ver recibo y configuración", { exact: true }).click()
-    assert((await page.locator(".r-receipt-content").innerText()).includes("Doble res")); await audit(page)
-  })
-  await run("Entrega, cobertura, beneficio, recarga, recibo y perfil", { viewport: { width: 390, height: 844 } }, async ({ page }) => {
-    await page.goto(`${base}/restaurante`); await button(page, "A domicilio").click()
-    await button(page, "Mi perfil · demo").click(); await dialog(page).getByRole("checkbox", { name: "Usar perfil de ejemplo" }).check(); await close(page)
-    await button(page.locator(".r-menu-list"), "Elegir Hamburguesa Patio").click(); await button(dialog(page), "Añadir al pedido · $215").click()
-    await button(page, "Ver pedido, 1 productos").click(); await button(page, "Continuar con el pedido").click()
-    await page.getByLabel("Local del pedido · demo", { exact: true }).selectOption("tijuana")
-    await page.getByLabel("Zona de entrega de ejemplo", { exact: true }).selectOption("fuera")
-    assert(await page.locator(".r-panel-body .r-button.r-full").last().isDisabled())
-    await page.getByLabel("Zona de entrega de ejemplo", { exact: true }).selectOption("centro")
-    await page.getByRole("radio", { name: /^Pago digital · simulado/ }).check()
-    await page.getByRole("textbox", { name: "Dirección de ejemplo", exact: true }).fill("")
-    assert(await button(page, "Simular pedido · $239").isDisabled())
-    await page.getByRole("textbox", { name: "Dirección de ejemplo", exact: true }).fill("Avenida ficticia 25")
-    await audit(page); await page.screenshot({ path: path.join(output, "entrega.png") })
-    await button(page, "Simular pedido · $239").click(); const reference = (await saved(page)).order.id
-    await page.reload(); await page.getByRole("heading", { name: "En preparación", exact: true }).waitFor()
-    assert.equal((await saved(page)).order.id, reference); assert.equal((await saved(page)).order.pointId, "tijuana")
-    await button(page, "Avanzar simulación").click(); await page.getByRole("heading", { name: "En camino", exact: true }).waitFor()
-    await button(page, "Avanzar simulación").click(); await button(page, "Finalizar entrega de ejemplo").click()
-    await button(page, "Perfil y recibos de ejemplo").click()
-    assert((await dialog(page).innerText()).includes("4 visitas de ejemplo"))
-    await dialog(page).getByRole("button", { name: new RegExp(reference) }).click()
-    await button(dialog(page), "Vista del correo de ejemplo").click(); assert((await dialog(page).innerText()).includes("alex@example.invalid")); await audit(page)
-  })
-  await run("Minuto real, arrastre, miniatura, límites y retorno al seguimiento", { viewport: { width: 1440, height: 900 } }, async ({ page }) => {
-    await page.clock.install(); await page.goto(`${base}/restaurante`); await button(page, "Comer aquí").click()
-    await button(page, "Explorar la carta mientras espero").click(); await page.clock.fastForward(60_100)
-    assert((await page.locator(".r-timer-main").innerText()).includes("Mesa"))
-    await button(page.locator(".r-timer"), "Elegir esquina del contador").click(); await button(page.locator(".r-timer"), "Superior izquierda").click(); await page.clock.runFor(100)
-    await page.waitForFunction(() => { const rect = document.querySelector(".r-timer").getBoundingClientRect(); return rect.left < 24 && rect.top < 200 && !document.querySelector(".r-timer-positions") })
-    await page.evaluate(() => document.fonts.ready)
-    const handle = await page.locator(".r-timer-grip").boundingBox()
-    assert(await page.evaluate(({ x, y }) => !!document.elementFromPoint(x + 10, y + 10)?.closest(".r-timer-grip"), handle), "El arrastre debe comenzar sobre el asa visible")
-    await page.mouse.move(handle.x + 10, handle.y + 10); await page.mouse.down(); await page.mouse.move(handle.x + 210, handle.y + 110, { steps: 8 }); await page.mouse.up()
-    await page.waitForFunction(() => { const widget = JSON.parse(localStorage.getItem("patio12-demo-v1"))?.widget; return widget?.x > 0 && widget?.y > 0 })
-    const moved = (await saved(page)).widget; assert(moved.x > 0 && moved.y > 0); await bounds(page)
-    await page.setViewportSize({ width: 320, height: 640 }); await bounds(page)
-    await page.reload(); await page.locator(".r-timer").waitFor(); await bounds(page)
-    await page.locator(".r-timer-open").click(); assert.equal(new URL(page.url()).pathname, "/restaurante/seguimiento")
-  })
-  await run("Reserva independiente, disponibilidad y foco del diálogo", { viewport: { width: 390, height: 844 } }, async ({ page }) => {
-    await page.goto(`${base}/restaurante`); await button(page, "Para llevar").click(); await nav(page, "Locales")
-    await page.locator('.r-local-card[data-local="merida"]').getByRole("link", { name: "Conocer este local", exact: true }).click()
-    await button(page, "Reservar aquí").click()
-    assert((await dialog(page).innerText()).includes("Mérida · Centro"))
-    await button(dialog(page), "Cambiar local de la reserva").click(); await dialog(page).getByLabel("Local simulado", { exact: true }).selectOption("tijuana"); await button(dialog(page), "Usar este local").click()
-    assert((await dialog(page).innerText()).includes("Tijuana · Morelos")); assert.equal((await saved(page)).visit.pointId, "chapultepec")
-    for (let i = 0; i < 12; i++) { await page.keyboard.press(i % 2 ? "Shift+Tab" : "Tab"); assert(await page.evaluate(() => !!document.activeElement.closest("dialog"))) }
-    await dialog(page).getByLabel("Fecha de ejemplo", { exact: true }).selectOption({ index: 1 }); await button(dialog(page), "Ver horarios").click(); await button(dialog(page), "14:30 Disponible").click()
-    await button(dialog(page), "Cambiar fecha o personas").click(); await dialog(page).getByLabel("Personas", { exact: true }).selectOption("6"); await button(dialog(page), "Ver horarios").click()
-    assert(await button(dialog(page), "Simular reserva").isDisabled()); await button(dialog(page), "13:00 Disponible").click()
-    await audit(page); await button(dialog(page), "Simular reserva").click(); await page.getByRole("heading", { name: "Reserva simulada completada", exact: true }).waitFor()
-    await button(dialog(page), "Finalizar").click(); assert.equal((await saved(page)).visit.pointId, "chapultepec")
-  })
-  await run("Galería táctil, almacenamiento bloqueado y ventana flotante denegada", { viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true }, async ({ page, context }) => {
-    await page.addInitScript(() => {
-      Object.defineProperty(window, "documentPictureInPicture", { configurable: true, value: { requestWindow: () => Promise.reject(new Error("denegado")) } })
-      Storage.prototype.setItem = () => { throw new Error("blocked") }; Storage.prototype.getItem = () => { throw new Error("blocked") }
-    })
-    await page.goto(`${base}/restaurante`); await button(page, "Comer aquí").click(); await button(page, "Saltar espera de demostración").click(); await button(page, "Elegir mi comida").click()
-    await button(page.locator(".r-timer"), "Abrir contador en ventana flotante").click(); await page.getByText("No se pudo abrir. El seguimiento sigue disponible aquí.", { exact: true }).waitFor()
-    await button(page.locator(".r-menu-list"), "Elegir Ensalada del patio").click()
-    const gallery = dialog(page).locator(".r-gallery-frame"), box = await gallery.boundingBox()
-    const cdp = await context.newCDPSession(page)
-    await cdp.send("Input.dispatchTouchEvent", { type: "touchStart", touchPoints: [{ x: box.x + box.width - 35, y: box.y + 55 }] })
-    await cdp.send("Input.dispatchTouchEvent", { type: "touchMove", touchPoints: [{ x: box.x + 40, y: box.y + 58 }] })
-    await cdp.send("Input.dispatchTouchEvent", { type: "touchEnd", touchPoints: [] })
-    assert((await gallery.locator("img").getAttribute("src")).includes("ensalada-2")); await bounds(page); await audit(page)
-  })
+      const gallery = dialog(page).locator(".r-gallery-frame"),
+        box = await gallery.boundingBox()
+      const cdp = await context.newCDPSession(page)
+      await cdp.send("Input.dispatchTouchEvent", {
+        type: "touchStart",
+        touchPoints: [{ x: box.x + box.width - 35, y: box.y + 55 }],
+      })
+      await cdp.send("Input.dispatchTouchEvent", {
+        type: "touchMove",
+        touchPoints: [{ x: box.x + 40, y: box.y + 58 }],
+      })
+      await cdp.send("Input.dispatchTouchEvent", { type: "touchEnd", touchPoints: [] })
+      assert((await gallery.locator("img").getAttribute("src")).includes("ensalada-2"))
+      await bounds(page)
+      await audit(page)
+    },
+  )
 })

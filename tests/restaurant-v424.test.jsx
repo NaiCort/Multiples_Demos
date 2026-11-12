@@ -4,11 +4,26 @@ import PhotoGallery from "../src/giros/restaurante/components/PhotoGallery"
 import RestauranteApp from "../src/giros/restaurante/RestauranteApp"
 import RestaurantProvider from "../src/giros/restaurante/state/RestaurantProvider"
 import { MENU, menuForPoint } from "../src/giros/restaurante/data/menu"
-import { createVisit, initialState, restaurantReducer, restoreState, serializeState, STORAGE_KEY } from "../src/giros/restaurante/state/model"
+import {
+  createVisit,
+  initialState,
+  restaurantReducer,
+  restoreState,
+  serializeState,
+  STORAGE_KEY,
+} from "../src/giros/restaurante/state/model"
 import { button, click, enter, render } from "./helpers"
 
-const salad = MENU.find(item => item.id === "ensalada")
-const app = () => <MemoryRouter initialEntries={["/restaurante/carta"]}><RestaurantProvider><Routes><Route path="/restaurante/*" element={<RestauranteApp />} /></Routes></RestaurantProvider></MemoryRouter>
+const salad = MENU.find((item) => item.id === "ensalada")
+const app = () => (
+  <MemoryRouter initialEntries={["/restaurante/carta"]}>
+    <RestaurantProvider>
+      <Routes>
+        <Route path="/restaurante/*" element={<RestauranteApp />} />
+      </Routes>
+    </RestaurantProvider>
+  </MemoryRouter>
+)
 
 describe("Galería y respuesta visual de V4.2.4", () => {
   it("avanza, retrocede y vuelve al inicio sin perder el foco del control", async () => {
@@ -36,7 +51,7 @@ describe("Galería y respuesta visual de V4.2.4", () => {
     expect(container.querySelectorAll("img")).toHaveLength(1)
   })
   it("un producto de una sola foto no ofrece controles que no llevan a otra vista", async () => {
-    const single = MENU.find(item => item.photos.length === 1)
+    const single = MENU.find((item) => item.photos.length === 1)
     const { container } = await render(<PhotoGallery product={single} />)
     expect(container.querySelectorAll("button")).toHaveLength(0)
     expect(container.querySelector("img").getAttribute("alt")).toContain(single.name)
@@ -45,12 +60,30 @@ describe("Galería y respuesta visual de V4.2.4", () => {
     const now = Date.now()
     const visit = createVisit("pickup", 2, now, "puebla")
     const started = restaurantReducer(initialState(), { type: "start", visit })
-    const previous = restaurantReducer(started, { type: "cart", action: { type: "add", productId: "ensalada", quantity: 2, config: { amounts: { jitomate: "none", pepino: "little", vinagreta: "apart" } } } })
+    const previous = restaurantReducer(started, {
+      type: "cart",
+      action: {
+        type: "add",
+        productId: "ensalada",
+        quantity: 2,
+        config: { amounts: { jitomate: "none", pepino: "little", vinagreta: "apart" } },
+      },
+    })
     const restored = restoreState(serializeState(previous), now + 1_000)
     expect(restored.visit.id).toBe(visit.id)
     expect(restored.cart).toEqual(previous.cart)
-    expect(restored.cart[0].config.amounts).toEqual({ jitomate: "none", pepino: "little", vinagreta: "apart" })
-    const confirmed = restaurantReducer(restored, { type: "confirm-order", id: "P12-V424-TEST", now: now + 1_000, name: "Alex Demo", payment: "cash" })
+    expect(restored.cart[0].config.amounts).toEqual({
+      jitomate: "none",
+      pepino: "little",
+      vinagreta: "apart",
+    })
+    const confirmed = restaurantReducer(restored, {
+      type: "confirm-order",
+      id: "P12-V424-TEST",
+      now: now + 1_000,
+      name: "Alex Demo",
+      payment: "cash",
+    })
     expect(confirmed.order.quote.total).toBe(250)
     expect(confirmed.order.pointId).toBe("puebla")
   })
@@ -70,7 +103,9 @@ describe("Galería y respuesta visual de V4.2.4", () => {
     expect(document.activeElement).toBe(search)
     await click(button("Ver toda la carta"))
     expect(document.activeElement).toBe(search)
-    expect(document.querySelectorAll(".r-menu-item")).toHaveLength(menuForPoint("chapultepec").length)
+    expect(document.querySelectorAll(".r-menu-item")).toHaveLength(
+      menuForPoint("chapultepec").length,
+    )
   })
   it("añadir el mismo plato dos veces confirma cada acción y conserva el pedido entre páginas", async () => {
     await render(app())

@@ -20,7 +20,7 @@ export default function ComercialCTA({
   const reduced = useReducedMotion()
   const accent = dialogAccent(accentColor)
   const whatsappUrl = buildWhatsAppUrl(
-    `Hola Ian, vi tu demo de ${giro} y me interesa un sitio similar para mi negocio.`
+    `Hola Ian, vi tu demo de ${giro} y me interesa un sitio similar para mi negocio.`,
   )
 
   return (
@@ -49,7 +49,12 @@ export default function ComercialCTA({
         </p>
         <h3
           className="mb-4"
-          style={{ fontFamily: headingFontFamily || fontFamily, color: textColor, fontSize: "clamp(1.3rem, 2.5vw, 1.7rem)", lineHeight: 1.4 }}
+          style={{
+            fontFamily: headingFontFamily || fontFamily,
+            color: textColor,
+            fontSize: "clamp(1.3rem, 2.5vw, 1.7rem)",
+            lineHeight: 1.4,
+          }}
         >
           ¿Te gustaría adaptar una experiencia así a tu negocio?
         </h3>
@@ -57,8 +62,8 @@ export default function ComercialCTA({
           className="mb-7"
           style={{ fontFamily, color: "rgba(255,255,255,0.85)", fontSize: 14.5, lineHeight: 1.7 }}
         >
-          Puedo personalizar el estilo, el contenido y los flujos de contacto de un sitio
-          como este para tu propio negocio. Este demo es un ejemplo real de lo que puedo construir.
+          Puedo personalizar el estilo, el contenido y los flujos de contacto de un sitio como este
+          para tu propio negocio. Este demo es un ejemplo real de lo que puedo construir.
         </p>
         <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
           <a
@@ -66,7 +71,12 @@ export default function ComercialCTA({
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center gap-2 px-6 py-3 text-sm font-medium transition-opacity hover:opacity-90"
-            style={{ backgroundColor: accent, color: contrastingText(accent), fontFamily, borderRadius: radius > 20 ? 999 : radius }}
+            style={{
+              backgroundColor: accent,
+              color: contrastingText(accent),
+              fontFamily,
+              borderRadius: radius > 20 ? 999 : radius,
+            }}
           >
             Hablemos
             <ArrowRight size={16} />
