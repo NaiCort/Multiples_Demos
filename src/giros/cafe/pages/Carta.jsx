@@ -39,7 +39,10 @@ export default function Carta({ onChoose }) {
                   <h3>{item.nombre}</h3>
                   <p>{item.desc}</p>
                 </div>
-                <span className="l-price l-num">{pesos(item.precio)}</span>
+                <span className="l-price l-num">
+                  {item.opciones.includes("peso") ? "250 g · " : ""}
+                  {pesos(item.precio)}
+                </span>
                 <button
                   type="button"
                   className="l-add"

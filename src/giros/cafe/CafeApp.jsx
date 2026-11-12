@@ -10,6 +10,7 @@ import usePageMetadata from "../../hooks/usePageMetadata"
 import Inicio from "./pages/Inicio"
 import Carta from "./pages/Carta"
 import Pedido from "./pages/Pedido"
+import Origen from "./pages/Origen"
 import ItemPanel from "./components/ItemPanel"
 import { findItem } from "./data/carta"
 import { cartCount, load, reducer, save } from "./state/pedido"
@@ -18,6 +19,7 @@ import "./cafe.css"
 const PAGES = [
   ["/cafe", "Inicio"],
   ["/cafe/carta", "La carta"],
+  ["/cafe/origen", "Origen"],
 ]
 const TITLES = Object.fromEntries([...PAGES, ["/cafe/pedido", "Tu pedido"]])
 const storage = () => {
@@ -59,7 +61,7 @@ function CafeGuide() {
 
 export default function CafeApp() {
   useFavicon("/favicons/cafe.svg")
-  const { pathname } = useLocation()
+  const { pathname, hash } = useLocation()
   const navigate = useNavigate()
   const [whatsapp, setWhatsapp] = useState(false)
   const [state, dispatch] = useReducer(reducer, undefined, () => load(storage()))
@@ -75,7 +77,7 @@ export default function CafeApp() {
   }, [notice])
   const active = state.order && state.order.status !== "recogido"
   const count = cartCount(state.cart)
-  const choose = (item) => {
+  const choose = (item, initialConfig) => {
     if (active) {
       setNotice({
         id: Date.now(),
@@ -83,7 +85,7 @@ export default function CafeApp() {
       })
       return
     }
-    setChoosing(item)
+    setChoosing({ item, initialConfig })
   }
   const add = (line) => {
     dispatch({ type: "add", ...line })
@@ -100,9 +102,15 @@ export default function CafeApp() {
     "Café de especialidad ficticio en Xalapa: lotes de altura con productor, proceso y precio publicados. Portafolio de Ian Aldana Martínez.",
   )
   useEffect(() => {
-    if (!document.querySelector("dialog[open]"))
-      document.querySelector("#contenido h1")?.focus({ preventScroll: true })
-  }, [pathname])
+    if (document.querySelector("dialog[open]")) return
+    const target = hash ? document.getElementById(decodeURIComponent(hash.slice(1))) : null
+    if (target) {
+      target.scrollIntoView({ block: "start" })
+      const heading = target.querySelector("h2, h3")
+      heading?.setAttribute("tabindex", "-1")
+      heading?.focus({ preventScroll: true })
+    } else document.querySelector("#contenido h1")?.focus({ preventScroll: true })
+  }, [pathname, hash])
   return (
     <div className="ladera-root">
       <a className="skip-link" href="#contenido">
@@ -140,6 +148,7 @@ export default function CafeApp() {
           <Route index element={<Inicio onWhatsApp={() => setWhatsapp(true)} />} />
           <Route path="carta" element={<Carta onChoose={choose} />} />
           <Route path="pedido" element={<Pedido state={state} dispatch={dispatch} />} />
+          <Route path="origen" element={<Origen onChoose={choose} />} />
           <Route path="*" element={<Navigate to="/cafe" replace />} />
         </Routes>
       </main>
@@ -170,7 +179,14 @@ export default function CafeApp() {
           </div>
         )}
       </div>
-      {choosing && <ItemPanel item={choosing} onAdd={add} onClose={() => setChoosing(null)} />}
+      {choosing && (
+        <ItemPanel
+          item={choosing.item}
+          initialConfig={choosing.initialConfig}
+          onAdd={add}
+          onClose={() => setChoosing(null)}
+        />
+      )}
       <WaterMark />
       <WhatsAppPreview
         isOpen={whatsapp}

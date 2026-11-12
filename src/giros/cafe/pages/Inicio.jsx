@@ -60,6 +60,9 @@ export default function Inicio({ onWhatsApp }) {
           Lo preparamos en espresso y en filtrado. La ficha es la misma que acompaña cada taza.
         </p>
         <LoteSheet lote={LOTE_SEMANA} headingId="l-semana-lote" />
+        <Link className="l-text-link" to="/cafe/origen">
+          Ver las fichas de los cuatro lotes
+        </Link>
       </section>
 
       <section className="l-section l-section-tight" aria-labelledby="l-otros-titulo">
@@ -67,7 +70,9 @@ export default function Inicio({ onWhatsApp }) {
         <ul className="l-lot-list">
           {otros.map((lote) => (
             <li key={lote.id} style={{ "--lote": lote.color }}>
-              <strong>{lote.nombre}</strong>
+              <strong>
+                <Link to={`/cafe/origen#${lote.id}`}>{lote.nombre}</Link>
+              </strong>
               <span>{lote.municipio}</span>
               <span className="l-num">{metros(lote.altitud)}</span>
               <span>{lote.proceso}</span>

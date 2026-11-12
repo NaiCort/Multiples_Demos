@@ -1,4 +1,5 @@
 // Carta ficticia de Ladera, ordenada por método de preparación. Precios de ejemplo en MXN.
+import { LOTES } from "./lotes"
 
 export const LECHES = [
   { id: "entera", nombre: "Entera", extra: 0 },
@@ -8,6 +9,20 @@ export const LECHES = [
 ]
 export const AZUCAR = ["Sin azúcar", "Poca", "Normal"]
 export const SHOT_EXTRA = 18
+export const PESOS = [
+  { id: "250", nombre: "250 g", factor: 1 },
+  { id: "1000", nombre: "1 kg", factor: 3.6 },
+]
+export const MOLIENDAS = [
+  "Grano entero",
+  "Espresso",
+  "Moka",
+  "Gotero V60",
+  "Chemex",
+  "Prensa francesa",
+]
+export const bolsaPrecio = (precio250, peso = "250") =>
+  Math.round((precio250 * (PESOS.find((p) => p.id === peso)?.factor || 1)) / 5) * 5
 
 export const CATEGORIAS = [
   {
@@ -152,6 +167,20 @@ export const CATEGORIAS = [
     ],
   },
 ]
+
+CATEGORIAS.push({
+  id: "grano",
+  nombre: "Café en grano",
+  nota: "Bolsas tostadas esta semana. Las molemos al momento para tu método.",
+  items: LOTES.map((lote) => ({
+    id: `bolsa-${lote.id}`,
+    nombre: `${lote.nombre}, ${lote.municipio}`,
+    desc: `${lote.proceso} · ${lote.notas.join(", ")}.`,
+    precio: lote.precio250,
+    lote: lote.id,
+    opciones: ["peso", "molienda"],
+  })),
+})
 
 export const ITEMS = CATEGORIAS.flatMap((categoria) =>
   categoria.items.map((item) => ({ ...item, categoria: categoria.id })),

@@ -922,3 +922,103 @@ main#contenido:focus {
     transition: none;
   }
 }
+
+/* V4.3.2 · Origen y café en grano */
+.l-profile-figure {
+  margin: 40px 0 0;
+}
+.l-profile {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-width: 900px;
+}
+.l-profile .l-grid {
+  stroke: var(--l-line);
+  stroke-width: 1;
+}
+.l-profile .l-axis {
+  font-family: var(--l-sans);
+  font-size: 13px;
+  fill: var(--l-muted);
+  font-variant-numeric: tabular-nums;
+}
+.l-profile .l-point-name {
+  font-family: var(--l-sans);
+  font-stretch: 75%;
+  font-weight: 700;
+  font-size: 16px;
+  fill: var(--l-ink);
+}
+.l-profile .l-point-name,
+.l-profile .l-point-alt {
+  paint-order: stroke;
+  stroke: var(--l-paper);
+  stroke-width: 5px;
+  stroke-linejoin: round;
+}
+.l-slope {
+  fill: none;
+  stroke: var(--l-ink);
+  stroke-width: 1.6;
+}
+.l-profile-figure figcaption {
+  max-width: 60ch;
+  margin-top: 12px;
+  font-family: var(--l-sans);
+  font-size: 0.9rem;
+  color: var(--l-muted);
+}
+.l-origin-lot {
+  scroll-margin-top: 24px;
+  padding-block: 48px;
+}
+.l-origin-lot .l-sheet {
+  margin-top: 0;
+}
+.l-origin-lot .l-actions {
+  margin-top: 20px;
+}
+.l-reading dl {
+  display: grid;
+  gap: 0 40px;
+  margin-top: 24px;
+}
+.l-reading dl div {
+  padding: 16px 0;
+  border-top: 1px solid var(--l-line);
+}
+.l-reading dt {
+  font-family: var(--l-sans);
+  font-weight: 700;
+  font-size: 1.15rem;
+}
+.l-reading dd {
+  max-width: 52ch;
+  margin-top: 4px;
+  color: var(--l-muted);
+}
+.l-sheet-title:focus,
+.l-section h2:focus {
+  outline: none;
+}
+@media (min-width: 960px) {
+  .l-reading dl {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+.l-profile-scroll {
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+}
+.l-mobile-only {
+  display: none;
+}
+@media (max-width: 640px) {
+  .l-profile {
+    min-width: 600px;
+  }
+  .l-mobile-only {
+    display: inline;
+  }
+}

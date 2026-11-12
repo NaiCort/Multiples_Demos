@@ -1,6 +1,6 @@
 // Estado del pedido para recoger de Ladera: funciones puras, probadas sin navegador.
 // Se guarda en el navegador solo para que el recorrido sobreviva a una recarga.
-import { LECHES, SHOT_EXTRA, findItem } from "../data/carta"
+import { LECHES, PESOS, SHOT_EXTRA, bolsaPrecio, findItem } from "../data/carta"
 import { LOTES, LOTE_SEMANA } from "../data/lotes"
 
 export const STORAGE_KEY = "ladera-pedido-v1"
@@ -18,10 +18,13 @@ export function defaultConfig(item) {
   if (item.opciones.includes("shots")) config.shots = 0
   if (item.opciones.includes("azucar")) config.azucar = "Sin azúcar"
   if (item.opciones.includes("lote")) config.lote = LOTE_SEMANA.id
+  if (item.opciones.includes("peso")) config.peso = "250"
+  if (item.opciones.includes("molienda")) config.molienda = "Grano entero"
   return config
 }
 
 export function unitPrice(item, config = {}) {
+  if (config.peso) return bolsaPrecio(item.precio, config.peso)
   const leche = LECHES.find((option) => option.id === config.leche)
   return item.precio + (leche?.extra || 0) + (config.shots || 0) * SHOT_EXTRA
 }
@@ -33,6 +36,8 @@ export function describeConfig(item, config = {}) {
     parts.push(`Leche ${LECHES.find((o) => o.id === config.leche)?.nombre.toLowerCase()}`)
   if (config.shots) parts.push(`${config.shots} shot${config.shots > 1 ? "s" : ""} extra`)
   if (config.azucar) parts.push(config.azucar)
+  if (config.peso) parts.push(PESOS.find((peso) => peso.id === config.peso)?.nombre)
+  if (config.molienda) parts.push(config.molienda)
   return parts.filter(Boolean).join(" · ")
 }
 

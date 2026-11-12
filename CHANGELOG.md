@@ -1,3 +1,10 @@
+# V4.3.2 · 12 de noviembre de 2026
+
+- Añadir Origen: perfil de altitud de los cuatro lotes, una ficha por lote con curvas de nivel y una guía para leer la ficha.
+- Añadir café en grano: bolsas de 250 g o 1 kg con molienda según método, desde la carta o desde cada ficha.
+- Abrir el gotero V60 con el lote de la ficha ya elegido; enlazar los lotes de Inicio con sus fichas.
+- Dibujar las curvas de nivel al entrar en pantalla. Cinco pruebas nuevas.
+
 # V4.3.1 · 12 de noviembre de 2026
 
 - Añadir La carta de Ladera: 16 productos en cinco secciones por método, con personalización de leche, shots, azúcar, lote y cantidad.

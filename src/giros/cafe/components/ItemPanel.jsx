@@ -1,7 +1,7 @@
 import { useState } from "react"
 import { Minus, Plus } from "lucide-react"
 import Modal from "../../../components/shared/Modal"
-import { AZUCAR, LECHES, SHOT_EXTRA } from "../data/carta"
+import { AZUCAR, LECHES, MOLIENDAS, PESOS, SHOT_EXTRA, bolsaPrecio } from "../data/carta"
 import { LOTES, metros, pesos } from "../data/lotes"
 import { MAX_CANTIDAD, defaultConfig, unitPrice } from "../state/pedido"
 
@@ -51,8 +51,8 @@ function Stepper({ label, value, min, max, onChange, format = (n) => n }) {
   )
 }
 
-export default function ItemPanel({ item, onAdd, onClose }) {
-  const [config, setConfig] = useState(() => defaultConfig(item))
+export default function ItemPanel({ item, initialConfig, onAdd, onClose }) {
+  const [config, setConfig] = useState(() => ({ ...defaultConfig(item), ...initialConfig }))
   const [cantidad, setCantidad] = useState(1)
   const set = (key) => (value) => setConfig((previous) => ({ ...previous, [key]: value }))
   const total = unitPrice(item, config) * cantidad
@@ -106,6 +106,31 @@ export default function ItemPanel({ item, onAdd, onClose }) {
               onChange={set("shots")}
             />
           </div>
+        )}
+        {config.peso && (
+          <Choice
+            legend="Bolsa"
+            name="peso"
+            value={config.peso}
+            onChange={set("peso")}
+            options={PESOS.map((peso) => ({
+              value: peso.id,
+              label: (
+                <>
+                  {peso.nombre} <small>{pesos(bolsaPrecio(item.precio, peso.id))}</small>
+                </>
+              ),
+            }))}
+          />
+        )}
+        {config.molienda && (
+          <Choice
+            legend="Molienda"
+            name="molienda"
+            value={config.molienda}
+            onChange={set("molienda")}
+            options={MOLIENDAS.map((molienda) => ({ value: molienda, label: molienda }))}
+          />
         )}
         {config.azucar && (
           <Choice
