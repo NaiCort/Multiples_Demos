@@ -1,3 +1,9 @@
+# V4.3.3 · 12 de noviembre de 2026
+
+- Añadir Prepara en casa: recetas de gotero V60, Chemex, prensa francesa y moka, escaladas por tazas, con un temporizador real que marca cada vertido.
+- Ofrecer el café del lote de la semana molido para el método elegido.
+- Reorganizar el encabezado de Ladera para que quepa en el teléfono. Cuatro pruebas nuevas.
+
 # V4.3.2 · 12 de noviembre de 2026
 
 - Añadir Origen: perfil de altitud de los cuatro lotes, una ficha por lote con curvas de nivel y una guía para leer la ficha.

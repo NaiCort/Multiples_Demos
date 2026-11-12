@@ -11,6 +11,7 @@ import Inicio from "./pages/Inicio"
 import Carta from "./pages/Carta"
 import Pedido from "./pages/Pedido"
 import Origen from "./pages/Origen"
+import Prepara from "./pages/Prepara"
 import ItemPanel from "./components/ItemPanel"
 import { findItem } from "./data/carta"
 import { cartCount, load, reducer, save } from "./state/pedido"
@@ -20,8 +21,13 @@ const PAGES = [
   ["/cafe", "Inicio"],
   ["/cafe/carta", "La carta"],
   ["/cafe/origen", "Origen"],
+  ["/cafe/prepara", "En casa"],
 ]
-const TITLES = Object.fromEntries([...PAGES, ["/cafe/pedido", "Tu pedido"]])
+const TITLES = Object.fromEntries([
+  ...PAGES.slice(0, 3),
+  ["/cafe/prepara", "Prepara en casa"],
+  ["/cafe/pedido", "Tu pedido"],
+])
 const storage = () => {
   try {
     return window.localStorage
@@ -51,6 +57,10 @@ function CafeGuide() {
           La carta permite armar un pedido para recoger: leche, shots, azúcar y lote del filtrado.
           El pedido no se cobra ni se envía; pasa por la barra en un minuto para mostrar el
           seguimiento, y se conserva en este navegador al recargar.
+        </li>
+        <li>
+          Prepara en casa tiene un temporizador real: cuenta el tiempo y marca cada vertido de la
+          receta elegida. Las recetas son orientativas.
         </li>
         <li>WhatsApp abre una conversación simulada; no se envía ningún mensaje.</li>
       </ul>
@@ -131,17 +141,17 @@ export default function CafeApp() {
               {label}
             </NavLink>
           ))}
-          <button
-            type="button"
-            className="l-cart"
-            aria-label={active ? "Ver el estado de tu pedido" : `Ver pedido, ${count} productos`}
-            onClick={() => navigate("/cafe/pedido")}
-          >
-            <ShoppingBag size={18} aria-hidden="true" />
-            <span className="l-cart-label">{active ? "En barra" : "Pedido"}</span>
-            {!active && <span className="l-cart-count l-num">{count}</span>}
-          </button>
         </nav>
+        <button
+          type="button"
+          className="l-cart"
+          aria-label={active ? "Ver el estado de tu pedido" : `Ver pedido, ${count} productos`}
+          onClick={() => navigate("/cafe/pedido")}
+        >
+          <ShoppingBag size={18} aria-hidden="true" />
+          <span className="l-cart-label">{active ? "En barra" : "Pedido"}</span>
+          {!active && <span className="l-cart-count l-num">{count}</span>}
+        </button>
       </header>
       <main id="contenido" tabIndex={-1}>
         <Routes>
@@ -149,6 +159,7 @@ export default function CafeApp() {
           <Route path="carta" element={<Carta onChoose={choose} />} />
           <Route path="pedido" element={<Pedido state={state} dispatch={dispatch} />} />
           <Route path="origen" element={<Origen onChoose={choose} />} />
+          <Route path="prepara" element={<Prepara onChoose={choose} />} />
           <Route path="*" element={<Navigate to="/cafe" replace />} />
         </Routes>
       </main>
