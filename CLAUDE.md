@@ -20,6 +20,9 @@ acciones ficticias del negocio.
   Taller mecánico (V4.5) → Despacho contable (V4.6) → Revista digital (V4.7).
 - **Restaurante = solo Patio 12.** No se construyen las sub-categorías (fonda, comida
   rápida, lujo) ni el panel de empleados y precios: ambas ideas quedaron descartadas.
+- **Café = Ladera**, una sola identidad y un solo local, sin gestión de empleados. Su
+  ficha está en `docs/FICHA_CAFE.md`; leerla antes de tocar `src/giros/cafe/`.
+- Idea a futuro, sin fecha: una demo de empresa con gestión de empleados.
 - **No se modifican demos ya cerradas** mientras se construyen las demás. Mejoras y
   correcciones a demos existentes se anotan en "Pendientes para la fase de ajustes" (abajo)
   y se hacen en V4.8, al terminar las siete. Excepción: un error real en un componente
@@ -75,6 +78,11 @@ patrones, temáticar selección, foco, barras de desplazamiento y subrayado, cor
 Herramientas instaladas en `.claude/` (ver `.claude/README.md`): frontend-design,
 impeccable, web-design-guidelines y web-quality-skills.
 
+## Café en curso
+
+V4.3.0 publicó Inicio en `/cafe`. La Bienvenida se habilita para Café solo al cerrar
+V4.3.4. Siguiente: V4.3.1, Carta y pedido para recoger.
+
 ## Pendientes para la fase de ajustes (V4.8)
 
 No tocar antes de terminar las siete demos.
@@ -90,5 +98,8 @@ No tocar antes de terminar las siete demos.
    temas (unas 700 líneas cada uno) para consolidar componentes duplicados.
 4. **Patio 12:** quitar la etiqueta en mayúsculas sobre el título en Inicio y Carta.
 5. Fichas de identidad a posteriori de los cuatro temas de Psicólogo y de Patio 12.
-6. Dependencias de desarrollo con avisos moderados de `npm audit` (vitest, minimatch vía
+6. **Componentes compartidos:** la llamada comercial (`ComercialCTA`) lleva una etiqueta
+   en mayúsculas sobre el título y una tarjeta centrada; el banner de demo genera la alerta
+   `region` de axe (buenas prácticas). Revisar ambos para todas las demos.
+7. Dependencias de desarrollo con avisos moderados de `npm audit` (vitest, minimatch vía
    eslint): actualizar cuando haya versión compatible.

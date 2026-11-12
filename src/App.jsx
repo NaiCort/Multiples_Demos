@@ -9,6 +9,7 @@ import RouteErrorBoundary from "./components/shared/RouteErrorBoundary"
 
 const PsicologoApp = lazy(() => import("./giros/psicologo/PsicologoApp"))
 const RestauranteApp = lazy(() => import("./giros/restaurante/RestauranteApp"))
+const CafeApp = lazy(() => import("./giros/cafe/CafeApp"))
 
 function RouteLoading() {
   return (
@@ -36,6 +37,7 @@ export default function App() {
                 <Route path="/" element={<Bienvenida />} />
                 <Route path="/psicologo" element={<PsicologoApp />} />
                 <Route path="/restaurante/*" element={<RestauranteApp />} />
+                <Route path="/cafe/*" element={<CafeApp />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </Suspense>

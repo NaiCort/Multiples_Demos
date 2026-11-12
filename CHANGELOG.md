@@ -1,3 +1,10 @@
+# V4.3.0 · 12 de noviembre de 2026
+
+- Iniciar el giro Café con **Ladera, café de altura**: una sola identidad y un solo local en Xalapa, según `docs/FICHA_CAFE.md`.
+- Añadir la ruta `/cafe` con Inicio: horario y ubicación en la primera pantalla, curvas de nivel del lote de la semana, ficha técnica del lote, lista de lotes y horario de ejemplo.
+- Servir Archivo y Source Serif 4 desde el sitio, con sus licencias.
+- Añadir seis pruebas de Ladera. La Bienvenida no enlaza todavía a Café; se habilitará al cerrar V4.3.4.
+
 # V4.2.5 · 16 de octubre de 2026
 
 - Añadir navegación lateral de categorías a Carta y de países/estados a Locales, con selectores para móvil.
