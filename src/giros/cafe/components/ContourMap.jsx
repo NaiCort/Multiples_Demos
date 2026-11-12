@@ -33,7 +33,8 @@ export default function ContourMap({ lote, className = "" }) {
           strokeOpacity={index === last ? 1 : 0.28 + (0.5 * index) / Math.max(1, last)}
           vectorEffect="non-scaling-stroke"
           initial={reduced ? false : { pathLength: 0 }}
-          animate={{ pathLength: 1 }}
+          whileInView={{ pathLength: 1 }}
+          viewport={{ once: true, amount: 0.3 }}
           transition={{ duration: 0.85, delay: index * stagger, ease: EASE }}
         />
       ))}
