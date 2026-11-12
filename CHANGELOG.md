@@ -1,3 +1,10 @@
+# V4.3.1 · 12 de noviembre de 2026
+
+- Añadir La carta de Ladera: 16 productos en cinco secciones por método, con personalización de leche, shots, azúcar, lote y cantidad.
+- Añadir el pedido para recoger: hora calculada con el horario del local, nombre para el vaso, envío simulado y seguimiento acelerado en tres etapas, con vapor al estar listo.
+- Conservar carrito y pedido al recargar. Seis pruebas nuevas.
+- Fotografías de la carta pendientes de una fuente con licencia accesible desde el entorno.
+
 # V4.3.0 · 12 de noviembre de 2026
 
 - Iniciar el giro Café con **Ladera, café de altura**: una sola identidad y un solo local en Xalapa, según `docs/FICHA_CAFE.md`.

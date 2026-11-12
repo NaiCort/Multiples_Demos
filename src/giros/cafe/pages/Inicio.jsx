@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom"
 import { Clock, MapPin, MessageCircle } from "lucide-react"
 import ContourMap from "../components/ContourMap"
 import LoteSheet from "../components/LoteSheet"
@@ -34,13 +35,12 @@ export default function Inicio({ onWhatsApp }) {
             </li>
           </ul>
           <div className="l-actions">
-            <a className="l-button l-button-ink" href="#lote-semana">
+            <Link className="l-button l-button-cherry" to="/cafe/carta">
+              Pedir para recoger
+            </Link>
+            <a className="l-button l-button-line" href="#lote-semana">
               Ver el lote de la semana
             </a>
-            <button type="button" className="l-button l-button-line" onClick={onWhatsApp}>
-              <MessageCircle size={17} aria-hidden="true" />
-              Escribir por WhatsApp
-            </button>
           </div>
           <p className="l-fiction">
             Ladera es un café ficticio. Productores, fincas, cifras y precios son de ejemplo.
@@ -84,6 +84,10 @@ export default function Inicio({ onWhatsApp }) {
             {LOCAL.zona}, {LOCAL.referencia}. El parque es solo una referencia: el local no existe.
           </p>
           <p>{LOCAL.tueste}</p>
+          <button type="button" className="l-button l-button-line l-visit-ask" onClick={onWhatsApp}>
+            <MessageCircle size={17} aria-hidden="true" />
+            Escribir por WhatsApp
+          </button>
         </div>
         <table className="l-hours">
           <caption>Horario de ejemplo</caption>
