@@ -20,6 +20,9 @@ acciones ficticias del negocio.
   Taller mecánico (V4.5) → Despacho contable (V4.6) → Revista digital (V4.7).
 - **Restaurante = solo Patio 12.** No se construyen las sub-categorías (fonda, comida
   rápida, lujo) ni el panel de empleados y precios: ambas ideas quedaron descartadas.
+- **Café = Ladera**, una sola identidad y un solo local, sin gestión de empleados. Su
+  ficha está en `docs/FICHA_CAFE.md`; leerla antes de tocar `src/giros/cafe/`.
+- Idea a futuro, sin fecha: una demo de empresa con gestión de empleados.
 - **No se modifican demos ya cerradas** mientras se construyen las demás. Mejoras y
   correcciones a demos existentes se anotan en "Pendientes para la fase de ajustes" (abajo)
   y se hacen en V4.8, al terminar las siete. Excepción: un error real en un componente
