@@ -1,0 +1,396 @@
+@font-face {
+  font-family: "Ladera Sans";
+  src: url("/cafe/archivo-latin.woff2") format("woff2-variations");
+  font-style: normal;
+  font-weight: 100 900;
+  font-stretch: 62% 125%;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Ladera Serif";
+  src: url("/cafe/source-serif-4-latin.woff2") format("woff2-variations");
+  font-style: normal;
+  font-weight: 200 900;
+  font-display: swap;
+}
+
+/* Ficha de identidad: docs/FICHA_CAFE.md */
+.ladera-root {
+  --l-paper: #f8f8f5;
+  --l-sheet: #ffffff;
+  --l-ink: #1c1b19;
+  --l-muted: #5e5b55;
+  --l-line: #d9d6ce;
+  --l-cherry: #b0182e;
+  --l-ease: cubic-bezier(0.23, 1, 0.32, 1);
+  --l-sans: "Ladera Sans", "Arial Narrow", sans-serif;
+  --l-serif: "Ladera Serif", Georgia, serif;
+  min-height: 100dvh;
+  padding-top: 44px;
+  background: var(--l-paper);
+  color: var(--l-ink);
+  font-family: var(--l-serif);
+  font-size: 1.0625rem;
+  line-height: 1.6;
+  scrollbar-color: var(--l-muted) var(--l-paper);
+}
+.ladera-root ::selection {
+  background: var(--l-ink);
+  color: var(--l-paper);
+}
+.ladera-root :where(a, button, [tabindex]):focus-visible {
+  outline: 2px solid var(--l-ink);
+  outline-offset: 3px;
+}
+.ladera-root :where(main, .l-header, .l-footer) a:not(.l-button) {
+  color: inherit;
+  text-underline-offset: 0.2em;
+  text-decoration-thickness: 1px;
+}
+.ladera-root h1,
+.ladera-root h2,
+.ladera-root h3 {
+  font-family: var(--l-sans);
+  font-stretch: 68%;
+  font-weight: 780;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+.ladera-root h1:focus {
+  outline: none;
+}
+.l-num,
+.l-sheet-data dd,
+.l-hours td,
+.l-contour-label {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Encabezado */
+.l-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 18px 24px;
+  border-bottom: 1px solid var(--l-line);
+}
+.l-brand {
+  display: inline-flex;
+  align-items: flex-end;
+  gap: 10px;
+  text-decoration: none;
+  font-family: var(--l-sans);
+  font-stretch: 68%;
+  font-weight: 800;
+  font-size: 1.75rem;
+  line-height: 1;
+  letter-spacing: -0.01em;
+}
+.l-brand svg {
+  width: 34px;
+  height: 22px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+}
+.l-header nav {
+  display: flex;
+  gap: 22px;
+  font-family: var(--l-sans);
+  font-weight: 500;
+  font-size: 0.95rem;
+}
+.l-header nav a {
+  text-decoration: none;
+  padding: 6px 0;
+  border-bottom: 1px solid transparent;
+}
+.l-header nav a[aria-current="page"] {
+  border-bottom-color: var(--l-ink);
+}
+
+main#contenido:focus {
+  outline: none;
+}
+
+/* Portada */
+.l-hero {
+  display: grid;
+  gap: 40px;
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 56px 24px 72px;
+}
+.l-hero h1 {
+  font-size: clamp(3.2rem, 9vw, 6rem);
+  max-width: 9ch;
+}
+.l-lead {
+  max-width: 36ch;
+  margin-top: 28px;
+  font-size: 1.25rem;
+  line-height: 1.5;
+}
+.l-hero-facts {
+  display: grid;
+  gap: 8px;
+  margin-top: 28px;
+  font-family: var(--l-sans);
+  font-size: 0.95rem;
+  color: var(--l-muted);
+}
+.l-hero-facts li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.l-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 32px;
+}
+.l-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 48px;
+  padding: 0 22px;
+  border: 1px solid var(--l-ink);
+  border-radius: 2px;
+  font-family: var(--l-sans);
+  font-weight: 600;
+  font-size: 1rem;
+  text-decoration: none;
+  cursor: pointer;
+  transition:
+    background-color 200ms var(--l-ease),
+    color 200ms var(--l-ease),
+    transform 120ms var(--l-ease);
+}
+.l-button:active {
+  transform: scale(0.97);
+}
+.l-button-ink {
+  background: var(--l-ink);
+  color: var(--l-paper);
+}
+.l-button-ink:hover {
+  background: #3a3833;
+}
+.l-button-line {
+  background: transparent;
+  color: var(--l-ink);
+}
+.l-button-line:hover {
+  background: var(--l-sheet);
+}
+.l-fiction {
+  margin-top: 20px;
+  font-size: 0.9rem;
+  color: var(--l-muted);
+}
+.l-hero-map {
+  margin: 0;
+  color: var(--l-ink);
+}
+.l-hero-map figcaption {
+  margin-top: 10px;
+  font-family: var(--l-sans);
+  font-size: 0.85rem;
+  color: var(--l-muted);
+}
+.l-contour {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.l-contour-label {
+  font-family: var(--l-sans);
+  font-size: 13px;
+  fill: var(--l-muted);
+  paint-order: stroke;
+  stroke: var(--l-paper);
+  stroke-width: 4px;
+}
+
+/* Secciones */
+.l-section {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 72px 24px;
+  border-top: 1px solid var(--l-line);
+}
+.l-section-tight {
+  padding-block: 48px;
+}
+.l-section h2 {
+  font-size: clamp(2.2rem, 5vw, 3.4rem);
+}
+.l-section-lead {
+  max-width: 52ch;
+  margin-top: 14px;
+  color: var(--l-muted);
+}
+
+/* Ficha de lote */
+.l-sheet {
+  display: grid;
+  margin-top: 36px;
+  background: var(--l-sheet);
+  border: 1px solid var(--l-line);
+  border-radius: 2px;
+}
+.l-sheet-map {
+  padding: 16px;
+  border-bottom: 1px solid var(--l-line);
+}
+.l-sheet-map .l-contour-label {
+  stroke: var(--l-sheet);
+}
+.l-sheet-body {
+  padding: 24px;
+}
+.l-sheet-title {
+  font-size: clamp(2rem, 4vw, 2.75rem);
+}
+.l-sheet-data {
+  margin-top: 20px;
+}
+.l-sheet-data div {
+  display: grid;
+  grid-template-columns: minmax(8.5rem, 0.8fr) 1.4fr;
+  gap: 16px;
+  padding: 10px 0;
+  border-top: 1px solid var(--l-line);
+}
+.l-sheet-data dt {
+  font-family: var(--l-sans);
+  font-variant-caps: all-small-caps;
+  letter-spacing: 0.04em;
+  font-size: 1rem;
+  color: var(--l-muted);
+}
+
+/* Lista de lotes */
+.l-lot-list {
+  margin-top: 24px;
+}
+.l-lot-list li {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 2px 16px;
+  padding: 16px 0;
+  border-top: 1px solid var(--l-line);
+}
+.l-lot-list strong::before,
+.l-sheet-title::before {
+  content: "";
+  display: inline-block;
+  width: 0.42em;
+  height: 0.42em;
+  margin-right: 0.35em;
+  vertical-align: 0.12em;
+  background: var(--lote);
+}
+.l-lot-list strong {
+  font-family: var(--l-sans);
+  font-stretch: 75%;
+  font-weight: 700;
+  font-size: 1.35rem;
+}
+.l-lot-list span {
+  color: var(--l-muted);
+}
+.l-lot-list .l-notes {
+  grid-column: 1 / -1;
+  color: var(--l-ink);
+}
+
+/* Visítanos */
+.l-visit {
+  display: grid;
+  gap: 32px;
+}
+.l-visit p {
+  max-width: 48ch;
+  margin-top: 14px;
+}
+.l-hours {
+  width: 100%;
+  max-width: 420px;
+  border-collapse: collapse;
+  font-family: var(--l-sans);
+}
+.l-hours caption {
+  text-align: left;
+  padding-bottom: 8px;
+  font-variant-caps: all-small-caps;
+  letter-spacing: 0.04em;
+  color: var(--l-muted);
+}
+.l-hours th,
+.l-hours td {
+  padding: 10px 0;
+  border-top: 1px solid var(--l-line);
+  text-align: left;
+  font-weight: 500;
+}
+.l-hours td {
+  text-align: right;
+}
+
+.l-footer {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 28px 24px 64px;
+  font-size: 0.9rem;
+  color: var(--l-muted);
+}
+
+@media (min-width: 720px) {
+  .l-lot-list li {
+    grid-template-columns: 1.1fr 0.9fr 0.7fr 0.7fr 1.6fr;
+    align-items: baseline;
+  }
+  .l-lot-list .l-notes {
+    grid-column: auto;
+  }
+}
+@media (min-width: 960px) {
+  .l-hero {
+    grid-template-columns: 1fr 1.05fr;
+    align-items: center;
+    padding-top: 72px;
+  }
+  .l-sheet {
+    grid-template-columns: 1fr 1fr;
+  }
+  .l-sheet-map {
+    border-bottom: 0;
+    border-right: 1px solid var(--l-line);
+    align-self: stretch;
+    display: flex;
+    align-items: center;
+  }
+  .l-sheet-body {
+    padding: 32px 36px;
+  }
+  .l-visit {
+    grid-template-columns: 1.2fr 1fr;
+    align-items: start;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .l-button {
+    transition: none;
+  }
+  .l-button:active {
+    transform: none;
+  }
+}

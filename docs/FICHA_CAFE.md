@@ -31,8 +31,9 @@ de taza y precio. Todos los datos son ficticios y se declaran así.
 | Línea | Hilo | `#D9D6CE` | Separadores de 1 px y cuadrícula de fichas. |
 | Acento | Cereza | `#B0182E` | **Solo lo que se puede pedir o confirmar**: botón principal, precio en el panel de pedido, estado "lista". Nunca decorativo. |
 
-**Colores de lote:** cada lote tiene un tono propio que vive solo en su ficha (franja
-superior de 6 px y su curva de nivel), nunca en la navegación ni en botones: Durazno
+**Colores de lote:** cada lote tiene un tono propio que vive solo en su curva de nivel
+más alta y en una marca cuadrada junto a su nombre; nunca como borde de la ficha (patrón
+vigilado), en la navegación ni en botones: Durazno
 `#E3A07A`, Ciruela `#6B3A5B`, Miel `#C9952F`, Pizarra `#4E6170`. Texto siempre en Tinta.
 
 ## Tipografía
