@@ -1,8 +1,8 @@
 # Ficha de identidad · Ladera (Café, V4.3)
 
 Ficha escrita antes del código, según la Guía de identidad y calidad visual v1.1
-(Documento Maestro, Parte X). Fecha: 12 de noviembre de 2026. Estado: propuesta para
-revisión de Ian.
+(Documento Maestro, Parte X). Fecha: 12 de noviembre de 2026. Estado: aplicada; Ladera
+cerrada en V4.3.4.
 
 ## Concepto
 

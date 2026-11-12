@@ -52,10 +52,10 @@ const GIROS = [
     available: true,
   },
   {
-    path: null,
+    path: "/cafe",
     name: "Café",
-    desc: "Calidez, ritmo pausado, y motivo suficiente para quedarse un rato.",
-    available: false,
+    desc: "Ladera: café de altura, pedido para recoger y recetas en casa.",
+    available: true,
   },
   {
     path: null,

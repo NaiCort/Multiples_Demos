@@ -16,7 +16,8 @@ acciones ficticias del negocio.
 ## Estado y orden de trabajo
 
 - Se trabaja **una demo a la vez**, en este orden: Psicólogo (cerrada) → Restaurante
-  (cerrada en V4.2.5 con **Patio 12**) → **Café (siguiente, V4.3.#)** → Gimnasio (V4.4) →
+  (cerrada en V4.2.5 con **Patio 12**) → Café (cerrada en V4.3.4 con **Ladera**) →
+  **Gimnasio (siguiente, V4.4)** →
   Taller mecánico (V4.5) → Despacho contable (V4.6) → Revista digital (V4.7).
 - **Restaurante = solo Patio 12.** No se construyen las sub-categorías (fonda, comida
   rápida, lujo) ni el panel de empleados y precios: ambas ideas quedaron descartadas.
@@ -78,12 +79,12 @@ patrones, temáticar selección, foco, barras de desplazamiento y subrayado, cor
 Herramientas instaladas en `.claude/` (ver `.claude/README.md`): frontend-design,
 impeccable, web-design-guidelines y web-quality-skills.
 
-## Café en curso
+## Estado de Café
 
-Publicado en `/cafe`: Inicio (V4.3.0), Carta y pedido para recoger (V4.3.1), Origen y
-café en grano (V4.3.2), Prepara en casa (V4.3.3). La Bienvenida se habilita para Café solo al cerrar V4.3.4.
-Pendiente: fotografías de la carta (requieren clave de la API de Unsplash o permitir
-Wikimedia Commons). Siguiente: V4.3.4, Visítanos con cata, pasada final y alta en la Bienvenida.
+Café (Ladera) cerrado en V4.3.4, pendiente del visto bueno de Ian en la vista previa:
+Inicio, Carta y pedido para recoger, Origen y café en grano, Prepara en casa y Visítanos,
+con pruebas de navegador en `npm run test:browser:cafe`. **Siguiente: Gimnasio (V4.4)**,
+empezando por su ficha de identidad en `docs/`.
 
 ## Pendientes para la fase de ajustes (V4.8)
 
@@ -103,5 +104,7 @@ No tocar antes de terminar las siete demos.
 6. **Componentes compartidos:** la llamada comercial (`ComercialCTA`) lleva una etiqueta
    en mayúsculas sobre el título y una tarjeta centrada; el banner de demo genera la alerta
    `region` de axe (buenas prácticas). Revisar ambos para todas las demos.
-7. Dependencias de desarrollo con avisos moderados de `npm audit` (vitest, minimatch vía
+7. **Ladera:** fotografías de producto opcionales (requieren clave de la API de Unsplash
+   o permitir Wikimedia Commons); precarga de fuentes en `index.html`.
+8. Dependencias de desarrollo con avisos moderados de `npm audit` (vitest, minimatch vía
    eslint): actualizar cuando haya versión compatible.
