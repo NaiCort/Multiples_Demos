@@ -135,7 +135,7 @@ export function stageAt(order, now) {
 }
 
 // Horario por día de la semana (0 = domingo), en minutos desde medianoche.
-const HORARIO = { 0: [510, 840], 6: [480, 1200], default: [450, 1200] }
+export const HORARIO = { 0: [510, 840], 6: [480, 1200], default: [450, 1200] }
 const PREP = 10
 const STEP = 15
 const pad = (n) => String(n).padStart(2, "0")
@@ -186,4 +186,16 @@ export function save(storage, state) {
   } catch {
     return false
   }
+}
+
+// Estado del local según el horario de ejemplo, para la portada.
+export function estadoLocal(now = new Date()) {
+  const minutes = now.getHours() * 60 + now.getMinutes()
+  const [open, close] = HORARIO[now.getDay()] || HORARIO.default
+  if (minutes >= open && minutes < close)
+    return { abierto: true, texto: `hasta las ${label(close)}` }
+  if (minutes < open) return { abierto: false, texto: `abre hoy a las ${label(open)}` }
+  const tomorrow = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1)
+  const [next] = HORARIO[tomorrow.getDay()] || HORARIO.default
+  return { abierto: false, texto: `abre mañana a las ${label(next)}` }
 }

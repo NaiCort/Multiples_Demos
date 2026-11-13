@@ -1,4 +1,5 @@
 import AltitudeProfile from "../components/AltitudeProfile"
+import Foto from "../components/Foto"
 import LoteSheet from "../components/LoteSheet"
 import { findItem } from "../data/carta"
 import { LOTES } from "../data/lotes"
@@ -29,6 +30,10 @@ export default function Origen({ onChoose }) {
           Cuatro fincas de la región cafetalera alrededor de Xalapa. En cada ficha decimos quién
           cultivó el café, a qué altura y cuánto le pagamos por kilo.
         </p>
+        <div className="l-head-photos l-head-photos-two">
+          <Foto id="cerezas" priority sizes="(min-width: 720px) 50vw, 100vw" />
+          <Foto id="secado" priority sizes="(min-width: 720px) 50vw, 100vw" />
+        </div>
         <figure className="l-profile-figure">
           <div
             className="l-profile-scroll"
@@ -74,6 +79,12 @@ export default function Origen({ onChoose }) {
 
       <section className="l-section l-reading" aria-labelledby="l-leer-titulo">
         <h2 id="l-leer-titulo">Cómo leer la ficha</h2>
+        <figure className="l-roast-figure">
+          <Foto id="tuestes" sizes="(min-width: 960px) 50vw, 100vw" />
+          <figcaption>
+            Del grano verde al tueste oscuro: la misma escala que colorea el relieve de cada ficha.
+          </figcaption>
+        </figure>
         <dl>
           <div>
             <dt>Puntaje de cata</dt>

@@ -24,11 +24,27 @@ await suite("cafe", async ({ run, base }) => {
           "/cafe/origen",
           "/cafe/prepara",
           "/cafe/visitanos",
+          "/cafe/creditos",
         ]) {
           await go(page, base, path)
           assert.equal(await page.locator("h1").count(), 1, `Un h1 en ${path}`)
           await bounds(page)
           await audit(page)
+        }
+
+        await go(page, base, "/cafe")
+        if (width === 1440) {
+          await button(page, "Detener la cinta").click()
+          assert.equal(await button(page, "Reanudar la cinta").getAttribute("aria-pressed"), "true")
+        } else {
+          assert.equal(await page.locator(".l-marquee-toggle").isVisible(), false, "Sin movimiento")
+        }
+        for (const img of await page.locator("main img").all()) {
+          await img.scrollIntoViewIfNeeded()
+          assert(
+            await img.evaluate((el) => el.decode().then(() => el.naturalWidth > 0)),
+            "Foto local",
+          )
         }
 
         await go(page, base, "/cafe/carta")

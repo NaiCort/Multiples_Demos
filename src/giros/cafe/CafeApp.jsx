@@ -13,6 +13,7 @@ import Pedido from "./pages/Pedido"
 import Origen from "./pages/Origen"
 import Prepara from "./pages/Prepara"
 import Visitanos from "./pages/Visitanos"
+import Creditos from "./pages/Creditos"
 import ItemPanel from "./components/ItemPanel"
 import { findItem } from "./data/carta"
 import { cartCount, load, reducer, save } from "./state/pedido"
@@ -30,6 +31,7 @@ const TITLES = Object.fromEntries([
   ["/cafe/prepara", "Prepara en casa"],
   ["/cafe/visitanos", "Visítanos"],
   ["/cafe/pedido", "Tu pedido"],
+  ["/cafe/creditos", "Créditos"],
 ])
 const storage = () => {
   try {
@@ -53,8 +55,8 @@ function CafeGuide() {
           reales y el parque es una referencia geográfica, no un establecimiento.
         </li>
         <li>
-          Las curvas de nivel son ilustrativas: muestran una línea cada 50 metros hasta la altitud
-          del lote, no el terreno real de una finca.
+          Las curvas de nivel son ilustrativas: se colorean con la escala de tueste, una curva cada
+          25 o 50 metros hasta la altitud del lote, no el terreno real de una finca.
         </li>
         <li>
           La carta permite armar un pedido para recoger: leche, shots, azúcar y lote del filtrado.
@@ -167,6 +169,7 @@ export default function CafeApp() {
           <Route path="pedido" element={<Pedido state={state} dispatch={dispatch} />} />
           <Route path="origen" element={<Origen onChoose={choose} />} />
           <Route path="prepara" element={<Prepara onChoose={choose} />} />
+          <Route path="creditos" element={<Creditos />} />
           <Route
             path="visitanos"
             element={
@@ -188,15 +191,16 @@ export default function CafeApp() {
       </main>
       <ComercialCTA
         giro="cafetería"
-        accentColor="#F8F8F5"
-        backgroundColor="#1C1B19"
-        textColor="#F8F8F5"
+        accentColor="#F7F1E8"
+        backgroundColor="#2A1E19"
+        textColor="#F7F1E8"
         fontFamily="Ladera Serif, Georgia, serif"
         headingFontFamily="Ladera Sans, sans-serif"
         radius={2}
       />
       <footer className="l-footer">
         <p>Ladera · café de altura. Negocio ficticio creado para una demostración de portafolio.</p>
+        <Link to="/cafe/creditos">Créditos de fotografías y tipografías</Link>
       </footer>
       <div className="l-toast-region" role="status" aria-live="polite">
         {notice && (

@@ -81,10 +81,12 @@ impeccable, web-design-guidelines y web-quality-skills.
 
 ## Estado de Café
 
-Café (Ladera) cerrado en V4.3.4, pendiente del visto bueno de Ian en la vista previa:
-Inicio, Carta y pedido para recoger, Origen y café en grano, Prepara en casa y Visítanos,
-con pruebas de navegador en `npm run test:browser:cafe`. **Siguiente: Gimnasio (V4.4)**,
-empezando por su ficha de identidad en `docs/`.
+Café (Ladera) cerrado con la dirección «Tueste» en V4.3.5 (ficha v2 en
+`docs/FICHA_CAFE.md`), pendiente del visto bueno de Ian en la vista previa. Pruebas de
+navegador en `npm run test:browser:cafe`. **Siguiente: Gimnasio (V4.4)**: investigación de
+diseño, maquetas de portada para elegir y ficha de identidad antes de programar (así se
+decidió Café). Idea guardada: los bloques de color de la maqueta «Fachadas» para una demo
+futura.
 
 ## Pendientes para la fase de ajustes (V4.8)
 
@@ -104,7 +106,7 @@ No tocar antes de terminar las siete demos.
 6. **Componentes compartidos:** la llamada comercial (`ComercialCTA`) lleva una etiqueta
    en mayúsculas sobre el título y una tarjeta centrada; el banner de demo genera la alerta
    `region` de axe (buenas prácticas). Revisar ambos para todas las demos.
-7. **Ladera:** fotografías de producto opcionales (requieren clave de la API de Unsplash
-   o permitir Wikimedia Commons); precarga de fuentes en `index.html`.
+7. **Precarga de fuentes en `index.html`** (todas las demos): en red lenta, el cambio de
+   tipografía mueve el texto (CLS 0.146 medido en Créditos de Ladera).
 8. Dependencias de desarrollo con avisos moderados de `npm audit` (vitest, minimatch vía
    eslint): actualizar cuando haya versión compatible.

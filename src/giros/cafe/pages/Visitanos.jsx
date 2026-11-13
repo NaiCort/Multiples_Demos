@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react"
+import Foto from "../components/Foto"
 import { Link } from "react-router-dom"
 import { MessageCircle, Minus, Plus } from "lucide-react"
 import { LOCAL } from "../data/local"
@@ -263,6 +264,7 @@ export default function Visitanos({ visitas, onCanjear, onWhatsApp }) {
           Un solo local en {LOCAL.zona}, {LOCAL.referencia}. El parque es solo una referencia: el
           local no existe.
         </p>
+        <Foto id="ventana" priority className="l-head-photo l-head-photo-tall" sizes="100vw" />
       </section>
       <section className="l-section l-visit-grid" aria-label="Horario y tarjeta de visitas">
         <div>
