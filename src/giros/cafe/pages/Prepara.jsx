@@ -1,4 +1,5 @@
 import { useState } from "react"
+import Foto from "../components/Foto"
 import { Minus, Plus } from "lucide-react"
 import BrewTimer from "../components/BrewTimer"
 import { findItem } from "../data/carta"
@@ -31,6 +32,7 @@ export default function Prepara({ onChoose }) {
           Las mismas recetas que usamos en barra, con un temporizador que te dice cuándo verter. Una
           báscula de cocina ayuda más que cualquier otro accesorio.
         </p>
+        <Foto id="goteo" priority className="l-head-photo" sizes="100vw" />
       </section>
 
       <section className="l-section l-brew" aria-labelledby="l-metodo-titulo">

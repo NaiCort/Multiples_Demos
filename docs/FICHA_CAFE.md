@@ -1,129 +1,106 @@
-# Ficha de identidad · Ladera (Café, V4.3)
+# Ficha de identidad · Ladera (Café, V4.3) · versión 2, «Tueste»
 
-Ficha escrita antes del código, según la Guía de identidad y calidad visual v1.1
-(Documento Maestro, Parte X). Fecha: 12 de noviembre de 2026. Estado: aplicada; Ladera
-cerrada en V4.3.4.
+Guía de identidad y calidad visual v1.1 (Documento Maestro, Parte X). Versión 1: 12 de
+noviembre de 2026, ficha técnica minimalista (V4.3.0–V4.3.4). **Versión 2: 13 de
+noviembre de 2026**, dirección «Tueste» elegida por Ian entre tres maquetas (V4.3.5).
+
+## Por qué cambió
+
+La versión 1 tomó como anclas a tostadores de especialidad (SEY, Onyx) y resultó fría
+para una cafetería: sin fotos, casi monocromática y sin mostrar el lugar. La
+investigación «Cafeterías: color, sitio web y animación que sí funciona» mostró que un
+sitio de café vende primero el lugar: fotografía real, tonos cálidos y claros, carta a un
+toque e información para quedarse. La versión 2 conserva todas las funciones y el motivo
+de altura, y los vuelve cálidos.
 
 ## Concepto
 
-**Ladera, café de altura.** Cafetería y tostador ficticio con **un solo local** en Xalapa,
-Veracruz. Trabaja con lotes de fincas de la región (Coatepec, Xico, Teocelo y Huatusco)
-y presenta cada café como una ficha de lote: productor, finca, altitud, proceso, notas
-de taza y precio. Todos los datos son ficticios y se declaran así.
+**Ladera, café de altura.** Cafetería y tostador ficticio con **un solo local** en Xalapa.
+Lotes de fincas de Coatepec, Xico, Teocelo y Huatusco, presentados como fichas con
+productor, altitud, proceso, notas y precio. Todos los datos son ficticios.
 
-- **Idea propia del giro:** la altura y la ladera de la montaña. Se expresa con **curvas
-  de nivel** dibujadas en SVG; cada lote tiene la suya, derivada de su altitud.
-- **Modo (Impeccable):** Persuade en Inicio; Operate en Carta y Pedido; Read en Origen y
-  Prepara en casa.
-- **Escena de uso:** de día, con prisa o con calma, muchas veces desde el teléfono en la
-  fila o camino al local. Por eso el sitio es **claro y luminoso**, no oscuro.
-- **Fuera de alcance:** gestión de empleados (descartada el 12/11/2026), varios locales,
-  envío a domicilio, cuentas reales y pagos.
+- **Idea propia del giro:** el relieve de la finca coloreado con la **escala de tueste**,
+  del grano verde en lo bajo al tostado oscuro, con la cereza (o el color del lote) en la
+  cima. Une altura y tueste en una sola imagen.
+- **Escena de uso:** de día, desde el teléfono en la fila o con calma en una mesa. Claro y
+  cálido, nunca oscuro.
+- **Fuera de alcance:** gestión de empleados, varios locales, envío a domicilio, cuentas
+  y pagos reales.
 
 ## Paleta
 
 | Rol | Nombre | Hex | Dónde se usa |
 |---|---|---|---|
-| Neutro | Papel | `#F8F8F5` | Fondo general. Blanco apenas cálido, nunca crema. |
-| Superficie | Papel alto | `#FFFFFF` | Fichas de lote, panel de pedido. |
-| Dominante | Tinta | `#1C1B19` | Texto, títulos, líneas de curvas de nivel, botones secundarios. |
-| Texto secundario | Tinta media | `#5E5B55` | Metadatos y ayudas. Contraste ≥ 4.5:1 sobre Papel. |
-| Línea | Hilo | `#D9D6CE` | Separadores de 1 px y cuadrícula de fichas. |
-| Acento | Cereza | `#B0182E` | **Solo lo que se puede pedir o confirmar**: botón principal, precio en el panel de pedido, estado "lista". Nunca decorativo. |
+| Neutro | Papel cálido | `#F7F1E8` | Fondo general. Decisión consciente: luz cálida, no el beige de plantilla. |
+| Superficie | Papel alto | `#FFFBF5` | Fichas, temporizador, tarjeta de visitas. |
+| Dominante | Tostado | `#2A1E19` | Texto, botones secundarios, llamada comercial. |
+| Texto secundario | Tostado medio | `#6B5A50` | Metadatos. Contraste 5.8:1 sobre Papel cálido. |
+| Línea | Hilo | `#E2D6C4` | Separadores de 1 px. |
+| Acento | Cereza | `#A3162B` | Lo que se pide o confirma y **una banda por página** (la cinta del día). Contraste 6.9:1. |
 
-**Colores de lote:** cada lote tiene un tono propio que vive solo en su curva de nivel
-más alta y en una marca cuadrada junto a su nombre; nunca como borde de la ficha (patrón
-vigilado), en la navegación ni en botones: Durazno
-`#E3A07A`, Ciruela `#6B3A5B`, Miel `#C9952F`, Pizarra `#4E6170`. Texto siempre en Tinta.
+**Escala de tueste** (solo en relieves): `#E3E0C4`, `#E8D3A8`, `#E2BC88`, `#D6A06A`,
+`#C2834F`, `#A8683F`, `#8A4F33`, `#6E3B26`. **Colores de lote** (cima del relieve y marca
+junto al nombre): Durazno `#E3A07A`, Ciruela `#6B3A5B`, Miel `#C9952F`, Pizarra `#4E6170`.
 
 ## Tipografía
 
-- **Títulos y etiquetas:** Archivo (variable, eje de anchura). Condensada (`wdth` 62–75)
-  en peso 700–800 para títulos; ancho normal en 500 para etiquetas y botones.
-- **Texto:** Source Serif 4 (variable, tamaños ópticos), 400 y 600.
-- Ambas con licencia OFL, **servidas desde el propio sitio** en woff2, como en Patio 12.
-- Cifras tabulares (`font-variant-numeric: tabular-nums`) en precios, altitudes, tiempos
-  y gramos. Nada de monoespaciada para los datos.
-- Escala: título de Inicio entre 4.5 y 6rem; texto 1.0625rem; medida de 60 a 70
-  caracteres; tracking de títulos −0.02em.
-- Sin mayúsculas sostenidas en títulos; etiquetas en versalitas solo dentro de la ficha
-  de lote.
+- **Títulos:** Source Serif 4, peso 600, tamaño óptico de cartel. Serif con carácter, sin
+  palabras en cursiva como acento.
+- **Texto:** Source Serif 4, 400.
+- **Navegación, botones, etiquetas y cifras:** Archivo (ancho normal; condensada solo en
+  el logotipo). Cifras tabulares en precios, horas y altitudes.
+- Ambas servidas desde el sitio, licencia OFL.
 
-## Forma, radios y sombras
+## Fotografía
 
-- Esquinas de 2 px en botones y fichas; píldora completa solo en los modificadores de
-  bebida (leche, shots, azúcar).
-- Profundidad por superficies (Papel, Papel alto) y hilos de 1 px. Una sola sombra, la
-  del panel de pedido flotante: `0 8px 24px rgba(28, 27, 25, 0.12)`.
-- La ficha de lote es una hoja técnica: datos en dos columnas con hilos, no una tarjeta
-  con ícono.
+Once fotos de Wikimedia Commons (CC0, CC BY, CC BY-SA y dominio público), reducidas a
+1280 y 640 px en WebP, con autor, licencia y huella en `public/cafe/fotos/fotos-origen.json`
+y créditos en `/cafe/creditos`. Ilustran el ambiente; no se presentan como Ladera ni como
+lugares de Xalapa. La foto principal y las de encabezado cargan con prioridad.
+
+## Forma, sombras y densidad
+
+- Esquinas de 2 px; píldora solo en modificadores y botón «Agregar».
+- Una sombra suave (`0 8px 24px` al 12–14 %) para la etiqueta sobre la foto y el panel de
+  pedido. Profundidad por superficies.
+- Portada con aire; carta y pedido densos; fichas compactas.
 
 ## Movimiento
 
-- **Momento propio:** al entrar a Inicio y a cada ficha de lote, las curvas de nivel se
-  dibujan una vez (trazo de 1.2 s como máximo, `cubic-bezier(0.23, 1, 0.32, 1)`).
-- **Temporizador de preparación** (Prepara en casa): el avance y los vertidos responden
-  al botón de iniciar; no es decoración.
-- **Vapor:** solo en la confirmación "tu bebida está lista", tres trazos breves.
-- Interfaz: 200 ms con ease-out; presionar 120 ms con escala 0.97; entradas desde 0.95.
-- Movimiento reducido: las curvas aparecen ya dibujadas, el vapor se reemplaza por un
-  fundido, y el temporizador sigue contando sin animar.
-- Sin aparición hacia arriba en cada sección y sin cinta deslizante (ya la usa Patio 12).
+- **Momento propio:** el relieve se colorea franja por franja al entrar en pantalla
+  (1.2 s como máximo).
+- **Cinta del día** en cereza: se desplaza despacio, se puede detener, y con movimiento
+  reducido queda quieta y sin botón.
+- Temporizador real, vapor solo en «tu pedido está listo», 200 ms con ease-out en la
+  interfaz, 120 ms al presionar, leve acercamiento (1.02) de las fotos de «Lo que más se
+  pide» al pasar el puntero.
 
-## Densidad
+## Anclas
 
-- Inicio: aire generoso, una idea por pantalla.
-- Carta y Pedido: densa y escaneable, como una lista de precios.
-- Ficha de lote: compacta, datos alineados en columnas.
-- El espacio vertical varía por sección según el contenido.
+- Recopilaciones 2026 de sitios de café (Zarla, CreateToday): foto real del lugar,
+  cálido y luminoso, carta a un toque.
+- Onyx Coffee Lab: transparencia por lote (se conserva en las fichas).
+- Cartografía de relieve con tintas hipsométricas (Patterson): el degradado como dato.
 
-## Anclas visuales
+## Patrones vigilados permitidos con motivo
 
-- **SEY Coffee** (Brooklyn): espacio en blanco severo, etiquetas condensadas,
-  explicaciones en serif, hoja de origen junto a la taza.
-- **Onyx Coffee Lab**: transparencia por lote (precio, productor, perfil) y sitio como
-  laboratorio con guías de preparación.
-- **Blue Bottle Coffee**: cafés ordenados por método de preparación; tono cercano y no
-  pomposo.
-- Referencia de contenido, no visual: los cafés de tercera ola de Xalapa y Coatepec, que
-  muestran productor, altitud y puntaje de cata.
+Fondo cálido, serif expresiva en títulos, cinta deslizante con contenido real y relieve
+con tintas por altura (cartografía, no degradado decorativo).
 
-## Patrones prohibidos en Ladera
+## Patrones prohibidos
 
-- Fondos crema, beige o café; textura de papel kraft; modo oscuro.
-- Mesh gradient, manchas de luz y brillos (se descarta lo que el catálogo de la sección
-  16 proponía para café).
-- Granos, tazas o arte latte como ilustración o íconos decorativos; emojis.
-- Vapor en el hero.
-- Monoespaciada como disfraz de "técnico".
-- Etiqueta sobre el título, serif cursiva como acento, numeración 01/02/03 decorativa
-  (los pasos del temporizador sí llevan número porque el orden importa).
-- Cinta deslizante de especialidades.
-- Tipografía manuscrita o de pizarrón.
-- Fotografías generadas con IA. Solo fotografía real con licencia, autor y procedencia
-  registrados, servida desde el sitio.
-- Lucide solo para controles funcionales (carrito, cerrar, ubicación, reloj).
+Modo oscuro, vidrio, brillos y manchas de luz, etiqueta sobre el título, palabra en
+cursiva como acento, tarjetas iguales con ícono, borde de color en un lado, cifras de
+relleno, imágenes generadas con IA, carruseles automáticos, granos o tazas como
+ilustración decorativa, emojis, monoespaciada como adorno.
 
-## Páginas y recorridos
+## Páginas
 
-Rutas bajo `/cafe`, con su propio estado dentro de la ruta (sin proveedor global):
-
-| Página | Contenido | Recorrido simulado (5 estados) |
+| Página | Ruta | Fotos |
 |---|---|---|
-| Inicio | Concepto, lote de la semana, horario y ubicación visibles sin desplazarse | — |
-| Carta | Bebidas por método (espresso, filtrado, frías, sin café) y bolsas de grano | Pedido para recoger: modificadores, hora exacta de entrega, "tu bebida está lista" |
-| Origen | Fichas de lote con curvas de nivel y datos de finca | Comprar bolsa de grano con molienda según método |
-| Prepara en casa | Guías por método | Temporizador de preparación funcional |
-| Visítanos | Un local: dirección, horario, mapa estático o enlace, tarjeta de visitas | Reservar lugar en una cata de los sábados |
-
-Componentes compartidos que se reutilizan: DemoBanner, WaterMark, ComercialCTA,
-WhatsAppPreview, DemoConfirmation. Ladera tiene su propio estilo en cada uno.
-
-## Plan de entregas
-
-1. **V4.3.0:** ruta `/cafe`, fuentes, tokens de la paleta, Inicio y favicon.
-2. **V4.3.1:** Carta y pedido para recoger.
-3. **V4.3.2:** Origen con curvas de nivel y compra de grano.
-4. **V4.3.3:** Prepara en casa con temporizador.
-5. **V4.3.4:** Visítanos, cata, pasada final (conteo de patrones, Impeccable,
-   web-design-guidelines, Core Web Vitals, móvil) y documentos de validación.
+| Inicio | `/cafe` | interior, latte, cortado, gotero, salón |
+| La carta y pedido | `/cafe/carta`, `/cafe/pedido` | espresso, gotero, tostador |
+| Origen | `/cafe/origen` | cerezas, secado, escala de tueste |
+| Prepara en casa | `/cafe/prepara` | gotero |
+| Visítanos | `/cafe/visitanos` | ventana |
+| Créditos | `/cafe/creditos` | todas, en miniatura |

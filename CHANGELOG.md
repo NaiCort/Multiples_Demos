@@ -1,3 +1,10 @@
+# V4.3.5 · 13 de noviembre de 2026 · Ladera «Tueste»
+
+- Rediseñar Ladera con la dirección «Tueste»: paleta cálida, títulos en serif, fotografía real y relieve coloreado con la escala de tueste.
+- Añadir once fotografías de Wikimedia Commons con autor y licencia, y la página de Créditos.
+- Inicio: estado del local, cinta del día con pausa, «Lo que más se pide» y «Un lugar para quedarse».
+- Fotos de encabezado en Carta, Origen, Prepara y Visítanos. Cuatro pruebas nuevas; pruebas de navegador ampliadas.
+
 # V4.3.4 · 12 de noviembre de 2026 · cierre de Café
 
 - Añadir Visítanos: horario, tarjeta de visitas con sellos por pedido recogido y reserva simulada de la cata de los sábados.

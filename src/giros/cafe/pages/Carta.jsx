@@ -1,4 +1,5 @@
 import { Plus } from "lucide-react"
+import Foto from "../components/Foto"
 import { CATEGORIAS } from "../data/carta"
 import { LOTE_SEMANA, pesos } from "../data/lotes"
 
@@ -13,6 +14,11 @@ export default function Carta({ onChoose }) {
           Pide desde aquí y recoge en barra a la hora que elijas. Esta semana el espresso es de{" "}
           {LOTE_SEMANA.nombre}, {LOTE_SEMANA.municipio}.
         </p>
+        <div className="l-head-photos">
+          <Foto id="espresso" priority sizes="(min-width: 960px) 40vw, 100vw" />
+          <Foto id="goteo" sizes="(min-width: 960px) 30vw, 50vw" />
+          <Foto id="tostador" sizes="(min-width: 960px) 30vw, 50vw" />
+        </div>
         <nav className="l-jump" aria-label="Secciones de la carta">
           {CATEGORIAS.map((categoria) => (
             <a key={categoria.id} href={`#${categoria.id}`}>
