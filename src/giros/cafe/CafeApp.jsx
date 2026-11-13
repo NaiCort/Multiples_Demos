@@ -55,8 +55,9 @@ function CafeGuide() {
           reales y el parque es una referencia geográfica, no un establecimiento.
         </li>
         <li>
-          Las curvas de nivel son ilustrativas: se colorean con la escala de tueste, una curva cada
-          25 o 50 metros hasta la altitud del lote, no el terreno real de una finca.
+          Las curvas de nivel son ilustrativas: muestran la finca vista desde arriba, con una línea
+          cada 50 metros hasta la altitud del lote; los colores son un guiño al tueste, no el
+          terreno real de una finca.
         </li>
         <li>
           La carta permite armar un pedido para recoger: leche, shots, azúcar y lote del filtrado.
