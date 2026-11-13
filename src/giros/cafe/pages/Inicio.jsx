@@ -87,15 +87,16 @@ export default function Inicio({ onWhatsApp }) {
           seed={29}
           width={1440}
           height={520}
-          step={25}
           slice
           className="l-relief-map"
         />
         <div className="l-relief-label">
-          <h2 id="l-relieve-titulo">De la ladera a tu taza</h2>
+          <h2 id="l-relieve-titulo">Cómo leer nuestros mapas</h2>
           <p>
-            Cada franja es un tueste: del grano verde en lo bajo al tostado oscuro, con la cereza en
-            la cima de {LOTE_SEMANA.finca}. Relieve ilustrativo.
+            Cada mapa de Ladera muestra la finca vista desde arriba. Cada línea sube 50 metros y la
+            cima marca la altitud donde crece el lote: aquí, {LOTE_SEMANA.finca} a{" "}
+            {metros(LOTE_SEMANA.altitud)}. Los colores, del grano verde al tostado oscuro, son un
+            guiño al tueste. Relieves ilustrativos.
           </p>
         </div>
       </section>

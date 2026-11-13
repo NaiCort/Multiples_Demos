@@ -21,7 +21,9 @@ productor, altitud, proceso, notas y precio. Todos los datos son ficticios.
 
 - **Idea propia del giro:** el relieve de la finca coloreado con la **escala de tueste**,
   del grano verde en lo bajo al tostado oscuro, con la cereza (o el color del lote) en la
-  cima. Une altura y tueste en una sola imagen.
+  cima. Todos los mapas usan la misma escala (una línea cada 50 m; la cima es la altitud
+  del lote) y se explican una sola vez, en Inicio. El color es un guiño al tueste, no un
+  dato: el tueste no depende de la altitud.
 - **Escena de uso:** de día, desde el teléfono en la fila o con calma en una mesa. Claro y
   cálido, nunca oscuro.
 - **Fuera de alcance:** gestión de empleados, varios locales, envío a domicilio, cuentas
