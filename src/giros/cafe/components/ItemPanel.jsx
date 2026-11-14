@@ -1,7 +1,15 @@
 import { useState } from "react"
 import { Minus, Plus } from "lucide-react"
 import Modal from "../../../components/shared/Modal"
-import { AZUCAR, LECHES, MOLIENDAS, PESOS, SHOT_EXTRA, bolsaPrecio } from "../data/carta"
+import {
+  AZUCAR,
+  LECHES,
+  MOLIENDAS,
+  PESOS,
+  SHOT_EXTRA,
+  alergenosTexto,
+  bolsaPrecio,
+} from "../data/carta"
 import { LOTES, metros, pesos } from "../data/lotes"
 import { MAX_CANTIDAD, defaultConfig, unitPrice } from "../state/pedido"
 
@@ -59,6 +67,13 @@ export default function ItemPanel({ item, initialConfig, onAdd, onClose }) {
   return (
     <Modal title={item.nombre} onClose={onClose} className="ladera-modal" radius={2}>
       <p className="l-modal-desc">{item.desc}</p>
+      {item.alergenos && (
+        <p className="l-allergens" aria-live="polite">
+          {alergenosTexto(item, config).length
+            ? `Contiene ${alergenosTexto(item, config).join(", ")} (ejemplo)`
+            : "Sin alérgenos principales (ejemplo)"}
+        </p>
+      )}
       <form
         className="l-item-form"
         onSubmit={(event) => {

@@ -40,6 +40,8 @@ export default function Creditos() {
                   <a href={LICENCIAS[foto.licencia]} target="_blank" rel="noopener noreferrer">
                     {foto.licencia}
                   </a>
+                ) : foto.licencia === "Public domain" ? (
+                  "Dominio público"
                 ) : (
                   foto.licencia
                 )}

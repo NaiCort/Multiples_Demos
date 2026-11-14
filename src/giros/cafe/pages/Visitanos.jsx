@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react"
+import ComoLlegar from "../components/ComoLlegar"
 import Foto from "../components/Foto"
 import { Link } from "react-router-dom"
 import { MessageCircle, Minus, Plus } from "lucide-react"
@@ -51,7 +52,7 @@ function Tarjeta({ visitas, onCanjear }) {
   )
 }
 
-function Cata() {
+function Cata({ onPrivacy }) {
   const fechas = useMemo(() => proximosSabados(new Date()), [])
   const [reserva, setReserva] = useState(() => loadCata(storage()))
   const [fecha, setFecha] = useState(fechas[0].iso)
@@ -247,13 +248,19 @@ function Cata() {
                 : `Apartar ${personasValidas} ${personasValidas === 1 ? "lugar" : "lugares"}`}
             </button>
           </fieldset>
+          <p className="l-fiction">
+            El nombre queda solo en este navegador.{" "}
+            <button type="button" className="l-inline-link" onClick={onPrivacy}>
+              Aviso de privacidad
+            </button>
+          </p>
         </form>
       )}
     </section>
   )
 }
 
-export default function Visitanos({ visitas, onCanjear, onWhatsApp }) {
+export default function Visitanos({ visitas, onCanjear, onWhatsApp, onPrivacy }) {
   return (
     <>
       <section className="l-page-head" aria-labelledby="l-visitanos-titulo">
@@ -287,7 +294,8 @@ export default function Visitanos({ visitas, onCanjear, onWhatsApp }) {
         </div>
         <Tarjeta visitas={visitas} onCanjear={onCanjear} />
       </section>
-      <Cata />
+      <ComoLlegar />
+      <Cata onPrivacy={onPrivacy} />
     </>
   )
 }

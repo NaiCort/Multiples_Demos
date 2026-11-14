@@ -1,6 +1,6 @@
 import { Plus } from "lucide-react"
 import Foto from "../components/Foto"
-import { CATEGORIAS } from "../data/carta"
+import { CATEGORIAS, alergenosTexto } from "../data/carta"
 import { LOTE_SEMANA, pesos } from "../data/lotes"
 
 export default function Carta({ onChoose }) {
@@ -44,6 +44,12 @@ export default function Carta({ onChoose }) {
                 <div>
                   <h3>{item.nombre}</h3>
                   <p>{item.desc}</p>
+                  <p className="l-allergens">
+                    {item.alergenos.length
+                      ? `Contiene ${alergenosTexto(item).join(", ")}`
+                      : "Sin alérgenos principales"}
+                    {item.opciones.includes("leche") && " · se puede sin lácteos"}
+                  </p>
                 </div>
                 <span className="l-price l-num">
                   {item.opciones.includes("peso") ? "250 g · " : ""}
@@ -64,7 +70,10 @@ export default function Carta({ onChoose }) {
         </section>
       ))}
       <p className="l-section l-fiction">
-        Precios de ejemplo en MXN. Pago al recoger, en caja: esta demo no cobra ni envía pedidos.
+        Precios de ejemplo en pesos mexicanos (MXN) con IVA incluido. Pago al recoger, en caja: esta
+        demo no cobra ni envía pedidos. Los alérgenos son información de ejemplo; en un café real se
+        confirman en barra, sobre todo si la alergia es grave. La leche de avena puede contener
+        trazas de gluten y la de almendra es un fruto seco.
       </p>
     </>
   )
