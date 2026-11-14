@@ -84,10 +84,16 @@ impeccable, web-design-guidelines y web-quality-skills.
 Café (Ladera) cerrado en V4.3.6 con la dirección «Tueste» (ficha v2 en
 `docs/FICHA_CAFE.md`): V4.3.5 rediseño y V4.3.6 privacidad, alérgenos, IVA, tamaños y
 cómo llegar. Pendiente del visto bueno de Ian en la vista previa. Pruebas de
-navegador en `npm run test:browser:cafe`. **Siguiente: Gimnasio (V4.4)**: investigación de
-diseño, maquetas de portada para elegir y ficha de identidad antes de programar (así se
-decidió Café). Idea guardada: los bloques de color de la maqueta «Fachadas» para una demo
-futura.
+navegador en `npm run test:browser:cafe`. Idea guardada: los bloques de color de la
+maqueta «Fachadas» para una demo futura.
+
+## Estado de Gimnasio
+
+**Gimnasio = Brío** (V4.4, en curso): club ficticio de cinco sucursales con clases,
+coaches, área de socio simulada con un perfil de ejemplo y tienda corta. Investigación y
+maquetas hechas; Ian eligió la dirección «Combinada» con video en lugar de fotos y dos
+temas (Cobalto y Distrito). Leer `docs/FICHA_GIMNASIO.md` antes de tocar
+`src/giros/gimnasio/`.
 
 ## Pendientes para la fase de ajustes (V4.8)
 
