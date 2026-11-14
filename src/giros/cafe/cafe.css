@@ -1626,3 +1626,48 @@ main#contenido:focus {
   font-size: 0.92rem;
   color: var(--l-muted);
 }
+
+/* V4.3.6 · Cierre de Café */
+.l-allergens {
+  margin-top: 4px;
+  font-family: var(--l-sans);
+  font-size: 0.85rem;
+  color: var(--l-muted);
+}
+.ladera-modal .l-allergens {
+  margin-top: 6px;
+}
+.l-inline-link {
+  padding: 0;
+  background: transparent;
+  color: var(--l-ink);
+  font: inherit;
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+  cursor: pointer;
+}
+.l-footer-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 24px;
+  margin-top: 8px;
+  font-family: var(--l-sans);
+}
+.l-footer-links a {
+  margin-top: 0;
+}
+.l-privacy p + p {
+  margin-top: 12px;
+}
+.l-privacy {
+  margin-bottom: 20px;
+}
+.l-directions-list {
+  max-width: 60ch;
+  margin: 20px 0 24px;
+  padding-left: 1.2em;
+  list-style: decimal;
+}
+.l-directions-list li {
+  padding: 6px 0;
+}

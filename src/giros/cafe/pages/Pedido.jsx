@@ -162,7 +162,7 @@ function Seguimiento({ order, onPickup, onReset }) {
   )
 }
 
-export default function Pedido({ state, dispatch }) {
+export default function Pedido({ state, dispatch, onPrivacy }) {
   const { cart, order } = state
   const slots = useMemo(() => pickupSlots(new Date()), [])
   const [nombre, setNombre] = useState("")
@@ -286,7 +286,10 @@ export default function Pedido({ state, dispatch }) {
             </div>
             <p className="l-fiction">
               Pago al recoger, en caja. Esta demo no cobra, no envía el pedido y no guarda tu nombre
-              fuera de este navegador.
+              fuera de este navegador.{" "}
+              <button type="button" className="l-inline-link" onClick={onPrivacy}>
+                Aviso de privacidad
+              </button>
             </p>
             <button
               type="submit"

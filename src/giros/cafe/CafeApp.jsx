@@ -15,6 +15,8 @@ import Prepara from "./pages/Prepara"
 import Visitanos from "./pages/Visitanos"
 import Creditos from "./pages/Creditos"
 import ItemPanel from "./components/ItemPanel"
+import Privacidad from "./components/Privacidad"
+import { CATA_KEY } from "./state/cata"
 import { findItem } from "./data/carta"
 import { cartCount, load, reducer, save } from "./state/pedido"
 import "./cafe.css"
@@ -87,6 +89,22 @@ export default function CafeApp() {
   const [state, dispatch] = useReducer(reducer, undefined, () => load(storage()))
   const [choosing, setChoosing] = useState(null)
   const [notice, setNotice] = useState(null)
+  const [privacy, setPrivacy] = useState(false)
+  const openPrivacy = () => setPrivacy(true)
+  const borrar = () => {
+    try {
+      window.localStorage.removeItem(CATA_KEY)
+    } catch {
+      /* Sin almacenamiento no hay nada que borrar. */
+    }
+    dispatch({ type: "borrar" })
+    setPrivacy(false)
+    navigate("/cafe")
+    setNotice({
+      id: Date.now(),
+      text: "Se borraron el pedido, la tarjeta de visitas y la reserva de esta demo.",
+    })
+  }
   useEffect(() => {
     save(storage(), state)
   }, [state])
@@ -167,7 +185,10 @@ export default function CafeApp() {
         <Routes>
           <Route index element={<Inicio onWhatsApp={() => setWhatsapp(true)} />} />
           <Route path="carta" element={<Carta onChoose={choose} />} />
-          <Route path="pedido" element={<Pedido state={state} dispatch={dispatch} />} />
+          <Route
+            path="pedido"
+            element={<Pedido state={state} dispatch={dispatch} onPrivacy={openPrivacy} />}
+          />
           <Route path="origen" element={<Origen onChoose={choose} />} />
           <Route path="prepara" element={<Prepara onChoose={choose} />} />
           <Route path="creditos" element={<Creditos />} />
@@ -177,6 +198,7 @@ export default function CafeApp() {
               <Visitanos
                 visitas={state.visitas || 0}
                 onWhatsApp={() => setWhatsapp(true)}
+                onPrivacy={openPrivacy}
                 onCanjear={() => {
                   dispatch({ type: "canjear" })
                   setNotice({
@@ -201,7 +223,12 @@ export default function CafeApp() {
       />
       <footer className="l-footer">
         <p>Ladera · café de altura. Negocio ficticio creado para una demostración de portafolio.</p>
-        <Link to="/cafe/creditos">Créditos de fotografías y tipografías</Link>
+        <div className="l-footer-links">
+          <Link to="/cafe/creditos">Créditos de fotografías y tipografías</Link>
+          <button type="button" className="l-inline-link" onClick={openPrivacy}>
+            Aviso de privacidad
+          </button>
+        </div>
       </footer>
       <div className="l-toast-region" role="status" aria-live="polite">
         {notice && (
@@ -227,6 +254,7 @@ export default function CafeApp() {
         />
       )}
       <WaterMark />
+      {privacy && <Privacidad onClose={() => setPrivacy(false)} onBorrar={borrar} />}
       <WhatsAppPreview
         isOpen={whatsapp}
         onClose={() => setWhatsapp(false)}

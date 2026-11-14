@@ -16,7 +16,7 @@ acciones ficticias del negocio.
 ## Estado y orden de trabajo
 
 - Se trabaja **una demo a la vez**, en este orden: Psicólogo (cerrada) → Restaurante
-  (cerrada en V4.2.5 con **Patio 12**) → Café (cerrada en V4.3.4 con **Ladera**) →
+  (cerrada en V4.2.5 con **Patio 12**) → Café (cerrada en V4.3.6 con **Ladera**) →
   **Gimnasio (siguiente, V4.4)** →
   Taller mecánico (V4.5) → Despacho contable (V4.6) → Revista digital (V4.7).
 - **Restaurante = solo Patio 12.** No se construyen las sub-categorías (fonda, comida
@@ -81,8 +81,9 @@ impeccable, web-design-guidelines y web-quality-skills.
 
 ## Estado de Café
 
-Café (Ladera) cerrado con la dirección «Tueste» en V4.3.5 (ficha v2 en
-`docs/FICHA_CAFE.md`), pendiente del visto bueno de Ian en la vista previa. Pruebas de
+Café (Ladera) cerrado en V4.3.6 con la dirección «Tueste» (ficha v2 en
+`docs/FICHA_CAFE.md`): V4.3.5 rediseño y V4.3.6 privacidad, alérgenos, IVA, tamaños y
+cómo llegar. Pendiente del visto bueno de Ian en la vista previa. Pruebas de
 navegador en `npm run test:browser:cafe`. **Siguiente: Gimnasio (V4.4)**: investigación de
 diseño, maquetas de portada para elegir y ficha de identidad antes de programar (así se
 decidió Café). Idea guardada: los bloques de color de la maqueta «Fachadas» para una demo

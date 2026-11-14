@@ -13,6 +13,12 @@ export const LOCAL = {
     "Internet y enchufes en la barra larga",
     "Música baja, sin televisiones",
     "Planta baja sin escalones y baño accesible",
+    "Perros con correa en las mesas de la entrada",
+  ],
+  llegar: [
+    "Desde el Parque Juárez, camina dos cuadras hacia el norte; el tostador se ve desde la calle.",
+    "Hay estacionamiento público a una cuadra; en el centro conviene llegar a pie o en taxi.",
+    "Indicaciones de ejemplo: el local no existe.",
   ],
   tueste: "Tostamos los martes y viernes por la mañana, con el tostador a la vista.",
 }

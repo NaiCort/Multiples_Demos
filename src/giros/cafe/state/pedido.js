@@ -114,6 +114,8 @@ export function reducer(state, action) {
       }
     case "reset":
       return { ...initialState, visitas: state.visitas || 0 }
+    case "borrar":
+      return initialState
     case "canjear":
       return (state.visitas || 0) >= SELLOS ? { ...state, visitas: 0 } : state
     default:

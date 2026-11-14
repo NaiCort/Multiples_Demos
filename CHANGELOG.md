@@ -1,3 +1,11 @@
+# V4.3.6 · 14 de noviembre de 2026 · cierre de Café
+
+- Añadir aviso de privacidad propio de Ladera con opción de borrar los datos guardados.
+- Añadir alérgenos de ejemplo por producto, que cambian con la leche elegida.
+- Indicar precios con IVA incluido y tamaño en ml o g en toda la carta.
+- Añadir «Cómo llegar» con un botón de mapas simulado, la política de mascotas y «Dominio público» en Créditos.
+- Cinco pruebas nuevas; pruebas de navegador ampliadas.
+
 # V4.3.5 · 13 de noviembre de 2026 · Ladera «Tueste»
 
 - Rediseñar Ladera con la dirección «Tueste»: paleta cálida, títulos en serif, fotografía real y relieve coloreado con la escala de tueste.

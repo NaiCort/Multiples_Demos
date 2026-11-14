@@ -7,6 +7,13 @@ export const LECHES = [
   { id: "avena", nombre: "Avena", extra: 15 },
   { id: "almendra", nombre: "Almendra", extra: 15 },
 ]
+// Alérgenos de ejemplo. La leche se puede cambiar por avena o almendra (almendra = nuez).
+export const ALERGENOS = {
+  lacteos: "Lácteos",
+  gluten: "Gluten",
+  huevo: "Huevo",
+  nuez: "Nueces",
+}
 export const AZUCAR = ["Sin azúcar", "Poca", "Normal"]
 export const SHOT_EXTRA = 18
 export const PESOS = [
@@ -32,6 +39,7 @@ export const CATEGORIAS = [
     items: [
       {
         id: "espresso",
+        alergenos: [],
         nombre: "Espresso",
         desc: "30 ml, servido con agua mineral.",
         precio: 45,
@@ -39,6 +47,7 @@ export const CATEGORIAS = [
       },
       {
         id: "americano",
+        alergenos: [],
         nombre: "Americano",
         desc: "Espresso doble y agua caliente, 240 ml.",
         precio: 52,
@@ -46,13 +55,15 @@ export const CATEGORIAS = [
       },
       {
         id: "cortado",
+        alergenos: ["lacteos"],
         nombre: "Cortado",
-        desc: "Espresso con la misma cantidad de leche texturizada.",
+        desc: "Espresso doble con la misma cantidad de leche texturizada, 120 ml.",
         precio: 58,
         opciones: ["leche", "shots"],
       },
       {
         id: "capuchino",
+        alergenos: ["lacteos"],
         nombre: "Capuchino",
         desc: "180 ml, espuma densa.",
         precio: 65,
@@ -60,6 +71,7 @@ export const CATEGORIAS = [
       },
       {
         id: "latte",
+        alergenos: ["lacteos"],
         nombre: "Latte",
         desc: "300 ml, poca espuma.",
         precio: 70,
@@ -74,6 +86,7 @@ export const CATEGORIAS = [
     items: [
       {
         id: "v60",
+        alergenos: [],
         nombre: "Gotero V60",
         desc: "Una taza de 300 ml, extracción limpia.",
         precio: 78,
@@ -81,6 +94,7 @@ export const CATEGORIAS = [
       },
       {
         id: "chemex",
+        alergenos: [],
         nombre: "Chemex para dos",
         desc: "600 ml en jarra, dos tazas.",
         precio: 140,
@@ -88,6 +102,7 @@ export const CATEGORIAS = [
       },
       {
         id: "prensa",
+        alergenos: [],
         nombre: "Prensa francesa",
         desc: "350 ml, cuerpo pesado.",
         precio: 72,
@@ -102,6 +117,7 @@ export const CATEGORIAS = [
     items: [
       {
         id: "cold-brew",
+        alergenos: [],
         nombre: "Cold brew",
         desc: "Extracción en frío de 16 horas, 350 ml.",
         precio: 68,
@@ -109,15 +125,17 @@ export const CATEGORIAS = [
       },
       {
         id: "espresso-tonico",
+        alergenos: [],
         nombre: "Espresso tónico",
-        desc: "Espresso doble sobre agua tónica y una cáscara de limón.",
+        desc: "Espresso doble sobre agua tónica y una cáscara de limón, 300 ml.",
         precio: 75,
         opciones: [],
       },
       {
         id: "espresso-naranja",
+        alergenos: [],
         nombre: "Espresso con naranja",
-        desc: "Jugo de naranja de Álamo, espresso y hielo.",
+        desc: "Jugo de naranja de Álamo, espresso y hielo, 300 ml.",
         precio: 72,
         opciones: [],
       },
@@ -130,13 +148,15 @@ export const CATEGORIAS = [
     items: [
       {
         id: "chocolate",
+        alergenos: ["lacteos"],
         nombre: "Chocolate de agua",
-        desc: "Tableta de cacao de Tabasco batida a mano.",
+        desc: "Tableta de cacao de Tabasco batida a mano, 300 ml.",
         precio: 62,
         opciones: ["leche", "azucar"],
       },
       {
         id: "te-limon",
+        alergenos: [],
         nombre: "Té de limón y menta",
         desc: "Infusión de hojas frescas, 350 ml.",
         precio: 45,
@@ -151,16 +171,25 @@ export const CATEGORIAS = [
     items: [
       {
         id: "pan-elote",
+        alergenos: ["lacteos", "gluten", "huevo"],
         nombre: "Pan de elote",
-        desc: "Rebanada, servido tibio.",
+        desc: "Rebanada de 110 g, servida tibia.",
         precio: 48,
         opciones: [],
       },
-      { id: "concha", nombre: "Concha de vainilla", desc: "Una pieza.", precio: 32, opciones: [] },
+      {
+        id: "concha",
+        alergenos: ["lacteos", "gluten", "huevo"],
+        nombre: "Concha de vainilla",
+        desc: "Pieza de 90 g.",
+        precio: 32,
+        opciones: [],
+      },
       {
         id: "panque",
+        alergenos: ["lacteos", "gluten", "huevo", "nuez"],
         nombre: "Panqué de plátano y nuez",
-        desc: "Rebanada gruesa.",
+        desc: "Rebanada de 120 g.",
         precio: 46,
         opciones: [],
       },
@@ -178,6 +207,7 @@ CATEGORIAS.push({
     desc: `${lote.proceso} · ${lote.notas.join(", ")}.`,
     precio: lote.precio250,
     lote: lote.id,
+    alergenos: [],
     opciones: ["peso", "molienda"],
   })),
 })
@@ -186,3 +216,13 @@ export const ITEMS = CATEGORIAS.flatMap((categoria) =>
   categoria.items.map((item) => ({ ...item, categoria: categoria.id })),
 )
 export const findItem = (id) => ITEMS.find((item) => item.id === id)
+
+// Texto de alérgenos para una línea de la carta o un pedido.
+export function alergenosTexto(item, config = {}) {
+  const lista = new Set(item.alergenos || [])
+  if (config.leche === "avena" || config.leche === "almendra") lista.delete("lacteos")
+  if (config.leche === "almendra") lista.add("nuez")
+  const texto = [...lista].map((id) => ALERGENOS[id].toLowerCase())
+  if (config.leche === "avena" && !lista.has("gluten")) texto.push("posibles trazas de gluten")
+  return texto
+}
